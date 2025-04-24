@@ -7,8 +7,8 @@ class Lyricist < Atome
     height_f = params[:height] || LyricsStyle.dimensions[:button_height]
     top_f = params[:top] || 0
     left_f = params[:left] || 0
-    background_f = params[:background] || params[:color] || LyricsStyle.colors[:primary]
-    color_f = params[:text_color] || :black
+    background_f = params[:background]  || LyricsStyle.colors[:primary]
+    color_f = params[:color] || :black
     label_f = params[:label] || :dummy
     parent_f = params[:parent] || :view
     size_f = params[:size] || LyricsStyle.dimensions[:text_small]
@@ -34,7 +34,7 @@ class Lyricist < Atome
       })
     )
     
-    return btn
+     btn
   end
 
   def build_control_buttons
@@ -71,7 +71,9 @@ class Lyricist < Atome
     erase = button({
       label: 'erase', 
       id: :erase, 
-      color: :black, 
+      color: :red,
+      background: :yellow,
+      label: :erase,
       left: LyricsStyle.positions[:second_column]
     })
     
@@ -221,12 +223,12 @@ class Lyricist < Atome
     edit_lyrics = button({
       label: "Edit",
       id: :edit_lyrics_button,
-      width: LyricsStyle.dimensions[:medium_width],
-      height: LyricsStyle.dimensions[:medium_height],
+      # width: LyricsStyle.dimensions[:medium_width],
+      # height: LyricsStyle.dimensions[:medium_height],
       left: LyricsStyle.positions[:seventh_column],
       top: LyricsStyle.positions[:second_row],
-      color: LyricsStyle.colors[:info],
-      text_color: LyricsStyle.colors[:text_secondary],
+      # color: LyricsStyle.colors[:info],
+      text_color: :yellow,
       size: LyricsStyle.dimensions[:text_medium]
     })
 

@@ -32,14 +32,14 @@ class LyricsStyle
   def self.dimensions
     {
       # Largeurs
-      standard_width: 42,
+      standard_width: 55,
       medium_width: 80,
       large_width: 140,
       container_width: 600,
       line_width: 1600,
       
       # Hauteurs
-      button_height: 32,
+      button_height: 25,
       medium_height: 40,
       large_height: 52,
       container_height: 500,
@@ -57,7 +57,7 @@ class LyricsStyle
   def self.decorations
     {
       standard_smooth: 10,
-      button_smooth: 12,
+      button_smooth: 9,
       container_smooth: 16,
       standard_shadow: { blur: 15, alpha: 0.7 },
       container_shadow: { blur: 20, alpha: 0.6 },

@@ -10,8 +10,7 @@ require_relative 'lyricist_core'
 lyr = Lyricist.new
 lyr.new_song({ 0 => "hello", 594 => "world", 838 => "of", 1295 => "hope" })
 
-
-    open_filer = text({data: :importimportimportimportimportimportimport, top: 120, left: 120, color: :yellowgreen })
+open_filer = text({ data: :importimportimportimportimportimportimport, top: 120, left: 120, color: :yellowgreen })
 open_filer.import(true) do |val|
   parse_song_lyrics(val)
 end
