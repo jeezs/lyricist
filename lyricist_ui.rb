@@ -1,0 +1,121 @@
+# frozen_string_literal: true
+
+class Lyricist < Atome
+  # Construction de l'interface utilisateur
+  def build_ui
+    build_control_buttons
+    build_record_button
+    build_lyrics_viewer
+    build_song_support
+    build_editor_controls
+    build_timeline_slider
+    build_navigation_buttons
+    build_lyrics_editor_button
+  end
+  
+  def build_lyrics_viewer
+    counter = grab(:view).text({ 
+      data: :counter, 
+      content: :play, 
+      left: 60, 
+      top: LyricsStyle.positions[:third_row], 
+      position: :absolute, 
+      id: :counter 
+    })
+    
+    base_text = ''
+
+    lyrics_support = grab(:view).box({
+      id: :lyrics_support,
+      width: 180,
+      height: 180,
+      top: LyricsStyle.positions[:fourth_row],
+      left: 35,
+      color: LyricsStyle.colors[:container_bg]
+    })
+
+    lyrics_support.text({
+      top: 3,
+      left: 3,
+      width: LyricsStyle.dimensions[:line_width],
+      data: base_text,
+      id: :lyric_viewer,
+      edit: false,
+      component: { size: LyricsStyle.dimensions[:text_xlarge] },
+      position: :absolute,
+      content: { 0 => base_text },
+      context: :insert
+    })
+
+    counter.timer({ position: 88 })
+
+    # Événements sur le viewer de paroles
+    setup_lyrics_events
+  end
+
+  def build_song_support
+    support = grab(:view).box({
+      overflow: :auto,
+      top: 3,
+      left: :auto,
+      right: 9,
+      width: 399,
+      height: 600,
+      smooth: LyricsStyle.decorations[:standard_smooth],
+      color: LyricsStyle.colors[:container_light],
+      id: :support
+    })
+
+    support.shadow(LyricsStyle.decorations[:invert_shadow])
+
+    # Bouton d'importation
+    open_filer = text(
+      LyricsStyle.text_style({ 
+        data: :import, 
+        top: 63, 
+        left: 6, 
+        color: :yellowgreen 
+      })
+    )
+    
+    open_filer.import(true) do |val|
+      parse_song_lyrics(val)
+    end
+
+    importer do |val|
+      parse_song_lyrics(val[:content])
+    end
+  end
+  
+  def build_timeline_slider
+    grab(:view).slider(
+      LyricsStyle.slider_style({
+        id: :timeline_slider,
+        max: @length,
+        value: 0,
+        left: 99,
+        top: LyricsStyle.positions[:timeline_top],
+        tag: []
+      })
+    ) do |value|
+      lyrics = grab(:lyric_viewer)
+      counter = grab(:counter)
+      update_lyrics(value, lyrics, counter)
+    end
+  end
+
+  def setup_lyrics_events
+    lyrics = grab(:lyric_viewer)
+
+    lyrics.keyboard(:down) do |native_event|
+      grab(:lyrics_support).color({ red: 1, id: :red_col })
+      event = Native(native_event)
+      if event[:keyCode].to_s == '13' # Touche Entrée
+        grab(:lyrics_support).remove(:red_col)
+        grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
+        event.preventDefault
+        alter_lyric_event(grab(:lyric_viewer).data)
+      end
+    end
+  end
+end
