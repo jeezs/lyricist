@@ -69,7 +69,6 @@ class Lyricist < Atome
 
     # Bouton Erase
     erase = button({
-      label: 'erase', 
       id: :erase, 
       color: :red,
       background: :yellow,
@@ -80,6 +79,24 @@ class Lyricist < Atome
     erase.touch(true) do
       clear_all
     end
+
+    ###########
+
+    clear = button({
+                     label: 'clear',
+                     id: :clear,
+                     top: 66,
+                     left: 120,
+                     color: :yellow,
+                     background: :red,
+                     left: LyricsStyle.positions[:second_column]
+                   })
+
+    clear.touch(true) do
+      # clear_all
+      grab(:support).clear(true)
+    end
+    ###########
 
     # Bouton Stop
     stop = button({
