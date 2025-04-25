@@ -93,7 +93,7 @@ class Lyricist < Atome
 
     clear.touch(true) do
       # clear_all
-      grab(:support).clear(true)
+      grab(:importer_support).clear(true)
     end
     ###########
 

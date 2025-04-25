@@ -63,7 +63,7 @@ class Lyricist < Atome
       height: 600,
       smooth: LyricsStyle.decorations[:standard_smooth],
       color: LyricsStyle.colors[:container_light],
-      id: :support
+      id: :importer_support
     })
 
     support.shadow(LyricsStyle.decorations[:invert_shadow])

@@ -20,7 +20,7 @@ def parse_song_lyrics(song)
     new_id = "a_lyrics_line_#{index}".to_sym
     puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
-    line_support = grab(:support).box({
+    line_support = grab(:importer_support).box({
                                         id: new_id,
                                         width: 399,
                                         height: 30,
