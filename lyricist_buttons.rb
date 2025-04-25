@@ -7,46 +7,45 @@ class Lyricist < Atome
     height_f = params[:height] || LyricsStyle.dimensions[:button_height]
     top_f = params[:top] || 0
     left_f = params[:left] || 0
-    background_f = params[:background]  || LyricsStyle.colors[:primary]
+    background_f = params[:background] || LyricsStyle.colors[:primary]
     color_f = params[:color] || :black
     label_f = params[:label] || :dummy
     parent_f = params[:parent] || :view
     size_f = params[:size] || LyricsStyle.dimensions[:text_small]
-    
+
     btn = grab(parent_f).box(
       LyricsStyle.button_style({
-        id: id_f,
-        width: width_f, 
-        height: height_f, 
-        top: top_f,
-        left: left_f, 
-        color: background_f
-      })
+                                 id: id_f,
+                                 width: width_f,
+                                 height: height_f,
+                                 top: top_f,
+                                 left: left_f,
+                                 color: background_f
+                               })
     )
-    
+
     btn.text(
       LyricsStyle.text_style({
-        data: label_f, 
-        component: { size: size_f }, 
-        top: 5, 
-        left: 3, 
-        color: color_f
-      })
+                               data: label_f,
+                               component: { size: size_f },
+                               top: 5,
+                               left: 3,
+                               color: color_f
+                             })
     )
-    
-     btn
+
+    btn
   end
 
   def build_control_buttons
 
-    
     # Bouton Start
     start = button({
-      label: :start, 
-      id: :start,
-      color: LyricsStyle.colors[:primary]
-    })
-    
+                     label: :start,
+                     id: :start,
+                     color: LyricsStyle.colors[:primary]
+                   })
+
     start.touch(true) do
       counter = grab(:counter)
 
@@ -69,13 +68,13 @@ class Lyricist < Atome
 
     # Bouton Erase
     erase = button({
-      id: :erase, 
-      color: :red,
-      background: :yellow,
-      label: :erase,
-      left: LyricsStyle.positions[:second_column]
-    })
-    
+                     id: :erase,
+                     color: :red,
+                     background: :yellow,
+                     label: :erase,
+                     left: LyricsStyle.positions[:second_column]
+                   })
+
     erase.touch(true) do
       clear_all
     end
@@ -100,12 +99,12 @@ class Lyricist < Atome
 
     # Bouton Stop
     stop = button({
-      label: :stop, 
-      id: :stop, 
-      color: LyricsStyle.colors[:secondary], 
-      left: LyricsStyle.positions[:third_column]
-    })
-    
+                    label: :stop,
+                    id: :stop,
+                    color: LyricsStyle.colors[:secondary],
+                    left: LyricsStyle.positions[:third_column]
+                  })
+
     stop.touch(true) do
       counter = grab(:counter)
       counter.timer({ stop: true })
@@ -117,26 +116,42 @@ class Lyricist < Atome
 
     # Bouton Pause
     pause = button({
-      label: :pause, 
-      color: LyricsStyle.colors[:accent], 
-      text_color: :black,
-      left: LyricsStyle.positions[:fourth_column]
-    })
-    
+                     label: :pause,
+                     color: LyricsStyle.colors[:accent],
+                     text_color: :black,
+                     left: LyricsStyle.positions[:fourth_column]
+                   })
+
     pause.touch(true) do
       grab(:counter).timer({ pause: true })
     end
+    import_lyrics = button({
+                             label: :import,
+                             id: :import_lyrics,
+                             color: LyricsStyle.colors[:accent],
+                             text_color: :black,
+                             top: 66,
+                             left: LyricsStyle.positions[:fourth_column]
+                           })
+
+    import_lyrics.import(true) do |val|
+      parse_song_lyrics(val)
+    end
+    importer do |val|
+      parse_song_lyrics(val[:content])
+    end
+
   end
 
   def build_record_button
     record = button({
-      label: 'rec.', 
-      id: :rec_box, 
-      top: 30, 
-      left: 0,
-      text_color: :white
-    })
-    
+                      label: 'rec.',
+                      id: :rec_box,
+                      top: 30,
+                      left: 0,
+                      text_color: :white
+                    })
+
     rec_color = grab(:view).color({ id: :rec_color, red: 1, alpha: 0.6 })
     record.apply(:rec_color)
 
@@ -161,18 +176,20 @@ class Lyricist < Atome
     end
   end
 
+
+
   def build_editor_controls
     prev_word = button({
-      label: :prev,
-      id: :prev, 
-      left: LyricsStyle.positions[:fifth_column]
-    })
-    
+                         label: :prev,
+                         id: :prev,
+                         left: LyricsStyle.positions[:fifth_column]
+                       })
+
     next_word = button({
-      label: :next,
-      id: :next,
-      left: LyricsStyle.positions[:sixth_column]
-    })
+                         label: :next,
+                         id: :next,
+                         left: LyricsStyle.positions[:sixth_column]
+                       })
 
     prev_word.touch(true) do
       lyrics = grab(:lyric_viewer)
@@ -218,17 +235,17 @@ class Lyricist < Atome
 
   def build_navigation_buttons
     prev_word = button({
-      label: :prev,
-      id: :prev,
-      left: LyricsStyle.positions[:fifth_column]
-    })
-    
+                         label: :prev,
+                         id: :prev,
+                         left: LyricsStyle.positions[:fifth_column]
+                       })
+
     next_word = button({
-      label: :next,
-      id: :next,
-      left: LyricsStyle.positions[:sixth_column]
-    })
-    
+                         label: :next,
+                         id: :next,
+                         left: LyricsStyle.positions[:sixth_column]
+                       })
+
     prev_word.touch(true) do
       alert (:lyric_viewer).content
       # cf : update_lyrics
@@ -238,16 +255,16 @@ class Lyricist < Atome
   def build_lyrics_editor_button
     # Création du bouton d'édition des paroles
     edit_lyrics = button({
-      label: "Edit",
-      id: :edit_lyrics_button,
-      # width: LyricsStyle.dimensions[:medium_width],
-      # height: LyricsStyle.dimensions[:medium_height],
-      left: LyricsStyle.positions[:seventh_column],
-      top: LyricsStyle.positions[:second_row],
-      # color: LyricsStyle.colors[:info],
-      text_color: :yellow,
-      size: LyricsStyle.dimensions[:text_medium]
-    })
+                           label: "Edit",
+                           id: :edit_lyrics_button,
+                           # width: LyricsStyle.dimensions[:medium_width],
+                           # height: LyricsStyle.dimensions[:medium_height],
+                           left: LyricsStyle.positions[:seventh_column],
+                           top: LyricsStyle.positions[:second_row],
+                           # color: LyricsStyle.colors[:info],
+                           text_color: :yellow,
+                           size: LyricsStyle.dimensions[:text_medium]
+                         })
 
     edit_lyrics.touch(true) do
       if @editor_open
@@ -261,9 +278,9 @@ class Lyricist < Atome
       end
     end
   end
-  
+
   private
-  
+
   def identity_generator
     # Génère un ID unique
     "button_#{Time.now.to_i}_#{rand(1000)}".to_sym

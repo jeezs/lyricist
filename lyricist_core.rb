@@ -85,37 +85,5 @@ class Lyricist < Atome
   end
 
   # Analyse et affichage des paroles de chanson
-  def parse_song_lyrics(song)
-    song_lines = song.split("\n")
-    song_lines.each_with_index do |line_found, index|
-      new_id = "a_lyrics_line_#{index}".to_sym
-      puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
-      line_support = grab(:support).box({
-        id: new_id,
-        width: 399,
-        height: 30,
-        top: index * 33,
-        left: 3,
-        color: LyricsStyle.colors[:danger],
-        smooth: LyricsStyle.decorations[:standard_smooth]
-      })
-
-      line_support.text({
-        data: line_found,
-        id: "#{new_id}_text",
-        top: 1,
-        left: 1,
-        position: :absolute,
-        width: 399
-      })
-
-      line_support.touch(true) do
-        lyrics = grab(:lyric_viewer)
-        counter = grab(:counter)
-        lyrics.data(line_found)
-        alter_lyric_event(lyrics, counter)
-      end
-    end
-  end
 end
