@@ -3,14 +3,11 @@
 class Lyricist < Atome
   # Construction de l'interface utilisateur
   def build_ui
+    build_tool_bar
     build_control_buttons
-    build_record_button
     build_lyrics_viewer
     build_song_support
-    build_editor_controls
     build_timeline_slider
-    build_navigation_buttons
-    build_lyrics_editor_button
   end
 
   def build_lyrics_viewer
@@ -20,7 +17,7 @@ class Lyricist < Atome
                                  left: 60,
                                  top: LyricsStyle.positions[:third_row],
                                  position: :absolute,
-                                 id: :counter
+                                 id: :counter,
                                })
 
     base_text = ''
@@ -96,19 +93,41 @@ class Lyricist < Atome
   def build_timeline_slider
     grab(:view).slider(
       LyricsStyle.slider_style({
-                                 id: :timeline_slider,
-                                 max: @length,
-                                 depth: 1,
-                                 value: 0,
-                                 left: 99,
-                                 top: LyricsStyle.positions[:timeline_top],
-                                 tag: []
+                                   id: :timeline_slider,
+                                   range: { color: :orange },
+                                   min: 0,
+                                   max: @length,
+                                   width: 666,
+                                   value: 0,
+                                   height: 25,
+                                   left: 61,
+                                   tag: [],
+                                   top: :auto,
+                                   bottom: 3,
+                                   color: :orange,
+                                   cursor: { color: :orange, width: 25, height: 25 }
+
                                })
     ) do |value|
       lyrics = grab(:lyric_viewer)
       counter = grab(:counter)
       update_lyrics(value, lyrics, counter)
     end
+  end
+
+  def build_tool_bar
+    grab(:view).box({
+                      id: :tool_bar,
+                      color: LyricsStyle.colors[:container_bg],
+                      shadow: LyricsStyle.decorations[:standard_shadow],
+                      top: 333,
+                      left: 0,
+                      right: 0,
+                      width: :auto,
+                      height: 39,
+                      opacity: 1,
+                      drag: true
+                    })
   end
 
   def setup_lyrics_events
@@ -121,7 +140,7 @@ class Lyricist < Atome
         grab(:lyrics_support).remove(:red_col)
         grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
         event.preventDefault
-        alter_lyric_event(grab(:lyric_viewer).data)
+        alter_lyric_event
       end
     end
   end

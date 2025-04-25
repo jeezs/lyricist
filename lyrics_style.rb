@@ -101,7 +101,7 @@ class LyricsStyle
       seventh_column: 520,
       
       # Positions spécifiques
-      timeline_top: 350, # Position du slider
+      timeline_top: :auto, # Position du slider
       editor_default_left: 300,
       editor_default_top: 150
     }

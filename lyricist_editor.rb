@@ -308,13 +308,13 @@ class Lyricist < Atome
 
   def show_add_dialog(editor_container, lyrics)
     # Ouvrir un dialogue pour ajouter une nouvelle ligne
-    dialog_container = grab(:view).box(
+    dialog_container = grab(:lyrics_editor_container).box(
       LyricsStyle.container_style({
                                     id: :add_dialog,
                                     width: 300,
                                     height: 150,
-                                    left: 500,
-                                    top: 250,
+                                    left: 120,
+                                    top: 120,
                                     position: :absolute
                                   })
     )

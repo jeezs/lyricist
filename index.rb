@@ -6,7 +6,43 @@ require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
 
-def alter_lyric_event(lyrics)
+def button(params)
+  id_f = params[:id] || identity_generator
+  width_f = params[:width] || LyricsStyle.dimensions[:standard_width]
+  height_f = params[:height] || LyricsStyle.dimensions[:button_height]
+  top_f = params[:top] || 0
+  left_f = params[:left] || 0
+  background_f = params[:background] || LyricsStyle.colors[:primary]
+  color_f = params[:color] || LyricsStyle.colors[:secondary]
+  label_f = params[:label] || :dummy
+  parent_f = params[:parent] || :view
+  size_f = params[:size] || LyricsStyle.dimensions[:text_small]
+
+  btn = grab(parent_f).box(
+    LyricsStyle.button_style({
+                               id: id_f,
+                               width: width_f,
+                               height: height_f,
+                               top: top_f,
+                               left: left_f,
+                               color: background_f
+                             })
+  )
+
+  btn.text(
+    LyricsStyle.text_style({
+                             data: label_f,
+                             component: { size: size_f },
+                             top: 5,
+                             left: 3,
+                             color: color_f
+                           })
+  )
+
+  btn
+end
+
+def alter_lyric_event
   lyrics = grab(:lyric_viewer)
   counter = grab(:counter)
   current_position = counter.timer[:position]
@@ -41,9 +77,8 @@ def parse_song_lyrics(song)
 
     line_support.touch(true) do
       lyrics = grab(:lyric_viewer)
-      counter = grab(:counter)
       lyrics.data(line_found)
-      alter_lyric_event(lyrics)
+      alter_lyric_event
     end
   end
 end
