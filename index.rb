@@ -10,6 +10,8 @@ def button(params)
   id_f = params[:id] || identity_generator
   width_f = params[:width] || LyricsStyle.dimensions[:standard_width]
   height_f = params[:height] || LyricsStyle.dimensions[:button_height]
+  right_f = params[:right] || 0
+  bottom_f = params[:bottom] || 0
   top_f = params[:top] || 0
   left_f = params[:left] || 0
   background_f = params[:background] || LyricsStyle.colors[:primary]
@@ -25,6 +27,8 @@ def button(params)
                                height: height_f,
                                top: top_f,
                                left: left_f,
+                               right: right_f,
+                               bottom: bottom_f,
                                color: background_f
                              })
   )
@@ -82,8 +86,19 @@ def parse_song_lyrics(song)
     end
   end
 end
+
+
+
+
 # Création de l'instance et lancement de l'application
 lyr = Lyricist.new
+import_drag=grab(:import_module)
+import_drag.display(:none)
+
+
+grab(:toolbox_tool).display(:none)
+# exxample below
+
 lyr.new_song({ 0 => "hello", 594 => "world", 838 => "of", 1295 => "hope" })
 
 ### set number of line

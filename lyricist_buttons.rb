@@ -59,6 +59,7 @@ class Lyricist < Atome
     end
 
 
+
     # Bouton Erase
     erase = button({
                      id: :erase,
@@ -72,6 +73,27 @@ class Lyricist < Atome
     erase.touch(true) do
       clear_all
     end
+
+    ###
+    view_importer = button({
+                     id: :import_viewer,
+                     color: :red,
+                     background: :yellow,
+                     label: :view,
+                     top: LyricsStyle.dimensions[:tool_bar_height],
+                     left: 333,
+                     parent: :tool_bar
+                   })
+
+    view_importer.touch(true) do
+      import_drag=grab(:import_module)
+      if import_drag.display== :none
+        import_drag.display(:block)
+      else
+        import_drag.display(:none)
+      end
+    end
+
 
     ###########
 
@@ -216,17 +238,35 @@ class Lyricist < Atome
                              id: :import_lyrics,
                              color: LyricsStyle.colors[:accent],
                              text_color: :black,
-                             top: 66,
-                             left: LyricsStyle.positions[:fourth_column],
-                             parent: :tool_bar
+                             top: 3,
+                             left: 3,
+                             parent: :import_module
                            })
 
     import_lyrics.import(true) do |val|
       parse_song_lyrics(val)
     end
-    # importer do |val|
-    #   parse_song_lyrics(val[:content])
-    # end
+
+    #######
+    close_import = button({
+                             label: :close,
+                             id: :close_import,
+                             color: LyricsStyle.colors[:accent],
+                             text_color: :black,
+                             top: 3,
+                             left: :auto,
+                             right: 3,
+                             parent: :import_module
+                           })
+    import_drag=grab(:import_module)
+    close_import.touch(true) do |val|
+      if import_drag.display== :none
+        import_drag.display(:block)
+      else
+        import_drag.display(:none)
+      end
+    end
+
 
   end
 

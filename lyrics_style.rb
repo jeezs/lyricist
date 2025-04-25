@@ -37,13 +37,16 @@ class LyricsStyle
       large_width: 140,
       container_width: 600,
       line_width: 1600,
-      
+
       # Hauteurs
       button_height: 25,
       medium_height: 40,
       large_height: 52,
       container_height: 500,
-      
+      tool_bar_height: 39,
+      slider_height: 25,
+      margin: 3,
+
       # Tailles de texte
       text_small: 12,
       text_medium: 14,
