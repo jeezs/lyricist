@@ -38,7 +38,7 @@ def button(params)
                              data: label_f,
                              component: { size: size_f },
                              top: 5,
-                             left: 3,
+                             center: true,
                              color: color_f
                            })
   )
@@ -96,7 +96,7 @@ import_drag.display(:none)
 grab(:toolbox_tool).display(:none)
 # exxample below
 
-lyr.new_song({ 0 => "hello", 594 => "world", 838 => "of", 1295 => "hope" })
+lyr.new_song({ 0 => "hello", 594 => "world dfjhgjh", 838 => "of", 1295 => "hope" })
 
 ### set number of line
 # set font size

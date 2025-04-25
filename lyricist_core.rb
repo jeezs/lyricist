@@ -18,18 +18,25 @@ class Lyricist < Atome
   def format_lyrics(lyrics_array, target)
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       target.data(lyrics_array[0])
+      target.color(LyricsStyle.colors[:first_line_color])
+      target.left(LyricsStyle.positions[:lyrics_left_offset])
+      target.top(LyricsStyle.positions[:lyrics_top_offset])
+      # target is the first line in the lyrics viewer
+      target.component({ size: LyricsStyle.dimensions[:lyrics_size] })
       lyrics_array.each_with_index do |lyric, index|
         unless index == 0
-          child = target.text({ 
-            data: lyric, 
-            component: { size: LyricsStyle.dimensions[:text_xlarge] } 
-          })
+          child = target.text({
+                                data: lyric,
+
+                                component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] }
+                              })
+          # child is the other lines in the lyrics viewer
           child.edit(false)
-          child.width(LyricsStyle.dimensions[:line_width])
-          child.color(LyricsStyle.colors[:text_primary])
-          child.left(0)
+          child.width(LyricsStyle.dimensions[:lyrics_width])
+          # child.color(LyricsStyle.colors[:text_primary])
+          child.color(  LyricsStyle.colors[:other_lines_color])
           child.position(:absolute)
-          child.top(LyricsStyle.dimensions[:text_xlarge] * index)
+          child.top(LyricsStyle.dimensions[:next_Line_lyrics_size] * index+LyricsStyle.dimensions[:lyrics_size]/3)
         end
       end
     end
@@ -43,8 +50,6 @@ class Lyricist < Atome
     current_lyrics = closest_values(target.content, value, @number_of_lines)
     format_lyrics(current_lyrics, target)
   end
-
-
 
   def full_refresh_viewer(at = 0)
     grab(:timeline_slider).delete({ force: true })

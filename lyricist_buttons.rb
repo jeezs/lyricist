@@ -9,6 +9,8 @@ class Lyricist < Atome
     play = button({
                      label: :play,
                      id: :play,
+                     top: LyricsStyle.dimensions[:margin],
+                     left: LyricsStyle.dimensions[:margin],
                      parent: :tool_bar
                    })
 
@@ -42,12 +44,9 @@ class Lyricist < Atome
     edit_lyrics=button({
              label: "Edit",
              id: :edit_lyrics_button,
-             # width: LyricsStyle.dimensions[:medium_width],
-             # height: LyricsStyle.dimensions[:medium_height],
-             left: LyricsStyle.positions[:seventh_column],
-             top: LyricsStyle.positions[:second_row],
-             # color: LyricsStyle.colors[:info],
-             text_color: :yellow,
+             left: :auto,
+             right: LyricsStyle.dimensions[:margin],
+              top: LyricsStyle.dimensions[:margin],
              size: LyricsStyle.dimensions[:text_medium],
              parent: :tool_bar
            })
@@ -69,10 +68,9 @@ class Lyricist < Atome
     # Bouton Erase
     erase = button({
                      id: :erase,
-                     color: :red,
-                     background: :yellow,
                      label: :erase,
-                     left: LyricsStyle.positions[:second_column],
+                     top: LyricsStyle.dimensions[:margin],
+                     left: LyricsStyle.positions[:fourth_column],
                      parent: :tool_bar
                    })
 
@@ -83,11 +81,10 @@ class Lyricist < Atome
     ###
     view_importer = button({
                      id: :import_viewer,
-                     color: :red,
-                     background: :yellow,
-                     label: :view,
-                     top: LyricsStyle.dimensions[:tool_bar_height],
-                     left: 333,
+                     label: :lyrics,
+                     top: LyricsStyle.dimensions[:margin],
+                     left: :auto,
+                     right: LyricsStyle.positions[:second_column],
                      parent: :tool_bar
                    })
 
@@ -105,15 +102,15 @@ class Lyricist < Atome
 
     record = button({
                       label: 'rec.',
-                      id: :rec_box,
-                      top: 30,
-                      left: 0,
+                      id: :record,
+                      top: LyricsStyle.dimensions[:margin],
+                      left: LyricsStyle.positions[:third_column],
                       text_color: :white,
                       parent: :tool_bar
                     })
 
-    rec_color = grab(:view).color({ id: :rec_color, red: 1, alpha: 0.6 })
-    record.apply(:rec_color)
+    # rec_color = grab(:view).color({ id: :rec_color, red: 1, alpha: 0.6 })
+    # record.apply(:rec_color)
 
     record.touch(true) do
       prev_postion = @actual_position
@@ -140,11 +137,13 @@ class Lyricist < Atome
     clear = button({
                      label: 'clear',
                      id: :clear,
-                     top: 66,
-                     color: :yellow,
-                     background: :red,
+                     top: LyricsStyle.dimensions[:margin],
+                     color: LyricsStyle.colors[:accent],
+
+                     # color: :yellow,
+                     # background: :red,
                      left: LyricsStyle.positions[:second_column],
-                     parent: :tool_bar
+                     parent: :import_module
                    })
 
     clear.touch(true) do
@@ -157,8 +156,9 @@ class Lyricist < Atome
     stop = button({
                     label: :stop,
                     id: :stop,
+                    top: LyricsStyle.dimensions[:margin],
                     color: LyricsStyle.colors[:secondary],
-                    left: LyricsStyle.positions[:third_column],
+                    left: LyricsStyle.positions[:second_column],
                     parent: :tool_bar
                   })
 
@@ -173,50 +173,54 @@ class Lyricist < Atome
     end
 
     # Bouton Pause
-    pause = button({
-                     label: :pause,
-                     color: LyricsStyle.colors[:accent],
-                     text_color: :black,
-                     left: LyricsStyle.positions[:fourth_column],
-                     parent: :tool_bar
-                   })
-
-    pause.touch(true) do
-      if @playing
-        grab(:counter).timer({ pause: true })
-        @playing=false
-      else
-        counter = grab(:counter)
-
-        prev_length = @length
-        counter.timer({ end: 99999999999 }) do |value|
-          lyrics = grab(:lyric_viewer)
-          update_lyrics(value, lyrics, counter)
-          if @record && value >= @length
-            @length = value
-          else
-            if value >= @length
-              counter.timer({ stop: true })
-            end
-          end
-          if value < prev_length
-            grab(:timeline_slider).value(value)
-          end
-        end
-        @playing=true
-      end
-
-    end
+    # pause = button({
+    #                  label: :pause,
+    #                  color: LyricsStyle.colors[:accent],
+    #                  text_color: :black,
+    #                  left: LyricsStyle.positions[:fourth_column],
+    #                  parent: :tool_bar
+    #                })
+    #
+    # pause.touch(true) do
+    #   if @playing
+    #     grab(:counter).timer({ pause: true })
+    #     @playing=false
+    #   else
+    #     counter = grab(:counter)
+    #
+    #     prev_length = @length
+    #     counter.timer({ end: 99999999999 }) do |value|
+    #       lyrics = grab(:lyric_viewer)
+    #       update_lyrics(value, lyrics, counter)
+    #       if @record && value >= @length
+    #         @length = value
+    #       else
+    #         if value >= @length
+    #           counter.timer({ stop: true })
+    #         end
+    #       end
+    #       if value < prev_length
+    #         grab(:timeline_slider).value(value)
+    #       end
+    #     end
+    #     @playing=true
+    #   end
+    #
+    # end
 
     prev_word = button({
-                         label: :prev,
-                         id: :prev,
+                         label: :<,
+                         width: 25,
+                         id: :previous,
+                         top:   LyricsStyle.dimensions[:margin],
                          left: LyricsStyle.positions[:fifth_column],
                          parent: :tool_bar
                        })
 
     next_word = button({
-                         label: :next,
+                         label: :>,
+                         width: 25,
+                         top: LyricsStyle.dimensions[:margin],
                          id: :next,
                          left: LyricsStyle.positions[:sixth_column],
                          parent: :tool_bar
@@ -266,9 +270,9 @@ class Lyricist < Atome
     import_lyrics = button({
                              label: :import,
                              id: :import_lyrics,
-                             color: LyricsStyle.colors[:accent],
+                             # color: LyricsStyle.colors[:accent],
                              text_color: :black,
-                             top: 3,
+                             top: LyricsStyle.dimensions[:margin],
                              left: 3,
                              parent: :import_module
                            })
@@ -281,9 +285,7 @@ class Lyricist < Atome
     close_import = button({
                              label: :close,
                              id: :close_import,
-                             color: LyricsStyle.colors[:accent],
-                             text_color: :black,
-                             top: 3,
+                             top: LyricsStyle.dimensions[:margin],
                              left: :auto,
                              right: 3,
                              parent: :import_module

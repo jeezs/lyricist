@@ -5,9 +5,11 @@ class LyricsStyle
   # Couleurs
   def self.colors
     {
+      first_line_color: { red: 0.9, green: 0.6, blue: 0.6 },
+      other_lines_color: { red: 0.5, green: 0.3, blue: 0.3 },
       # Couleurs principales
       primary: { red: 0.15, green: 0.15, blue: 0.15  },
-      secondary: { red: 0.39, green: 0.39, blue: 0.39 },
+      secondary: { red: 0.72, green: 0.52, blue: 0.52 },
       accent: { red: 0.9, green: 0.3, blue: 0.6 },
       danger: { red: 0.95, green: 0.3, blue: 0.3 },
       success: { red: 0.3, green: 0.8, blue: 0.5 },
@@ -31,12 +33,13 @@ class LyricsStyle
   # Dimensions
   def self.dimensions
     {
+      slider_width: 399,
       # Largeurs
       standard_width: 55,
       medium_width: 80,
       large_width: 140,
       container_width: 600,
-      line_width: 1600,
+      lyrics_width: 1600,
 
       # Hauteurs
       button_height: 25,
@@ -52,7 +55,9 @@ class LyricsStyle
       text_medium: 14,
       text_normal: 16,
       text_large: 20,
-      text_xlarge: 36
+      text_xlarge: 36,
+      lyrics_size: 69,
+      next_Line_lyrics_size: 52
     }
   end
 
@@ -88,6 +93,9 @@ class LyricsStyle
   # Positions
   def self.positions
     {
+      lyrics_left_offset: 39,
+      lyrics_top_offset: 25,
+      slider_bottom: 25,
       # Positions standards
       first_row: 10,
       second_row: 10,
@@ -96,11 +104,11 @@ class LyricsStyle
       
       # Positions horizontales
       first_column: 10,
-      second_column: 70,
-      third_column: 160,
-      fourth_column: 250,
-      fifth_column: 340,
-      sixth_column: 430,
+      second_column: 63,
+      third_column: 124,
+      fourth_column: 188,
+      fifth_column: 270,
+      sixth_column: 300,
       seventh_column: 520,
       
       # Positions spécifiques
@@ -150,16 +158,16 @@ class LyricsStyle
     style = {
       range: { color: colors[:accent] },
       min: 0,
-      width: 600, # Prend toute la largeur
+      width: 399,
       height: dimensions[:medium_height],
       color: colors[:secondary],
       position: :absolute,
       bottom: 20,
       left: 0,
       shadow: decorations[:standard_shadow],
-      cursor: { 
-        color: colors[:accent], 
-        width: dimensions[:medium_height] + 10, 
+      cursor: {
+        color: colors[:accent],
+        width: dimensions[:medium_height] + 10,
         height: dimensions[:medium_height] + 10,
         smooth: decorations[:button_smooth],
         shadow: decorations[:glow]

@@ -119,13 +119,13 @@ class Lyricist < Atome
                                  range: { color: :orange },
                                  min: 0,
                                  max: @length,
-                                 width: 666,
+                                 width: LyricsStyle.dimensions[:slider_width],
                                  value: 0,
                                  height: LyricsStyle.dimensions[:slider_height],
                                  left: 61,
                                  tag: [],
                                  top: :auto,
-                                 bottom: LyricsStyle.dimensions[:margin],
+                                 bottom: LyricsStyle.positions[:slider_bottom],
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
 
