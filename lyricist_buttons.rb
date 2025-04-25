@@ -137,9 +137,9 @@ class Lyricist < Atome
     import_lyrics.import(true) do |val|
       parse_song_lyrics(val)
     end
-    importer do |val|
-      parse_song_lyrics(val[:content])
-    end
+    # importer do |val|
+    #   parse_song_lyrics(val[:content])
+    # end
 
   end
 

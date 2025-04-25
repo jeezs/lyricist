@@ -68,19 +68,19 @@ class Lyricist < Atome
 
     support.shadow(LyricsStyle.decorations[:invert_shadow])
 
-    # Bouton d'importation
-    open_filer = text(
-      LyricsStyle.text_style({ 
-        data: :import, 
-        top: 63, 
-        left: 6, 
-        color: :yellowgreen 
-      })
-    )
-    
-    open_filer.import(true) do |val|
-      parse_song_lyrics(val)
-    end
+    # # Bouton d'importation
+    # open_filer = text(
+    #   LyricsStyle.text_style({ 
+    #     data: :import, 
+    #     top: 63, 
+    #     left: 6, 
+    #     color: :yellowgreen 
+    #   })
+    # )
+    #
+    # open_filer.import(true) do |val|
+    #   parse_song_lyrics(val)
+    # end
 
     importer do |val|
       parse_song_lyrics(val[:content])

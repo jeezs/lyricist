@@ -44,13 +44,7 @@ class Lyricist < Atome
     format_lyrics(current_lyrics, target)
   end
 
-  def alter_lyric_event(lyrics)
-    lyrics = grab(:lyric_viewer)
-    counter = grab(:counter)
-    current_position = counter.timer[:position]
-    lyrics.content[current_position] = lyrics.data
-    lyrics.blink(LyricsStyle.colors[:danger])
-  end
+
 
   def full_refresh_viewer(at = 0)
     grab(:timeline_slider).delete({ force: true })

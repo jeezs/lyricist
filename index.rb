@@ -5,6 +5,15 @@ require_relative 'lyricist_ui'
 require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
+
+def alter_lyric_event(lyrics)
+  lyrics = grab(:lyric_viewer)
+  counter = grab(:counter)
+  current_position = counter.timer[:position]
+  lyrics.content[current_position] = lyrics.data
+  lyrics.blink(LyricsStyle.colors[:danger])
+end
+
 def parse_song_lyrics(song)
   song_lines = song.split("\n")
   song_lines.each_with_index do |line_found, index|
@@ -34,7 +43,7 @@ def parse_song_lyrics(song)
       lyrics = grab(:lyric_viewer)
       counter = grab(:counter)
       lyrics.data(line_found)
-      alter_lyric_event(lyrics, counter)
+      alter_lyric_event(lyrics)
     end
   end
 end
