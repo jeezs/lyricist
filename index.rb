@@ -87,9 +87,6 @@ def parse_song_lyrics(song)
   end
 end
 
-
-
-
 # Création de l'instance et lancement de l'application
 lyr = Lyricist.new
 import_drag=grab(:import_module)

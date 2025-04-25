@@ -54,7 +54,7 @@ class Lyricist < Atome
       else
         # Ouvrir l'éditeur
         @editor_open = true
-        show_lyrics_editor(LyricsStyle.positions[:editor_default_left], LyricsStyle.positions[:editor_default_top])
+        show_lyrics_editor(33, 33)
       end
     end
 

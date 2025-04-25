@@ -11,7 +11,7 @@ class Lyricist < Atome
                                     position: :absolute,
                                     overflow: :auto,
                                     drag: true,
-                                    resize: true,
+                                    # resize: true,
                                     depth: 4
                                   })
     )
