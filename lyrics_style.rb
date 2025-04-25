@@ -11,7 +11,7 @@ class LyricsStyle
       primary: { red: 0.15, green: 0.15, blue: 0.15  },
       secondary: { red: 0.72, green: 0.52, blue: 0.52 },
       accent: { red: 0.9, green: 0.3, blue: 0.6 },
-      danger: { red: 0.95, green: 0.3, blue: 0.3 },
+      danger: { red: 1, green: 0, blue: 0, alpha: 0.3 },
       success: { red: 0.3, green: 0.8, blue: 0.5 },
       warning: { red: 0.95, green: 0.7, blue: 0.2 },
       info: { red: 0.3, green: 0.7, blue: 0.95 },
@@ -96,6 +96,7 @@ class LyricsStyle
       lyrics_left_offset: 39,
       lyrics_top_offset: 25,
       slider_bottom: 25,
+      counter_left: 369,
       # Positions standards
       first_row: 10,
       second_row: 10,

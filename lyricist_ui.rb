@@ -11,13 +11,28 @@ class Lyricist < Atome
   end
 
   def build_lyrics_viewer
-    counter = grab(:view).text({
+
+
+   button({
+                    label: '',
+                    id: :counter_support,
+                    left: LyricsStyle.positions[:counter_left],
+                    # color: LyricsStyle.colors[:secondary],
+                    top: LyricsStyle.dimensions[:margin],
+                    # position: :absolute,
+                    parent: :tool_bar
+                  })
+
+    counter = grab(:counter_support).text({
                                  data: :counter,
                                  content: :play,
-                                 left: 60,
-                                 top: LyricsStyle.positions[:third_row],
+                                 # center: true,
+                                 left: 6,
+                                 color: LyricsStyle.colors[:secondary],
+                                 top: 6,
                                  position: :absolute,
                                  id: :counter,
+                                 invert: true
                                })
 
     base_text = ''
@@ -157,10 +172,11 @@ class Lyricist < Atome
     lyrics = grab(:lyric_viewer)
 
     lyrics.keyboard(:down) do |native_event|
-      grab(:lyrics_support).color({ red: 1, id: :red_col })
+      # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
-        grab(:lyrics_support).remove(:red_col)
+        # grab(:lyrics_support).color(LyricsStyle.colors[:container_bg])
+        # grab(:lyrics_support).remove(:red_col)
         grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
         event.preventDefault
         alter_lyric_event

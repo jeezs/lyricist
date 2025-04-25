@@ -5,6 +5,10 @@ class Lyricist < Atome
 
   def build_control_buttons
 
+
+
+
+
     # Bouton Start
     play = button({
                      label: :play,
@@ -118,11 +122,12 @@ class Lyricist < Atome
       if @record == true
         @record = false
         lyric_viewer.edit(false)
-        rec_color.alpha(0.6)
+        record.color(LyricsStyle.colors[:primary])
         @number_of_lines = @original_number_of_lines
       else
         @record = true
-        rec_color.alpha(1)
+        record.color(LyricsStyle.colors[:danger])
+        # record.alpha(1)
         lyric_viewer.edit(true)
         @number_of_lines = 1
         counter = grab(:counter)
