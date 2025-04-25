@@ -5,48 +5,50 @@ class Lyricist < Atome
     # Conteneur principal pour l'éditeur
     editor_container = grab(:view).box(
       LyricsStyle.container_style({
-        id: :lyrics_editor_container,
-        top: top_f,
-        left: left_f,
-        position: :absolute,
-        overflow: :auto,
-        drag: true,
-        resize: true
-      })
+                                    id: :lyrics_editor_container,
+                                    top: top_f,
+                                    left: left_f,
+                                    position: :absolute,
+                                    overflow: :auto,
+                                    drag: true,
+                                    resize: true,
+                                    depth: 4
+                                  })
     )
 
     # Titre de l'éditeur
     editor_container.text(
       LyricsStyle.text_style({
-        data: "Lyrics editor",
-        component: { size: LyricsStyle.dimensions[:text_large] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 33,
-        top: 10
-      })
+                               data: "Lyrics editor",
+                               component: { size: LyricsStyle.dimensions[:text_large] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 33,
+                               top: 10,
+
+                             })
     )
 
     # Bouton pour fermer l'éditeur
     close_button = editor_container.box(
       LyricsStyle.action_button_style({
-        width: 25,
-        height: 25,
-        right: 10,
-        top: 10,
-        color: LyricsStyle.colors[:danger]
-      })
+                                        width: 25,
+                                        height: 25,
+                                        right: 10,
+                                        top: 10,
+                                        color: LyricsStyle.colors[:danger]
+                                      })
     )
-    
+
     close_button.text(
       LyricsStyle.text_style({
-        data: "X",
-        component: { size: LyricsStyle.dimensions[:text_small] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 8,
-        top: 3
-      })
+                               data: "X",
+                               component: { size: LyricsStyle.dimensions[:text_small] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 8,
+                               top: 3
+                             })
     )
-    
+
     close_button.touch(true) do
       editor_container.delete({ recursive: true })
       @editor_open = false
@@ -63,37 +65,37 @@ class Lyricist < Atome
       # Conteneur pour chaque ligne
       line_container = editor_container.box(
         LyricsStyle.line_container_style({
-          id: "line_container_#{index}".to_sym,
-          top: y_position
-        })
+                                           id: "line_container_#{index}".to_sym,
+                                           top: y_position
+                                         })
       )
 
       # Champ pour le timecode
       timecode_field = line_container.text(
         LyricsStyle.text_style({
-          id: "timecode_#{index}".to_sym,
-          data: timecode.to_s,
-          component: { size: LyricsStyle.dimensions[:text_normal] },
-          edit: true,
-          width: 70,
-          left: 10,
-          top: 10,
-          color: LyricsStyle.colors[:text_accent]
-        })
+                                 id: "timecode_#{index}".to_sym,
+                                 data: timecode.to_s,
+                                 component: { size: LyricsStyle.dimensions[:text_normal] },
+                                 edit: true,
+                                 width: 70,
+                                 left: 10,
+                                 top: 10,
+                                 color: LyricsStyle.colors[:text_accent]
+                               })
       )
-      
+
       # Champ pour le texte
       text_field = line_container.text(
         LyricsStyle.text_style({
-          id: "text_#{index}".to_sym,
-          data: text.to_s,
-          component: { size: LyricsStyle.dimensions[:text_normal] },
-          edit: true,
-          width: 300,
-          left: 90,
-          top: 10,
-          color: LyricsStyle.colors[:text_primary]
-        })
+                                 id: "text_#{index}".to_sym,
+                                 data: text.to_s,
+                                 component: { size: LyricsStyle.dimensions[:text_normal] },
+                                 edit: true,
+                                 width: 300,
+                                 left: 90,
+                                 top: 10,
+                                 color: LyricsStyle.colors[:text_primary]
+                               })
       )
 
       # Actions
@@ -101,7 +103,7 @@ class Lyricist < Atome
 
       # Bouton de mise à jour
       update_button = build_update_button(line_container, timecode, timecode_field, text_field, lyrics)
-      
+
       # Bouton de suppression
       delete_button = build_delete_button(line_container, editor_container, timecode, lyrics)
     end
@@ -179,22 +181,22 @@ class Lyricist < Atome
   def build_update_button(line_container, timecode, timecode_field, text_field, lyrics)
     update_button = line_container.box(
       LyricsStyle.action_button_style({
-        width: 25,
-        height: 25,
-        left: 400,
-        top: 10,
-        color: LyricsStyle.colors[:success]
-      })
+                                        width: 25,
+                                        height: 25,
+                                        left: 400,
+                                        top: 10,
+                                        color: LyricsStyle.colors[:success]
+                                      })
     )
-    
+
     update_button.text(
       LyricsStyle.text_style({
-        data: "✓",
-        component: { size: LyricsStyle.dimensions[:text_small] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 7,
-        top: 5
-      })
+                               data: "✓",
+                               component: { size: LyricsStyle.dimensions[:text_small] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 7,
+                               top: 5
+                             })
     )
 
     update_button.touch(true) do
@@ -235,22 +237,22 @@ class Lyricist < Atome
   def build_delete_button(line_container, editor_container, timecode, lyrics)
     delete_button = line_container.box(
       LyricsStyle.action_button_style({
-        width: 25,
-        height: 25,
-        left: 435,
-        top: 10,
-        color: LyricsStyle.colors[:danger]
-      })
+                                        width: 25,
+                                        height: 25,
+                                        left: 435,
+                                        top: 10,
+                                        color: LyricsStyle.colors[:danger]
+                                      })
     )
-    
+
     delete_button.text(
       LyricsStyle.text_style({
-        data: "✗",
-        component: { size: LyricsStyle.dimensions[:text_small] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 7,
-        top: 5
-      })
+                               data: "✗",
+                               component: { size: LyricsStyle.dimensions[:text_small] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 7,
+                               top: 5
+                             })
     )
 
     delete_button.touch(true) do
@@ -279,22 +281,22 @@ class Lyricist < Atome
   def build_add_line_button(editor_container, sorted_lyrics, lyrics)
     add_button = editor_container.box(
       LyricsStyle.line_container_style({
-        width: 470,
-        height: 40,
-        left: 10,
-        top: 50 + (sorted_lyrics.size * 60),
-        color: LyricsStyle.colors[:success]
-      })
+                                         width: 470,
+                                         height: 40,
+                                         left: 10,
+                                         top: 50 + (sorted_lyrics.size * 60),
+                                         color: LyricsStyle.colors[:success]
+                                       })
     )
-    
+
     add_button.text(
       LyricsStyle.text_style({
-        data: "+ Add a new line",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 160,
-        top: 10
-      })
+                               data: "+ Add a new line",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 160,
+                               top: 10
+                             })
     )
 
     add_button.touch(true) do
@@ -308,49 +310,49 @@ class Lyricist < Atome
     # Ouvrir un dialogue pour ajouter une nouvelle ligne
     dialog_container = grab(:view).box(
       LyricsStyle.container_style({
-        id: :add_dialog,
-        width: 300,
-        height: 150,
-        left: 500,
-        top: 250,
-        position: :absolute
-      })
+                                    id: :add_dialog,
+                                    width: 300,
+                                    height: 150,
+                                    left: 500,
+                                    top: 250,
+                                    position: :absolute
+                                  })
     )
 
     dialog_container.text(
       LyricsStyle.text_style({
-        data: "Add a new line",
-        component: { size: LyricsStyle.dimensions[:text_large] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 10,
-        top: 10
-      })
+                               data: "Add a new line",
+                               component: { size: LyricsStyle.dimensions[:text_large] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 10,
+                               top: 10
+                             })
     )
 
     # Champ pour le nouveau timecode
     dialog_container.text(
       LyricsStyle.text_style({
-        data: "Timecode:",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 10,
-        top: 40
-      })
+                               data: "Timecode:",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 10,
+                               top: 40
+                             })
     )
-    
+
     new_timecode_field = dialog_container.text(
       LyricsStyle.text_style({
-        id: :new_timecode,
-        data: 120,
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        edit: true,
-        width: 200,
-        left: 90,
-        top: 40,
-        color: LyricsStyle.colors[:text_accent]
-      })
+                               id: :new_timecode,
+                               data: 120,
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               edit: true,
+                               width: 200,
+                               left: 90,
+                               top: 40,
+                               color: LyricsStyle.colors[:text_accent]
+                             })
     )
-    
+
     new_timecode_field.keyboard(:down) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
@@ -361,27 +363,27 @@ class Lyricist < Atome
     # Champ pour le nouveau texte
     dialog_container.text(
       LyricsStyle.text_style({
-        data: "Texte:",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 10,
-        top: 70
-      })
+                               data: "Texte:",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 10,
+                               top: 70
+                             })
     )
-    
+
     new_text_field = dialog_container.text(
       LyricsStyle.text_style({
-        id: :new_text,
-        data: "Dummy text",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        edit: true,
-        width: 200,
-        left: 90,
-        top: 70,
-        color: LyricsStyle.colors[:text_primary]
-      })
+                               id: :new_text,
+                               data: "Dummy text",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               edit: true,
+                               width: 200,
+                               left: 90,
+                               top: 70,
+                               color: LyricsStyle.colors[:text_primary]
+                             })
     )
-    
+
     new_text_field.keyboard(:down) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
@@ -397,43 +399,43 @@ class Lyricist < Atome
     # Bouton de confirmation
     confirm_button = dialog_container.box(
       LyricsStyle.action_button_style({
-        width: LyricsStyle.dimensions[:large_width],
-        height: 30,
-        left: 30,
-        top: 110,
-        color: LyricsStyle.colors[:success]
-      })
+                                        width: LyricsStyle.dimensions[:large_width],
+                                        height: 30,
+                                        left: 30,
+                                        top: 110,
+                                        color: LyricsStyle.colors[:success]
+                                      })
     )
-    
+
     confirm_button.text(
       LyricsStyle.text_style({
-        data: "Confirmer",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 30,
-        top: 5
-      })
+                               data: "Confirmer",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 30,
+                               top: 5
+                             })
     )
 
     # Bouton d'annulation
     cancel_button = dialog_container.box(
       LyricsStyle.action_button_style({
-        width: LyricsStyle.dimensions[:large_width],
-        height: 30,
-        left: 160,
-        top: 110,
-        color: :gray
-      })
+                                        width: LyricsStyle.dimensions[:large_width],
+                                        height: 30,
+                                        left: 160,
+                                        top: 110,
+                                        color: :gray
+                                      })
     )
-    
+
     cancel_button.text(
       LyricsStyle.text_style({
-        data: "Annuler",
-        component: { size: LyricsStyle.dimensions[:text_normal] },
-        color: LyricsStyle.colors[:text_primary],
-        left: 35,
-        top: 5
-      })
+                               data: "Annuler",
+                               component: { size: LyricsStyle.dimensions[:text_normal] },
+                               color: LyricsStyle.colors[:text_primary],
+                               left: 35,
+                               top: 5
+                             })
     )
 
     # Action de confirmation

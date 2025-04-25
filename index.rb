@@ -51,10 +51,14 @@ end
 lyr = Lyricist.new
 lyr.new_song({ 0 => "hello", 594 => "world", 838 => "of", 1295 => "hope" })
 
-# open_filer = text({ data: :importimportimportimportimportimportimport, top: 120, left: 120, color: :yellowgreen })
-# open_filer.import(true) do |val|
-#   parse_song_lyrics(val)
-# end
-# importer do |val|
-#   parse_song_lyrics(val[:content])
-# end
+### set number of line
+# set font size
+# play / rec shortcut
+# replace mode
+# dsiplay / change  lyrics at correct time
+# # save lyrics
+# # # load lyrics
+# play audio
+# playlist
+# send midi
+# receive midi

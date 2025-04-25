@@ -6,8 +6,8 @@ class LyricsStyle
   def self.colors
     {
       # Couleurs principales
-      primary: { red: 0.2, green: 0.2, blue: 0.35 },
-      secondary: { red: 0.15, green: 0.15, blue: 0.25 },
+      primary: { red: 0.15, green: 0.15, blue: 0.15  },
+      secondary: { red: 0.39, green: 0.39, blue: 0.39 },
       accent: { red: 0.9, green: 0.3, blue: 0.6 },
       danger: { red: 0.95, green: 0.3, blue: 0.3 },
       success: { red: 0.3, green: 0.8, blue: 0.5 },
@@ -21,7 +21,7 @@ class LyricsStyle
       text_accent: { red: 0.95, green: 0.5, blue: 0.8 },
       
       # Couleurs des containers
-      container_bg: { red: 0.15, green: 0.15, blue: 0.25, alpha: 0.9 },
+      container_bg: { red: 0.12, green: 0.12, blue: 0.12, alpha: 1 },
       container_dark: { red: 0.1, green: 0.1, blue: 0.18, alpha: 0.95 },
       container_medium: { red: 0.18, green: 0.18, blue: 0.25, alpha: 0.9 },
       container_light: { red: 0.22, green: 0.22, blue: 0.3, alpha: 0.85 }

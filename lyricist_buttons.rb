@@ -8,7 +8,7 @@ class Lyricist < Atome
     top_f = params[:top] || 0
     left_f = params[:left] || 0
     background_f = params[:background] || LyricsStyle.colors[:primary]
-    color_f = params[:color] || :black
+    color_f = params[:color] || LyricsStyle.colors[:secondary]
     label_f = params[:label] || :dummy
     parent_f = params[:parent] || :view
     size_f = params[:size] || LyricsStyle.dimensions[:text_small]
@@ -40,13 +40,14 @@ class Lyricist < Atome
   def build_control_buttons
 
     # Bouton Start
-    start = button({
-                     label: :start,
-                     id: :start,
-                     color: LyricsStyle.colors[:primary]
+    play = button({
+                     label: :play,
+                     id: :play,
+                   #   color: LyricsStyle.colors[:primary],
+                   # background: :green,
                    })
 
-    start.touch(true) do
+    play.touch(true) do
       counter = grab(:counter)
 
       prev_length = @length
