@@ -8,6 +8,7 @@ class Lyricist < Atome
     @lyrics = {}
     @tempo = 120
     @record = false
+    @playing = false
     @replace_mode = false
     @default_length = 300
     @length = @default_length

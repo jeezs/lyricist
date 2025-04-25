@@ -13,22 +13,28 @@ class Lyricist < Atome
                    })
 
     play.touch(true) do
-      counter = grab(:counter)
+      if @playing
+        grab(:counter).timer({ pause: true })
+        @playing=false
+      else
+        counter = grab(:counter)
 
-      prev_length = @length
-      counter.timer({ end: 99999999999 }) do |value|
-        lyrics = grab(:lyric_viewer)
-        update_lyrics(value, lyrics, counter)
-        if @record && value >= @length
-          @length = value
-        else
-          if value >= @length
-            counter.timer({ stop: true })
+        prev_length = @length
+        counter.timer({ end: 99999999999 }) do |value|
+          lyrics = grab(:lyric_viewer)
+          update_lyrics(value, lyrics, counter)
+          if @record && value >= @length
+            @length = value
+          else
+            if value >= @length
+              counter.timer({ stop: true })
+            end
+          end
+          if value < prev_length
+            grab(:timeline_slider).value(value)
           end
         end
-        if value < prev_length
-          grab(:timeline_slider).value(value)
-        end
+        @playing=true
       end
     end
 
@@ -163,6 +169,7 @@ class Lyricist < Atome
       update_lyrics(0, lyrics, counter)
       grab(:timeline_slider).delete({ force: true })
       build_timeline_slider
+      @playing=false
     end
 
     # Bouton Pause
@@ -175,7 +182,30 @@ class Lyricist < Atome
                    })
 
     pause.touch(true) do
-      grab(:counter).timer({ pause: true })
+      if @playing
+        grab(:counter).timer({ pause: true })
+        @playing=false
+      else
+        counter = grab(:counter)
+
+        prev_length = @length
+        counter.timer({ end: 99999999999 }) do |value|
+          lyrics = grab(:lyric_viewer)
+          update_lyrics(value, lyrics, counter)
+          if @record && value >= @length
+            @length = value
+          else
+            if value >= @length
+              counter.timer({ stop: true })
+            end
+          end
+          if value < prev_length
+            grab(:timeline_slider).value(value)
+          end
+        end
+        @playing=true
+      end
+
     end
 
     prev_word = button({

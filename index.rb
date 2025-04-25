@@ -109,3 +109,4 @@ lyr.new_song({ 0 => "hello", 594 => "world", 838 => "of", 1295 => "hope" })
 # playlist
 # send midi
 # receive midi
+# pause alternate play / pause add @playing instance_var
