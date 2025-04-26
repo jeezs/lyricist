@@ -6,7 +6,6 @@ require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
 
-
 # class Audio_player
 class Object
 
