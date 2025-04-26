@@ -5,6 +5,26 @@ require_relative 'lyricist_ui'
 require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
+# class Audio_player
+class Object
+
+  def audio_length(audio_object)
+    audio_object.length
+  end
+
+
+def play_audio(audio_object)
+  audio_object.play(true)
+end
+
+def pause_audio(audio_object)
+  audio_object.pause(true)
+end
+
+def stop_audio(audio_object)
+  audio_object.stop(true)
+end
+end
 
 def button(params)
   id_f = params[:id] || identity_generator
@@ -99,6 +119,11 @@ grab(:toolbox_tool).display(:none)
 
 lyr.new_song({ 0 => "hello", 594 => "world dfjhgjh", 838 => "of", 1295 => "hope" })
 
+
+
+
+
+# lyr.player
 ### set number of line
 # set font size
 # play / rec shortcut
@@ -111,3 +136,7 @@ lyr.new_song({ 0 => "hello", 594 => "world dfjhgjh", 838 => "of", 1295 => "hope"
 # send midi
 # receive midi
 # pause alternate play / pause add @playing instance_var
+
+
+
+# player(:jj, :ll)

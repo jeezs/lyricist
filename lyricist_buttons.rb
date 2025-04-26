@@ -2,27 +2,40 @@
 
 class Lyricist < Atome
 
-
   def build_control_buttons
+    audio_object = @audio_object.audio({ path: @audio_path, id: :basic_audio })
 
-
-
-
-
+    # atome_audio=Atome.new
+    # a=atome_audio.audio({ path: 'medias/audios/clap.wav', id: :basic_audio })
+    # b=atome_audio.grab(:tool_bar).box({id: :playButton})
+    # b.text(:audio_tag)
+    # b.left(555)
+    # b.top(6)
+    # b.color(:red)
+    # b.touch(:down) do
+    #
+    #   a.play(true)
+    #   b.color(:green)
+    # end
     # Bouton Start
+    # @audio_object=Object.new
+    # @audi.init_audio
     play = button({
-                     label: :play,
-                     id: :play,
-                     top: LyricsStyle.dimensions[:margin],
-                     left: LyricsStyle.dimensions[:margin],
-                     parent: :tool_bar
-                   })
+                    label: :play,
+                    id: :play,
+                    top: LyricsStyle.dimensions[:margin],
+                    left: LyricsStyle.dimensions[:margin],
+                    parent: :tool_bar
+                  })
 
     play.touch(true) do
+
       if @playing
         grab(:counter).timer({ pause: true })
-        @playing=false
+        @playing = false
+        stop_audio(audio_object)
       else
+        play_audio(audio_object)
         counter = grab(:counter)
 
         prev_length = @length
@@ -39,21 +52,21 @@ class Lyricist < Atome
           if value < prev_length
             grab(:timeline_slider).value(value)
           end
+
         end
-        @playing=true
+        @playing = true
       end
     end
 
-
-    edit_lyrics=button({
-             label: "Edit",
-             id: :edit_lyrics_button,
-             left: :auto,
-             right: LyricsStyle.dimensions[:margin],
-              top: LyricsStyle.dimensions[:margin],
-             size: LyricsStyle.dimensions[:text_medium],
-             parent: :tool_bar
-           })
+    edit_lyrics = button({
+                           label: "Edit",
+                           id: :edit_lyrics_button,
+                           left: :auto,
+                           right: LyricsStyle.dimensions[:margin],
+                           top: LyricsStyle.dimensions[:margin],
+                           size: LyricsStyle.dimensions[:text_medium],
+                           parent: :tool_bar
+                         })
 
     edit_lyrics.touch(true) do
       if @editor_open
@@ -66,8 +79,6 @@ class Lyricist < Atome
         show_lyrics_editor(33, 33)
       end
     end
-
-
 
     # Bouton Erase
     erase = button({
@@ -84,23 +95,22 @@ class Lyricist < Atome
 
     ###
     view_importer = button({
-                     id: :import_viewer,
-                     label: :lyrics,
-                     top: LyricsStyle.dimensions[:margin],
-                     left: :auto,
-                     right: LyricsStyle.positions[:second_column],
-                     parent: :tool_bar
-                   })
+                             id: :import_viewer,
+                             label: :lyrics,
+                             top: LyricsStyle.dimensions[:margin],
+                             left: :auto,
+                             right: LyricsStyle.positions[:second_column],
+                             parent: :tool_bar
+                           })
 
     view_importer.touch(true) do
-      import_drag=grab(:import_module)
-      if import_drag.display== :none
+      import_drag = grab(:import_module)
+      if import_drag.display == :none
         import_drag.display(:block)
       else
         import_drag.display(:none)
       end
     end
-
 
     ###########
 
@@ -174,7 +184,7 @@ class Lyricist < Atome
       update_lyrics(0, lyrics, counter)
       grab(:timeline_slider).delete({ force: true })
       build_timeline_slider
-      @playing=false
+      @playing = false
     end
 
     # Bouton Pause
@@ -217,7 +227,7 @@ class Lyricist < Atome
                          label: :<,
                          width: 25,
                          id: :previous,
-                         top:   LyricsStyle.dimensions[:margin],
+                         top: LyricsStyle.dimensions[:margin],
                          left: LyricsStyle.positions[:fifth_column],
                          parent: :tool_bar
                        })
@@ -288,32 +298,37 @@ class Lyricist < Atome
 
     #######
     close_import = button({
-                             label: :close,
-                             id: :close_import,
-                             top: LyricsStyle.dimensions[:margin],
-                             left: :auto,
-                             right: 3,
-                             parent: :import_module
-                           })
-    import_drag=grab(:import_module)
+                            label: :close,
+                            id: :close_import,
+                            top: LyricsStyle.dimensions[:margin],
+                            left: :auto,
+                            right: 3,
+                            parent: :import_module
+                          })
+    import_drag = grab(:import_module)
     close_import.touch(true) do |val|
-      if import_drag.display== :none
+      if import_drag.display == :none
         import_drag.display(:block)
       else
         import_drag.display(:none)
       end
     end
 
-
+    # close_import = button({
+    #                         label: :close,
+    #                         id: :close_import,
+    #                         top: LyricsStyle.dimensions[:margin],
+    #                         left: :auto,
+    #                         right: 3,
+    #                         parent: :import_module
+    #                       })
+    # a = audio({ path: 'medias/audios/clap.wav', id: :basic_audio })
+    # b=box({id: :playButton})
+    # b.text(:audio_tag)
+    # a.left(333)
+    # b.touch(:down) do
+    #   a.play(true)
+    # end
   end
 
-
-
-
-  private
-
-  def identity_generator
-    # Génère un ID unique
-    "button_#{Time.now.to_i}_#{rand(1000)}".to_sym
-  end
 end
