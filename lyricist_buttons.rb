@@ -15,47 +15,25 @@ class Lyricist < Atome
     end
   end
 
+  def seconds_to_minutes(seconds)
+    minutes = seconds / 60
+    remaining_seconds = seconds % 60
+    "#{minutes}:#{remaining_seconds.to_s.rjust(2, '0')}"
+  end
+
   def init_audio(audio_path)
     @audio_object = @audio_object.audio({ path: audio_path, id: :basic_audio })
     @audio_path = audio_path
-    # @default_length=10000
     wait_for_duration(@audio_object, ->(duration) {
-      puts "La durée est: #{duration}"
-      @default_length=duration
+      # alert  seconds_to_minutes(duration)
+      @default_length=duration*1000
+      @length=duration*1000
     })
   end
 
   def build_control_buttons
 
-    #################
-    # while !audio_object.duration
-    #   puts 'hghgh'
-    # end
-    # Atome.repeat(1, repeat = 99) do |counter|
-    #   puts counter
-    # end
-    # audio_object.repeat(0.1, 20000) do
-    #   if audio_object.duration
-    #     # stop(repeat: watcher)
-    #     puts audio_object.duration
-    #   end
-    # end
 
-    # atome_audio=Atome.new
-    # a=atome_audio.audio({ path: 'medias/audios/clap.wav', id: :basic_audio })
-    # b=atome_audio.grab(:tool_bar).box({id: :playButton})
-    # b.text(:audio_tag)
-    # b.left(555)
-    # b.top(6)
-    # b.color(:red)
-    # b.touch(:down) do
-    #
-    #   a.play(true)
-    #   b.color(:green)
-    # end
-    # Bouton Start
-    # @audio_object=Object.new
-    # @audi.init_audio
     play = button({
                     label: :play,
                     id: :play,
@@ -73,7 +51,6 @@ class Lyricist < Atome
       else
 
         counter = grab(:counter)
-
         play_audio(@audio_object, @actual_position / 1000)
         prev_length = @length
         counter.timer({ end: Float::INFINITY }) do |value|
@@ -161,8 +138,7 @@ class Lyricist < Atome
                       parent: :tool_bar
                     })
 
-    # rec_color = grab(:view).color({ id: :rec_color, red: 1, alpha: 0.6 })
-    # record.apply(:rec_color)
+
 
     record.touch(true) do
       prev_postion = @actual_position
@@ -226,41 +202,6 @@ class Lyricist < Atome
       @playing = false
     end
 
-    # Bouton Pause
-    # pause = button({
-    #                  label: :pause,
-    #                  color: LyricsStyle.colors[:accent],
-    #                  text_color: :black,
-    #                  left: LyricsStyle.positions[:fourth_column],
-    #                  parent: :tool_bar
-    #                })
-    #
-    # pause.touch(true) do
-    #   if @playing
-    #     grab(:counter).timer({ pause: true })
-    #     @playing=false
-    #   else
-    #     counter = grab(:counter)
-    #
-    #     prev_length = @length
-    #     counter.timer({ end: 99999999999 }) do |value|
-    #       lyrics = grab(:lyric_viewer)
-    #       update_lyrics(value, lyrics, counter)
-    #       if @record && value >= @length
-    #         @length = value
-    #       else
-    #         if value >= @length
-    #           counter.timer({ stop: true })
-    #         end
-    #       end
-    #       if value < prev_length
-    #         grab(:timeline_slider).value(value)
-    #       end
-    #     end
-    #     @playing=true
-    #   end
-    #
-    # end
 
     prev_word = button({
                          label: :<,
@@ -353,21 +294,24 @@ class Lyricist < Atome
       end
     end
 
-    # close_import = button({
-    #                         label: :close,
-    #                         id: :close_import,
-    #                         top: LyricsStyle.dimensions[:margin],
-    #                         left: :auto,
-    #                         right: 3,
-    #                         parent: :import_module
-    #                       })
-    # a = audio({ path: 'medias/audios/clap.wav', id: :basic_audio })
-    # b=box({id: :playButton})
-    # b.text(:audio_tag)
-    # a.left(333)
-    # b.touch(:down) do
-    #   a.play(true)
-    # end
+    #######
+
+    save_song = button({
+                            label: :save,
+                            id: :save,
+                            top: LyricsStyle.dimensions[:margin],
+                            left: :auto,
+                            right: 333,
+                            parent: :tool_bar
+                          })
+    save_song.touch(true) do
+      lyrics=grab(:lyric_viewer).content.to_s
+      content_to_save={lyrics: lyrics,song: @audio_path}
+
+      save_file( @title, content_to_save)
+    end
+
+
   end
 
 end

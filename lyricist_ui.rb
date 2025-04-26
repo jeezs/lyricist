@@ -150,6 +150,35 @@ class Lyricist < Atome
       counter = grab(:counter)
       update_lyrics(value, lyrics, counter)
     end
+    grab(:timeline_slider_cursor).touch(:down) do
+      grab(:counter).timer({ pause: true })
+      # @playing = false
+      stop_audio(@audio_object)
+    end
+    grab(:timeline_slider_cursor).touch(:up) do
+
+      counter = grab(:counter)
+      if @playing
+        play_audio(@audio_object, @actual_position / 1000)
+        prev_length = @length
+        counter.timer({ end: Float::INFINITY }) do |value|
+          lyrics = grab(:lyric_viewer)
+          value = value.to_i
+          update_lyrics(value, lyrics, counter)
+          if @record && value >= @length
+            @length = value
+          else
+            if value >= @length
+              counter.timer({ stop: true })
+            end
+          end
+          if value < prev_length
+            grab(:timeline_slider).value(value)
+          end
+        end
+      end
+      end
+
   end
 
   def build_tool_bar

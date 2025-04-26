@@ -136,12 +136,13 @@ class Lyricist < Atome
         }.merge(common_style)
 
         # Création du texte enfant
-        child = target.text(child_params)
+        # child = target.text(child_params)
       end
     end
   end
 
   def update_lyrics(value, target, timer_found)
+    # alert "#{value}, #{target}, #{timer_found}"
     # Mise à jour du timer en une seule opération si possible
     if timer_found.respond_to?(:update)
       timer_found.update({
@@ -218,4 +219,44 @@ class Lyricist < Atome
   def cleanup_cache
     @sorted_keys_cache = {}
   end
+
+
+  def save_file(filename, content, mime_type = 'text/plain')
+    # Créer une fonction JavaScript avec des noms de paramètres explicites
+    save_js = JS.eval(<<~JS)
+    (function(fileContent, fileName, mimeType) {
+      console.log("Saving file:", fileName, "with content:", fileContent);
+      
+      // Créer le Blob avec le contenu
+      var blob = new Blob([fileContent], {type: mimeType});
+      
+      // Créer l'URL
+      var url = URL.createObjectURL(blob);
+      
+      // Créer le lien de téléchargement avec le nom de fichier correct
+      var link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);  // Utiliser setAttribute pour plus de fiabilité
+      
+      // Assurer la visibilité du lien
+      link.style.display = 'none';
+      
+      // Ajouter au DOM, cliquer et supprimer
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Libérer l'URL
+      setTimeout(function() {
+        URL.revokeObjectURL(url);
+      }, 100);
+      
+      return true;
+    })
+  JS
+
+    # Appeler la fonction avec les arguments dans le bon ordre
+    save_js.call(content, filename, mime_type)
+  end
+
 end

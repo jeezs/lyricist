@@ -13,20 +13,17 @@ class Object
     audio_object.length
   end
 
+  def play_audio(audio_object, at)
+    audio_object.play(at) # do |val|
+  end
 
-def play_audio(audio_object, at)
-  audio_object.play(at) #do |val|
-  # puts val
-  # end
-end
+  def pause_audio(audio_object)
+    audio_object.pause(:pause)
+  end
 
-def pause_audio(audio_object)
-  audio_object.pause(:pause)
-end
-
-def stop_audio(audio_object)
-  audio_object.play(:stop)
-end
+  def stop_audio(audio_object)
+    audio_object.play(:stop)
+  end
 end
 
 def button(params)
@@ -66,7 +63,6 @@ def button(params)
                            })
   )
 
-
   btn
 end
 
@@ -85,14 +81,14 @@ def parse_song_lyrics(song)
     puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
     line_support = grab(:importer_support).box({
-                                        id: new_id,
-                                        width: 399,
-                                        height: 30,
-                                        top: index * 33,
-                                        left: 3,
-                                        color: LyricsStyle.colors[:danger],
-                                        smooth: LyricsStyle.decorations[:standard_smooth]
-                                      })
+                                                 id: new_id,
+                                                 width: 399,
+                                                 height: 30,
+                                                 top: index * 33,
+                                                 left: 3,
+                                                 color: LyricsStyle.colors[:danger],
+                                                 smooth: LyricsStyle.decorations[:standard_smooth]
+                                               })
 
     line_support.text({
                         data: line_found,
@@ -116,22 +112,18 @@ end
 # import_drag=grab(:import_module)
 # import_drag.display(:none)
 
-
 grab(:toolbox_tool).display(:none)
+
 def load_song(lyrics_path, song_path)
   # 'medias/audios/Ices_From_Hells.m4a'
   lyr = Lyricist.new
   lyr.init_audio('medias/audios/Ices_From_Hells.m4a')
   lyr.new_song({ 0 => "hello", 2594 => "world dfjhgjh", 8838 => "of", 231295 => "hope" })
-  import_drag=grab(:import_module)
+  import_drag = grab(:import_module)
   import_drag.display(:none)
 end
 
-load_song('','')
-
-
-
-
+load_song('', '')
 
 # lyr.player
 ### set number of line
@@ -147,10 +139,7 @@ load_song('','')
 # receive midi
 # pause alternate play / pause add @playing instance_var
 
-
-
 # player(:jj, :ll)
-
 
 ##### test below
 # class Atome

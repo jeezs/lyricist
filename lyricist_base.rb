@@ -5,17 +5,17 @@ class Lyricist < Atome
   attr_accessor :lyrics, :record, :replace_mode, :length, :counter
 
   def initialize(content = nil)
-    @lyrics = {}
     @tempo = 120
     @record = false
     @playing = false
     @replace_mode = false
-    @default_length = 300
+    @default_length = 1
     @length = @default_length
     @original_number_of_lines = 4
     @number_of_lines = @original_number_of_lines
     @actual_position = 0
     @editor_open = false
+    @title="ices from hell"
     build_ui
     if content
       new_song(content)
