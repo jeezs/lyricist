@@ -2,8 +2,44 @@
 
 class Lyricist < Atome
 
+  def wait_for_duration(audio_object, callback)
+    # Vérifier si duration existe et convertir en Float Ruby
+    duration_value = audio_object.duration.to_f rescue nil
+
+    if duration_value && duration_value > 0
+      # Duration est définie, exécuter le callback
+      callback.call(duration_value)
+    else
+      # Planifier une nouvelle vérification après un court délai
+      JS.global.setTimeout(-> { wait_for_duration(audio_object, callback) }, 100)
+    end
+  end
+
+  def init_audio(audio_path)
+    @audio_object = @audio_object.audio({ path: audio_path, id: :basic_audio })
+    @audio_path = audio_path
+    # @default_length=10000
+    wait_for_duration(@audio_object, ->(duration) {
+      puts "La durée est: #{duration}"
+      @default_length=duration
+    })
+  end
+
   def build_control_buttons
-    audio_object = @audio_object.audio({ path: @audio_path, id: :basic_audio })
+
+    #################
+    # while !audio_object.duration
+    #   puts 'hghgh'
+    # end
+    # Atome.repeat(1, repeat = 99) do |counter|
+    #   puts counter
+    # end
+    # audio_object.repeat(0.1, 20000) do
+    #   if audio_object.duration
+    #     # stop(repeat: watcher)
+    #     puts audio_object.duration
+    #   end
+    # end
 
     # atome_audio=Atome.new
     # a=atome_audio.audio({ path: 'medias/audios/clap.wav', id: :basic_audio })
@@ -33,14 +69,16 @@ class Lyricist < Atome
       if @playing
         grab(:counter).timer({ pause: true })
         @playing = false
-        stop_audio(audio_object)
+        stop_audio(@audio_object)
       else
-        play_audio(audio_object)
+
         counter = grab(:counter)
 
+        play_audio(@audio_object, @actual_position / 1000)
         prev_length = @length
-        counter.timer({ end: 99999999999 }) do |value|
+        counter.timer({ end: Float::INFINITY }) do |value|
           lyrics = grab(:lyric_viewer)
+          value = value.to_i
           update_lyrics(value, lyrics, counter)
           if @record && value >= @length
             @length = value
@@ -178,6 +216,7 @@ class Lyricist < Atome
                   })
 
     stop.touch(true) do
+      stop_audio(@audio_object)
       counter = grab(:counter)
       counter.timer({ stop: true })
       lyrics = grab(:lyric_viewer)

@@ -16,7 +16,6 @@ class Lyricist < Atome
     @number_of_lines = @original_number_of_lines
     @actual_position = 0
     @editor_open = false
-    @audio_path = 'medias/audios/Ices_From_Hells.m4a'
     build_ui
     if content
       new_song(content)

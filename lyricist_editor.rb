@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class Lyricist < Atome
   def show_lyrics_editor(left_f, top_f)
     # Conteneur principal pour l'éditeur

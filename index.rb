@@ -5,6 +5,8 @@ require_relative 'lyricist_ui'
 require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
+
+
 # class Audio_player
 class Object
 
@@ -13,16 +15,18 @@ class Object
   end
 
 
-def play_audio(audio_object)
-  audio_object.play(true)
+def play_audio(audio_object, at)
+  audio_object.play(at) #do |val|
+  # puts val
+  # end
 end
 
 def pause_audio(audio_object)
-  audio_object.pause(true)
+  audio_object.pause(:pause)
 end
 
 def stop_audio(audio_object)
-  audio_object.stop(true)
+  audio_object.play(:stop)
 end
 end
 
@@ -109,15 +113,22 @@ def parse_song_lyrics(song)
 end
 
 # Création de l'instance et lancement de l'application
-lyr = Lyricist.new
-import_drag=grab(:import_module)
-import_drag.display(:none)
+
+# import_drag=grab(:import_module)
+# import_drag.display(:none)
 
 
 grab(:toolbox_tool).display(:none)
-# exxample below
+def load_song(lyrics_path, song_path)
+  # 'medias/audios/Ices_From_Hells.m4a'
+  lyr = Lyricist.new
+  lyr.init_audio('medias/audios/Ices_From_Hells.m4a')
+  lyr.new_song({ 0 => "hello", 2594 => "world dfjhgjh", 8838 => "of", 231295 => "hope" })
+  import_drag=grab(:import_module)
+  import_drag.display(:none)
+end
 
-lyr.new_song({ 0 => "hello", 594 => "world dfjhgjh", 838 => "of", 1295 => "hope" })
+load_song('','')
 
 
 
@@ -140,3 +151,21 @@ lyr.new_song({ 0 => "hello", 594 => "world dfjhgjh", 838 => "of", 1295 => "hope"
 
 
 # player(:jj, :ll)
+
+
+##### test below
+# class Atome
+#   def method_missing(name, *args, &block)
+#     alert " que faire avec #{name}, #{args}, #{block}"
+#   end
+# end
+# a=audio({path:'medias/audios/Ices_From_Hells.m4a' })
+# cc=box({top: 130})
+# cc.touch(:down) do
+#   a.volume(0.5)
+# end
+#
+# ccc=box({top: 170})
+# ccc.touch(:down) do
+#   alert  a.duration
+# end
