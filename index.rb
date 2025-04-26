@@ -114,16 +114,20 @@ end
 
 grab(:toolbox_tool).display(:none)
 
-def load_song(lyrics_path, song_path)
+def load_song(lyrics_content, song_path)
+  alert "#{lyrics_content}, #{song_path}"
   # 'medias/audios/Ices_From_Hells.m4a'
   lyr = Lyricist.new
-  lyr.init_audio('medias/audios/Ices_From_Hells.m4a')
-  lyr.new_song({ 0 => "hello", 2594 => "world dfjhgjh", 8838 => "of", 231295 => "hope" })
+  lyr.init_audio(song_path)
+  lyr.new_song(lyrics_content)
   import_drag = grab(:import_module)
   import_drag.display(:none)
 end
 
-load_song('', '')
+load_song({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
+# wait 3 do
+#   load_song({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
+# end
 
 # lyr.player
 ### set number of line

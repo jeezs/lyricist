@@ -308,7 +308,25 @@ class Lyricist < Atome
       lyrics=grab(:lyric_viewer).content.to_s
       content_to_save={lyrics: lyrics,song: @audio_path}
 
-      save_file( @title, content_to_save)
+      save_file( "#{@title}.lr", content_to_save)
+    end
+
+    #########
+    load_song = button({
+                         label: :load,
+                         id: :load,
+                         top: LyricsStyle.dimensions[:margin],
+                         left: :auto,
+                         right: 250,
+                         parent: :tool_bar
+                       })
+
+    load_song.import(true) do |val|
+      val=val.to_s
+      file_to_load=  eval(val)
+      lyrics=file_to_load['lyrics']
+      path=file_to_load['song']
+      load_song(lyrics, path)
     end
 
 
