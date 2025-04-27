@@ -108,7 +108,7 @@ def parse_song_lyrics(song)
     end
   end
 end
-
+audio({  id: :basic_audio })
 # Création de l'instance et lancement de l'application
 
 # import_drag=grab(:import_module)

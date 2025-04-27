@@ -22,17 +22,13 @@ class Lyricist < Atome
   end
 
   def init_audio(audio_path)
-    @audio_object=audio({  id: :basic_audio })
-    # wait 1 do
+    @audio_object=grab(:basic_audio)
+    @audio_path = audio_path
     @audio_object.path(audio_path)
-      @audio_path = audio_path
       wait_for_duration(@audio_object, ->(duration) {
-        # alert  seconds_to_minutes(duration)
         @default_length=duration*1000
         @length=duration*1000
       })
-    # end
-
   end
 
   def build_control_buttons
@@ -328,6 +324,7 @@ class Lyricist < Atome
       lyrics=eval(file_to_load['lyrics'])
       audio_path=file_to_load['song']
       title=file_to_load['title']
+      # we clear the current lyrics
       current_lyricist=grab(:the_lyricist).data
       current_lyricist.clear_all
       @title=title
