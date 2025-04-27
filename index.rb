@@ -39,7 +39,7 @@ def button(params)
   label_f = params[:label] || :dummy
   parent_f = params[:parent] || :view
   size_f = params[:size] || LyricsStyle.dimensions[:text_small]
-
+  edition=params[:edit] || false
   btn = grab(parent_f).box(
     LyricsStyle.button_style({
                                id: id_f,
@@ -56,10 +56,12 @@ def button(params)
   btn.text(
     LyricsStyle.text_style({
                              data: label_f,
+                             id: "#{id_f}_label",
                              component: { size: size_f },
                              top: 5,
                              center: true,
-                             color: color_f
+                             color: color_f,
+                             edit:edition
                            })
   )
 

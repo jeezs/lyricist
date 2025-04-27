@@ -334,8 +334,18 @@ class Lyricist < Atome
                          top: LyricsStyle.dimensions[:margin],
                          left: 250,
                          width: 120,
+                         edit: true,
                          parent: :tool_bar
                        })
+    titesong.keyboard(:down) do |native_event|
+      # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
+      event = Native(native_event)
+      if event[:keyCode].to_s == '13' # Touche Entrée
+        event.preventDefault
+        title=grab('title_label')
+        @title= title.data
+      end
+    end
 
 
   end
