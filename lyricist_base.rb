@@ -16,6 +16,7 @@ class Lyricist < Atome
     @actual_position = 0
     @editor_open = false
     @title="ices from hell"
+    @list={}
 
     build_ui
     if content
@@ -26,6 +27,7 @@ class Lyricist < Atome
   end
 
   def new_song(content)
+    @lyrics=content
     grab(:lyric_viewer).content(content)
     last_key, last_value = content.to_a.last
     @default_length = last_key

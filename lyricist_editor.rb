@@ -9,7 +9,7 @@ class Lyricist < Atome
                                     left: left_f,
                                     position: :absolute,
                                     overflow: :auto,
-                                    drag: true,
+                                    #drag: true,
                                     # resize: true,
                                     depth: 4
                                   })

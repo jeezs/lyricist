@@ -110,7 +110,7 @@ class LyricsStyle
       fourth_column: 188,
       fifth_column: 270,
       sixth_column: 405,
-      seventh_column: 435,
+      seventh_column: 480,
       
       # Positions spécifiques
       timeline_top: :auto, # Position du slider

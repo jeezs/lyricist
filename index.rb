@@ -5,6 +5,7 @@ require_relative 'lyricist_ui'
 require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
+require_relative 'list'
 
 # class Audio_player
 class Object
@@ -116,7 +117,7 @@ audio({  id: :basic_audio })
 
 grab(:toolbox_tool).display(:none)
 
-def load_song(lyrics_content, song_path)
+def init_lyrix(lyrics_content, song_path)
   # alert "#{lyrics_content}, #{song_path}"
   # 'medias/audios/Ices_From_Hells.m4a'
 
@@ -126,9 +127,10 @@ def load_song(lyrics_content, song_path)
   lyr.new_song(lyrics_content)
   import_drag = grab(:import_module)
   import_drag.display(:none)
+  lyr.initialize_list_manager
 end
 
-load_song({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
+init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
 # wait 3 do
 #   load_song({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
 # end

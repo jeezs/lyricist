@@ -22,17 +22,16 @@ class Lyricist < Atome
   end
 
   def init_audio(audio_path)
-    @audio_object=grab(:basic_audio)
+    @audio_object = grab(:basic_audio)
     @audio_path = audio_path
     @audio_object.path(audio_path)
-      wait_for_duration(@audio_object, ->(duration) {
-        @default_length=duration*1000
-        @length=duration*1000
-      })
+    wait_for_duration(@audio_object, ->(duration) {
+      @default_length = duration * 1000
+      @length = duration * 1000
+    })
   end
 
   def build_control_buttons
-
 
     play = button({
                     label: :play,
@@ -138,8 +137,6 @@ class Lyricist < Atome
                       parent: :tool_bar
                     })
 
-
-
     record.touch(true) do
       prev_postion = @actual_position
       lyric_viewer = grab(:lyric_viewer)
@@ -200,7 +197,6 @@ class Lyricist < Atome
       build_timeline_slider
       @playing = false
     end
-
 
     prev_word = button({
                          label: :<,
@@ -296,17 +292,17 @@ class Lyricist < Atome
     #######
 
     save_song = button({
-                            label: :save,
-                            id: :save,
-                            top: LyricsStyle.dimensions[:margin],
-                            left: 525,
-                            parent: :bottom_bar
-                          })
+                         label: :save,
+                         id: :save,
+                         top: LyricsStyle.dimensions[:margin],
+                         left: 525,
+                         parent: :bottom_bar
+                       })
     save_song.touch(true) do
-      lyrics=grab(:lyric_viewer).content.to_s
-      content_to_save={lyrics: lyrics,song: @audio_path, title: @title}
+      lyrics = grab(:lyric_viewer).content.to_s
+      content_to_save = { lyrics: lyrics, song: @audio_path, title: @title }
 
-      save_file( "#{@title}.lr", content_to_save)
+      save_file("#{@title}.lrx", content_to_save)
     end
 
     #########
@@ -319,43 +315,51 @@ class Lyricist < Atome
                        })
 
     load_song.import(true) do |val|
-      val=val.to_s
-      file_to_load=  eval(val)
-      lyrics=eval(file_to_load['lyrics'])
-      audio_path=file_to_load['song']
-      title=file_to_load['title']
+
+      filename = val[:filename]
+      content = val[:content]
+      file_to_load = eval(content)
+      lyrics = eval(file_to_load['lyrics'])
+      audio_path = file_to_load['song']
+      title = file_to_load['title']
+      current_lyricist = grab(:the_lyricist).data
       # we clear the current lyrics
-      current_lyricist=grab(:the_lyricist).data
-      current_lyricist.clear_all
-      @title=title
-      grab('title_label').data(title)
-      current_lyricist.init_audio(audio_path)
-      grab(:lyric_viewer).content(lyrics)
-      current_lyricist.full_refresh_viewer(0)
+      case File.extname(filename).downcase
+      when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
+        current_lyricist.init_audio(audio_path)
+      when ".txt"
+        grab(:lyric_viewer).content(lyrics)
+        current_lyricist.full_refresh_viewer(0)
+      when ".lrx"
+        current_lyricist.clear_all
+        @title = title
+        grab('title_label').data(title)
+        current_lyricist.init_audio(audio_path)
+        grab(:lyric_viewer).content(lyrics)
+        @lyrics=  grab(:lyric_viewer).content(lyrics)
+        current_lyricist.full_refresh_viewer(0)
+      else
+        # puts "Extension inconnue"
+      end
     end
 
-
-    titesong=  button({
-                         label: @title,
-                         id: :title,
-                         top: LyricsStyle.dimensions[:margin],
-                         left: 250,
-                         width: 120,
-                         edit: true,
-                         parent: :tool_bar
-                       })
+    titesong = button({
+                        label: @title,
+                        id: :title,
+                        top: LyricsStyle.dimensions[:margin],
+                        left: 250,
+                        width: 120,
+                        edit: true,
+                        parent: :tool_bar
+                      })
     titesong.keyboard(:down) do |native_event|
-      # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
         titesong.blink(:orange)
         event.preventDefault
-        title=grab('title_label')
-        @title= title.data
+        title = grab('title_label')
+        @title = title.data
       end
     end
-
-
   end
-
 end
