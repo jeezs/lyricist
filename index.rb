@@ -117,9 +117,11 @@ end
 grab(:toolbox_tool).display(:none)
 
 def load_song(lyrics_content, song_path)
-  alert "#{lyrics_content}, #{song_path}"
+  # alert "#{lyrics_content}, #{song_path}"
   # 'medias/audios/Ices_From_Hells.m4a'
+
   lyr = Lyricist.new
+  element({id: :the_lyricist, data: lyr})
   lyr.init_audio(song_path)
   lyr.new_song(lyrics_content)
   import_drag = grab(:import_module)

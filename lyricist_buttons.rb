@@ -176,7 +176,6 @@ class Lyricist < Atome
                    })
 
     clear.touch(true) do
-      # clear_all
       grab(:importer_support).clear(true)
     end
     ###########
@@ -322,9 +321,19 @@ class Lyricist < Atome
     load_song.import(true) do |val|
       val=val.to_s
       file_to_load=  eval(val)
-      lyrics=file_to_load['lyrics']
-      path=file_to_load['song']
-      load_song(lyrics, path)
+      lyrics=eval(file_to_load['lyrics'])
+      audio_path=file_to_load['song']
+      alert lyrics
+      # we clear the current lyrics
+      current_lyricist=grab(:the_lyricist).data
+      current_lyricist.clear_all
+
+      # alert "#{lyrics.class} : #{lyrics}"
+      # alert lyrics.class
+      @title="path"
+      current_lyricist.init_audio(audio_path)
+      grab(:lyric_viewer).content(lyrics)
+      # load_song(lyrics, path)
     end
 
 
