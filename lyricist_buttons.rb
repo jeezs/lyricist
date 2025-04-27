@@ -22,13 +22,17 @@ class Lyricist < Atome
   end
 
   def init_audio(audio_path)
-    @audio_object = @audio_object.audio({ path: audio_path, id: :basic_audio })
-    @audio_path = audio_path
-    wait_for_duration(@audio_object, ->(duration) {
-      # alert  seconds_to_minutes(duration)
-      @default_length=duration*1000
-      @length=duration*1000
-    })
+    @audio_object=audio({  id: :basic_audio })
+    # wait 1 do
+    @audio_object.path(audio_path)
+      @audio_path = audio_path
+      wait_for_duration(@audio_object, ->(duration) {
+        # alert  seconds_to_minutes(duration)
+        @default_length=duration*1000
+        @length=duration*1000
+      })
+    # end
+
   end
 
   def build_control_buttons
@@ -304,7 +308,7 @@ class Lyricist < Atome
                           })
     save_song.touch(true) do
       lyrics=grab(:lyric_viewer).content.to_s
-      content_to_save={lyrics: lyrics,song: @audio_path}
+      content_to_save={lyrics: lyrics,song: @audio_path, title: @title}
 
       save_file( "#{@title}.lr", content_to_save)
     end
@@ -323,17 +327,14 @@ class Lyricist < Atome
       file_to_load=  eval(val)
       lyrics=eval(file_to_load['lyrics'])
       audio_path=file_to_load['song']
-      alert lyrics
-      # we clear the current lyrics
+      title=file_to_load['title']
       current_lyricist=grab(:the_lyricist).data
       current_lyricist.clear_all
-
-      # alert "#{lyrics.class} : #{lyrics}"
-      # alert lyrics.class
-      @title="path"
+      @title=title
+      grab('title_label').data(title)
       current_lyricist.init_audio(audio_path)
       grab(:lyric_viewer).content(lyrics)
-      # load_song(lyrics, path)
+      current_lyricist.full_refresh_viewer(0)
     end
 
 
@@ -350,6 +351,7 @@ class Lyricist < Atome
       # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
+        titesong.blink(:orange)
         event.preventDefault
         title=grab('title_label')
         @title= title.data
