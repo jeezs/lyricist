@@ -12,28 +12,28 @@ class Lyricist < Atome
 
   def build_lyrics_viewer
 
-
-   button({
-                    label: '',
-                    id: :counter_support,
-                    left: LyricsStyle.positions[:counter_left],
-                    # color: LyricsStyle.colors[:secondary],
-                    top: LyricsStyle.dimensions[:margin],
-                    # position: :absolute,
-                    parent: :tool_bar
-                  })
+    button({
+             label: '',
+             id: :counter_support,
+             width: 99,
+             left: LyricsStyle.positions[:counter_left],
+             # color: LyricsStyle.colors[:secondary],
+             top: LyricsStyle.dimensions[:margin],
+             # position: :absolute,
+             parent: :tool_bar
+           })
 
     counter = grab(:counter_support).text({
-                                 data: :counter,
-                                 content: :play,
-                                 # center: true,
-                                 left: 6,
-                                 color: LyricsStyle.colors[:secondary],
-                                 top: 6,
-                                 position: :absolute,
-                                 id: :counter,
-                                 invert: true
-                               })
+                                            data: :counter,
+                                            content: :play,
+                                            # center: true,
+                                            left: 6,
+                                            color: LyricsStyle.colors[:secondary],
+                                            top: 6,
+                                            position: :absolute,
+                                            id: :counter,
+                                            invert: true
+                                          })
 
     base_text = ''
 
@@ -131,16 +131,17 @@ class Lyricist < Atome
     grab(:view).slider(
       LyricsStyle.slider_style({
                                  id: :timeline_slider,
+                                 attach: :bottom_bar,
                                  range: { color: :orange },
                                  min: 0,
                                  max: @length,
                                  width: LyricsStyle.dimensions[:slider_width],
                                  value: 0,
                                  height: LyricsStyle.dimensions[:slider_height],
-                                 left: 61,
+                                 left: LyricsStyle.dimensions[:margin],
                                  tag: [],
                                  top: :auto,
-                                 bottom: LyricsStyle.positions[:slider_bottom],
+                                 bottom: LyricsStyle.dimensions[:margin]*3,
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
 
@@ -177,7 +178,7 @@ class Lyricist < Atome
           end
         end
       end
-      end
+    end
 
   end
 
@@ -187,6 +188,21 @@ class Lyricist < Atome
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
                       top: 0,
+                      left: 0,
+                      right: 0,
+                      width: :auto,
+                      height: LyricsStyle.dimensions[:tool_bar_height],
+                      opacity: 1,
+                      depth: 3,
+                      # drag: true
+                    })
+
+    grab(:view).box({
+                      id: :bottom_bar,
+                      color: LyricsStyle.colors[:container_bg],
+                      shadow: LyricsStyle.decorations[:standard_shadow],
+                      top: :auto,
+                      bottom: 0,
                       left: 0,
                       right: 0,
                       width: :auto,

@@ -208,8 +208,8 @@ class Lyricist < Atome
                          width: 25,
                          id: :previous,
                          top: LyricsStyle.dimensions[:margin],
-                         left: LyricsStyle.positions[:fifth_column],
-                         parent: :tool_bar
+                         left: LyricsStyle.positions[:sixth_column],
+                         parent: :bottom_bar
                        })
 
     next_word = button({
@@ -217,8 +217,8 @@ class Lyricist < Atome
                          width: 25,
                          top: LyricsStyle.dimensions[:margin],
                          id: :next,
-                         left: LyricsStyle.positions[:sixth_column],
-                         parent: :tool_bar
+                         left: LyricsStyle.positions[:seventh_column],
+                         parent: :bottom_bar
                        })
 
     prev_word.touch(true) do
@@ -300,9 +300,8 @@ class Lyricist < Atome
                             label: :save,
                             id: :save,
                             top: LyricsStyle.dimensions[:margin],
-                            left: :auto,
-                            right: 333,
-                            parent: :tool_bar
+                            left: 525,
+                            parent: :bottom_bar
                           })
     save_song.touch(true) do
       lyrics=grab(:lyric_viewer).content.to_s
@@ -316,9 +315,8 @@ class Lyricist < Atome
                          label: :load,
                          id: :load,
                          top: LyricsStyle.dimensions[:margin],
-                         left: :auto,
-                         right: 250,
-                         parent: :tool_bar
+                         left: 465,
+                         parent: :bottom_bar
                        })
 
     load_song.import(true) do |val|
@@ -328,6 +326,16 @@ class Lyricist < Atome
       path=file_to_load['song']
       load_song(lyrics, path)
     end
+
+
+    titesong=  button({
+                         label: @title,
+                         id: :title,
+                         top: LyricsStyle.dimensions[:margin],
+                         left: 250,
+                         width: 120,
+                         parent: :tool_bar
+                       })
 
 
   end

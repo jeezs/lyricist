@@ -96,7 +96,7 @@ class LyricsStyle
       lyrics_left_offset: 39,
       lyrics_top_offset: 25,
       slider_bottom: 25,
-      counter_left: 369,
+      counter_left: 373,
       # Positions standards
       first_row: 10,
       second_row: 10,
@@ -109,8 +109,8 @@ class LyricsStyle
       third_column: 124,
       fourth_column: 188,
       fifth_column: 270,
-      sixth_column: 300,
-      seventh_column: 520,
+      sixth_column: 405,
+      seventh_column: 435,
       
       # Positions spécifiques
       timeline_top: :auto, # Position du slider
