@@ -107,7 +107,6 @@ class Lyricist
 
     # Comportement du bouton List
     list_button.touch(true) do
-      alert @list
       if grab(:list_panel).display == :none
         grab(:list_panel).display(:block)
         refresh_song_list

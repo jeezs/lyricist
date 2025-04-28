@@ -2,6 +2,64 @@
 
 class Lyricist < Atome
 
+  def set_list(filename, content)
+    @list_title = filename
+    list_content = eval(content)
+    @list = list_content
+  end
+
+  def load_strategy(val)
+    filename = val[:filename]
+    content = val[:content]
+
+    current_lyricist = grab(:the_lyricist).data
+    # puts "filename: #{filename}"
+    # puts "extname: #{File.extname(filename).downcase}"
+
+    # begin
+      case File.extname(filename).downcase
+      when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
+        puts "===> audio case"
+        audio_path="medias/audios/#{filename}"
+        current_lyricist.init_audio(audio_path)
+        return # Add explicit return
+      when ".txt"
+        puts "===> text case"
+        # grab(:lyric_viewer).content(lyrics)
+        # current_lyricist.full_refresh_viewer(0)
+        return # Add explicit return
+      when ".lrx"
+        puts "===> lrx case"
+        # begin
+          file_to_load = eval(content)
+          lyrics = eval(file_to_load['lyrics'])
+          audio_path = file_to_load['song']
+          title = file_to_load['title']
+          current_lyricist.clear_all
+          @title = title
+          grab('title_label').data(title)
+          current_lyricist.init_audio(audio_path)
+          grab(:lyric_viewer).content(lyrics)
+          @lyrics = grab(:lyric_viewer).content(lyrics)
+          current_lyricist.full_refresh_viewer(0)
+        # rescue => e
+        #   puts "Error in LRX processing: #{e.message}"
+        # end
+        return # Add explicit return
+      when ".lrs"
+        puts "===> lrs case"
+        current_lyrix = grab(:the_lyricist).data
+        current_lyrix.set_list(filename, content)
+        return # Add explicit return
+      else
+        puts "===> else case"
+        # puts "Extension inconnue"
+      end
+    # rescue => e
+    #   puts "Error in case statement: #{e.message}"
+    # end
+  end
+
   def wait_for_duration(audio_object, callback)
     # Vérifier si duration existe et convertir en Float Ruby
     duration_value = audio_object.duration.to_f rescue nil
@@ -202,7 +260,7 @@ class Lyricist < Atome
                          width: 25,
                          id: :previous,
                          top: LyricsStyle.dimensions[:margin],
-                         left: LyricsStyle.positions[:sixth_column],
+                         left: LyricsStyle.positions[:prev],
                          parent: :bottom_bar
                        })
 
@@ -211,7 +269,7 @@ class Lyricist < Atome
                          width: 25,
                          top: LyricsStyle.dimensions[:margin],
                          id: :next,
-                         left: LyricsStyle.positions[:seventh_column],
+                         left: LyricsStyle.positions[:next],
                          parent: :bottom_bar
                        })
 
@@ -305,11 +363,7 @@ class Lyricist < Atome
     end
 
     #########
-    def set_list(filename, content)
-      @list_title = filename
-      list_content=eval(content)
-      @list = list_content
-    end
+
 
     load_song = button({
                          label: :load,
@@ -318,44 +372,51 @@ class Lyricist < Atome
                          left: 465,
                          parent: :bottom_bar
                        })
-
     load_song.import(true) do |val|
-      alert val.class
-      puts val
-      filename = val[:filename]
-      content = val[:content]
-
       current_lyricist = grab(:the_lyricist).data
-      # we clear the current lyrics
-      # alert File.extname(filename).downcase
-      case File.extname(filename).downcase
-      when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
-        current_lyricist.init_audio(audio_path)
-      when ".txt"
-        alert :txt
-        grab(:lyric_viewer).content(lyrics)
-        current_lyricist.full_refresh_viewer(0)
-      when ".lrx"
-        alert :lrx
-        file_to_load = eval(content)
-        lyrics = eval(file_to_load['lyrics'])
-        audio_path = file_to_load['song']
-        title = file_to_load['title']
-        current_lyricist.clear_all
-        @title = title
-        grab('title_label').data(title)
-        current_lyricist.init_audio(audio_path)
-        grab(:lyric_viewer).content(lyrics)
-        @lyrics = grab(:lyric_viewer).content(lyrics)
-        current_lyricist.full_refresh_viewer(0)
-      when ".lrs"
-        current_lyrix = grab(:the_lyricist).data
-        current_lyrix.set_list(filename, content)
+      current_lyricist.load_strategy(val)
 
-      else
-        # puts "Extension inconnue"
-      end
     end
+    # load_song.import(true) do |val|
+    #
+    #   filename = val[:filename]
+    #   content = val[:content]
+    #
+    #   current_lyricist = grab(:the_lyricist).data
+    #   # we clear the current lyrics
+    #   # alert File.extname(filename).downcase
+    #   puts "filename: #{filename.to_s}"
+    #   puts "extname: #{File.extname(filename.to_s).downcase}"
+    #   case File.extname(filename).downcase
+    #   when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
+    #     puts "===> audio case"
+    #     # current_lyricist.init_audio(audio_path)
+    #   when ".txt"
+    #     puts "===> text case"
+    #     # grab(:lyric_viewer).content(lyrics)
+    #     # current_lyricist.full_refresh_viewer(0)
+    #   when ".lrx"
+    #     puts "===> lrx case"
+    #     file_to_load = eval(content)
+    #     lyrics = eval(file_to_load['lyrics'])
+    #     audio_path = file_to_load['song']
+    #     title = file_to_load['title']
+    #     current_lyricist.clear_all
+    #     @title = title
+    #     grab('title_label').data(title)
+    #     current_lyricist.init_audio(audio_path)
+    #     grab(:lyric_viewer).content(lyrics)
+    #     @lyrics = grab(:lyric_viewer).content(lyrics)
+    #     current_lyricist.full_refresh_viewer(0)
+    #   when ".lrs"
+    #     puts "===> lrs case"
+    #     current_lyrix = grab(:the_lyricist).data
+    #     current_lyrix.set_list(filename, content)
+    #   else
+    #     puts "===> else case"
+    #     # puts "Extension inconnue"
+    #   end
+    # end
 
     titesong = button({
                         label: @title,

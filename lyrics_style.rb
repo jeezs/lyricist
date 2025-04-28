@@ -93,6 +93,8 @@ class LyricsStyle
   # Positions
   def self.positions
     {
+      next: 435,
+      prev: 405,
       lyrics_left_offset: 39,
       lyrics_top_offset: 25,
       slider_bottom: 25,
