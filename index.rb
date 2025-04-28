@@ -81,7 +81,7 @@ def parse_song_lyrics(song)
   song_lines = song.split("\n")
   song_lines.each_with_index do |line_found, index|
     new_id = "a_lyrics_line_#{index}".to_sym
-    puts "new_id: #{new_id}, #{index} =>> #{line_found}"
+    # puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
     line_support = grab(:importer_support).box({
                                                  id: new_id,

@@ -208,6 +208,7 @@ class Lyricist < Atome
         # record.alpha(1)
         lyric_viewer.edit(true)
         @number_of_lines = 1
+
         counter = grab(:counter)
         lyrics = grab(:lyric_viewer)
         update_lyrics(0, lyrics, counter)
@@ -325,7 +326,8 @@ class Lyricist < Atome
                            })
 
     import_lyrics.import(true) do |val|
-      parse_song_lyrics(val)
+      alert val
+      # parse_song_lyrics(val[:content])
     end
 
     #######
