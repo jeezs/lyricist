@@ -11,6 +11,7 @@ class Lyricist < Atome
   end
 
   def load_strategy(val)
+    # alert val
     filename = val[:filename]
     content = val[:content]
 
@@ -57,6 +58,9 @@ class Lyricist < Atome
         # puts "===> lrs case"
         current_lyrix = grab(:the_lyricist).data
         current_lyrix.set_list(filename, content)
+        refresh_song_list
+          grab(:list_panel).display(:block)
+
         return # Add explicit return
       else
         puts "===> else case"
