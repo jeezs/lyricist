@@ -133,7 +133,6 @@ class Lyricist < Atome
                       id: :record,
                       top: LyricsStyle.dimensions[:margin],
                       left: LyricsStyle.positions[:third_column],
-                      text_color: :white,
                       parent: :tool_bar
                     })
 

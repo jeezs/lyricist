@@ -13,43 +13,55 @@ class Lyricist
 
     # Créer le panneau de liste (initialement caché)
     list_panel = grab('view').box({
-                             id: :list_panel,
-                             width: 400,
-                             height: 500,
-                             top: 50,
-                             left: 150,
-                             color: LyricsStyle.colors[:background],
-                             border: { color: LyricsStyle.colors[:primary], width: 2 },
-                             depth: 10,
-                             overflow: :auto,
-                             display: :none,
-                             attach: :tool_bar,
-                             drag: true
-                           })
+                                    id: :list_panel,
+                                    width: 400,
+                                    height: 500,
+                                    top: 50,
+                                    left: 150,
+                                    color: LyricsStyle.colors[:background],
+                                    border: { color: LyricsStyle.colors[:primary], width: 2 },
+                                    depth: 10,
+                                    overflow: :auto,
+                                    display: :none,
+                                    attach: :tool_bar,
+                                    drag: true
+                                  })
 
     # Ajouter une barre de titre au panneau
-    list_title_bar = grab('view').box({
-                                 id: :list_title_bar,
-                                 width: 400,
-                                 height: 40,
-                                 top: 0,
-                                 left: 0,
-                                 color: LyricsStyle.colors[:primary],
-                                 attach: :list_panel
-                               })
+    list_title_bar = grab('list_title_bar').box({
+                                        id: :list_title_bar,
+                                        width: 400,
+                                        height: 40,
+                                        top: 0,
+                                        left: 0,
+                                        color: LyricsStyle.colors[:primary],
+                                        attach: :list_panel
+                                      })
+    title_bar_list_text=list_title_bar.text({position: :absolute, top: LyricsStyle.dimensions[:margin]*3,
+                         left: LyricsStyle.dimensions[:margin]*3,
+                         data: 'new list', edit: true, color:  LyricsStyle.colors[:secondary] })
+    @list_title='new list'
+    title_bar_list_text.keyboard(:down) do |native_event|
+      event = Native(native_event)
+      if event[:keyCode].to_s == '13' # Touche Entrée
+        @list_title = title_bar_list_text.data
+        title_bar_list_text.blink(:orange)
+        event.preventDefault
+      end
+    end
 
     # Ajouter un titre
     grab('view').text({
-           content: "Playlist Manager",
-           id: :list_panel_title,
-           width: 300,
-           height: 30,
-           top: 10,
-           left: 10,
-           size: LyricsStyle.dimensions[:text_medium],
-           color: :white,
-           attach: :list_title_bar
-         })
+                        content: "Playlist Manager",
+                        id: :list_panel_title,
+                        width: 300,
+                        height: 30,
+                        top: 10,
+                        left: 10,
+                        size: LyricsStyle.dimensions[:text_medium],
+                        color: :white,
+                        attach: :list_title_bar
+                      })
 
     # Bouton fermer
     close_list = button({
@@ -58,39 +70,38 @@ class Lyricist
                           top: 5,
                           left: :auto,
                           right: 5,
-                          color: LyricsStyle.colors[:danger],
                           parent: :list_title_bar
                         })
 
     # Conteneur pour la liste
     list_container = grab('view').box({
-                                 id: :list_container,
-                                 width: 380,
-                                 height: 400,
-                                 top: 50,
-                                 left: 10,
-                                 color: LyricsStyle.colors[:background],
-                                 attach: :list_panel
-                               })
+                                        id: :list_container,
+                                        width: 380,
+                                        height: 400,
+                                        top: 50,
+                                        left: 10,
+                                        color: LyricsStyle.colors[:background],
+                                        attach: :list_panel
+                                      })
 
     # Bouton pour ajouter une nouvelle chanson
     add_song = button({
-                        label: "Add Current",
-                        id: :add_song,
+                        label: "new",
+                        id: :add_song_to_list,
                         top: 460,
                         left: 10,
-                        color: LyricsStyle.colors[:accent],
+                        # color: LyricsStyle.colors[:accent],
                         parent: :list_panel
                       })
 
     # Bouton pour sauvegarder les changements
     save_list = button({
-                         label: "Save List",
+                         label: "Save",
                          id: :save_list,
                          top: 460,
                          left: :auto,
                          right: 10,
-                         color: LyricsStyle.colors[:primary],
+                         # color: LyricsStyle.colors[:primary],
                          parent: :list_panel
                        })
 
@@ -125,12 +136,8 @@ class Lyricist
   def refresh_song_list
     # Supprimer tous les éléments actuels de la liste
     list_container = grab(:list_container)
-    list_container.fasten.each do |child|
-      child.delete({ recursive: true }) if child
-    end
-
+    list_container.clear(true)
     # Vérifier si @list existe
-    @list ||= {}
 
     # Trier les clés numériquement
     sorted_keys = @list.keys.sort_by { |k| k.to_i }
@@ -145,42 +152,43 @@ class Lyricist
 
       # Créer le conteneur pour l'élément
       item_container = grab('view').box({
-                                   id: "song_item_#{key}",
-                                   width: 360,
-                                   height: 50,
-                                   top: top_position,
-                                   left: 0,
-                                   color: LyricsStyle.colors[:secondary],
-                                   border: { color: LyricsStyle.colors[:primary], width: 1 },
-                                   attach: :list_container
-                                 })
+                                          id: "song_item_#{key}",
+                                          width: 360,
+                                          height: 50,
+                                          top: top_position,
+                                          left: 0,
+                                          smooth: 6,
+                                          color: LyricsStyle.colors[:primary],
+                                          # border: { color: LyricsStyle.colors[:primary], width: 1 },
+                                          attach: :list_container
+                                        })
 
       # Numéro d'ordre (éditable)
       order_input = grab('view').text({
-                           content: key.to_s,
-                           id: "order_#{key}",
-                           width: 30,
-                           height: 30,
-                           top: 10,
-                           left: 10,
-                           edit: true,
-                           size: LyricsStyle.dimensions[:text_small],
-                           color: :black,
-                           attach: "song_item_#{key}"
-                         })
+                                        content: key.to_s,
+                                        id: "order_#{key}",
+                                        width: 30,
+                                        height: 30,
+                                        top: 10,
+                                        left: 10,
+                                        edit: true,
+                                        size: LyricsStyle.dimensions[:text_small],
+                                        color: :black,
+                                        attach: "song_item_#{key}"
+                                      })
 
       # Titre de la chanson
       grab('view').text({
-             content: item["title"].to_s,
-             id: "title_#{key}",
-             width: 200,
-             height: 30,
-             top: 10,
-             left: 50,
-             size: LyricsStyle.dimensions[:text_small],
-             color: :black,
-             attach: "song_item_#{key}"
-           })
+                          content: item["title"].to_s,
+                          id: "title_#{key}",
+                          width: 200,
+                          height: 30,
+                          top: 10,
+                          left: 50,
+                          size: LyricsStyle.dimensions[:text_small],
+                          color: :black,
+                          attach: "song_item_#{key}"
+                        })
 
       # Bouton pour charger cette chanson
       load_button = button({
@@ -325,13 +333,16 @@ class Lyricist
     next_key = @list.empty? ? "1" : (@list.keys.map(&:to_i).max + 1).to_s
 
     # Ajouter à la liste
+
     @list[next_key] = new_song
+
   end
 
   # Méthode pour sauvegarder la playlist
   def save_playlist
     content_to_save = @list
-    save_file("playlist.pls", content_to_save)
+    list_tile=@list_title
+    save_file(list_tile, content_to_save)
   end
 
   # Pour charger une playlist sauvegardée (à ajouter au bouton load existant)
@@ -345,9 +356,8 @@ class Lyricist
 
   # Ajouter cette ligne à la méthode init ou initialize de votre classe
   def initialize_list_manager
-   # Initialiser la liste si elle n'existe pas
-    build_list_manager  # Construire l'interface du gestionnaire de liste
+    # Initialiser la liste si elle n'existe pas
+    build_list_manager # Construire l'interface du gestionnaire de liste
   end
-
 
 end
