@@ -138,7 +138,6 @@ class Lyricist
     list_container = grab(:list_container)
     list_container.clear(true)
     # Vérifier si @list existe
-
     # Trier les clés numériquement
     sorted_keys = @list.keys.sort_by { |k| k.to_i }
 
@@ -146,6 +145,7 @@ class Lyricist
     top_position = 10
 
     # Créer un élément pour chaque chanson
+
     sorted_keys.each do |key|
       item = @list[key]
       next unless item && item["title"]

@@ -3,7 +3,9 @@
 class Lyricist < Atome
 
   def set_list(filename, content)
-    @list_title = filename
+    # alert filename
+    # alert content.class
+    # @list_title = filename
     list_content = eval(content)
     @list = list_content
   end
@@ -50,8 +52,9 @@ class Lyricist < Atome
         #   puts "Error in LRX processing: #{e.message}"
         # end
         return # Add explicit return
-      when ".plx"
-        puts "===> lrs case"
+      when ".prx"
+
+        # puts "===> lrs case"
         current_lyrix = grab(:the_lyricist).data
         current_lyrix.set_list(filename, content)
         return # Add explicit return
