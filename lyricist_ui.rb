@@ -123,9 +123,11 @@ class Lyricist < Atome
     support.shadow(LyricsStyle.decorations[:invert_shadow])
 
     importer do |val|
+      content= val[:content]
+      filename= val[:name]
       current_lyricist = grab(:the_lyricist).data
-      alert val.class
-      current_lyricist.load_strategy(val)
+      formated_import={content: content, filename: filename}
+      current_lyricist.load_strategy(formated_import)
       # grab(:importer_support).clear(true)
       # parse_song_lyrics(val[:content])
     end
