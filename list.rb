@@ -344,7 +344,7 @@ class Lyricist
   # Méthode pour sauvegarder la playlist
   def save_playlist
     content_to_save = @list
-    list_tile="#{@list_title}.plx"
+    list_tile="#{@list_title}.prx"
     save_file(list_tile, content_to_save)
   end
 

@@ -90,12 +90,19 @@ class Lyricist < Atome
   end
 
   def format_lyrics(lyrics_array, target)
+    # puts "here ====> #{@length} - #{@actual_position}"
+
     return if lyrics_array.empty?
 
     # On vérifie si on doit mettre à jour l'affichage
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       # Mise à jour de la première ligne
       target.data(lyrics_array[0])
+      if lyrics_array[0] == '<end>'
+        puts @list
+        puts @title
+        stop_lyrics
+      end
 
       # Propriétés de style pour la première ligne
       style_first_line = {
@@ -137,6 +144,7 @@ class Lyricist < Atome
 
         # Création du texte enfant
         target.text(child_params)
+
       end
     end
   end

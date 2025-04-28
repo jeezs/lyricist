@@ -10,6 +10,17 @@ class Lyricist < Atome
     @list = list_content
   end
 
+  def stop_lyrics
+    stop_audio(@audio_object)
+    counter = grab(:counter)
+    counter.timer({ stop: true })
+    lyrics = grab(:lyric_viewer)
+    update_lyrics(0, lyrics, counter)
+    grab(:timeline_slider).delete({ force: true })
+    build_timeline_slider
+    @playing = false
+  end
+
   def load_strategy(val)
     # alert val
     filename = val[:filename]
@@ -97,6 +108,8 @@ class Lyricist < Atome
     wait_for_duration(@audio_object, ->(duration) {
       @default_length = duration * 1000
       @length = duration * 1000
+      # alert "1: #{self.class}"
+      # alert "1: #{@length}"
     })
   end
 
@@ -111,7 +124,8 @@ class Lyricist < Atome
                   })
 
     play.touch(true) do
-
+      # alert "2: #{self.class}"
+      # alert"2: #{@length}"
       if @playing
         grab(:counter).timer({ pause: true })
         @playing = false
@@ -258,14 +272,7 @@ class Lyricist < Atome
                   })
 
     stop.touch(true) do
-      stop_audio(@audio_object)
-      counter = grab(:counter)
-      counter.timer({ stop: true })
-      lyrics = grab(:lyric_viewer)
-      update_lyrics(0, lyrics, counter)
-      grab(:timeline_slider).delete({ force: true })
-      build_timeline_slider
-      @playing = false
+      stop_lyrics
     end
 
     prev_word = button({
@@ -388,7 +395,6 @@ class Lyricist < Atome
                        })
     load_song.import(true) do |val|
       current_lyricist = grab(:the_lyricist).data
-      alert val
       current_lyricist.load_strategy(val)
 
     end
