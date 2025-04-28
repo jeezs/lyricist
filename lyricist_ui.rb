@@ -108,7 +108,6 @@ class Lyricist < Atome
 
     support = grab(:import_module).box({
                                          id: :importer_support,
-
                                          overflow: :auto,
                                          top: 39,
                                          left: 3,

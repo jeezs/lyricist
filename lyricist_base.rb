@@ -7,6 +7,7 @@ class Lyricist < Atome
   def initialize(content = nil)
     @tempo = 120
     @record = false
+    @imported_lyrics='none'
     @playing = false
     @replace_mode = false
     @default_length = 1

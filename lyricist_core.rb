@@ -89,19 +89,34 @@ class Lyricist < Atome
     max_key
   end
 
+  def find_key_by_title(hash, title)
+    hash.each do |key, value|
+      return key if value["title"] == title
+    end
+    nil # Retourne nil si aucune correspondance n'est trouvée
+  end
+
   def format_lyrics(lyrics_array, target)
     # puts "here ====> #{@length} - #{@actual_position}"
 
     return if lyrics_array.empty?
-
     # On vérifie si on doit mettre à jour l'affichage
+
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       # Mise à jour de la première ligne
       target.data(lyrics_array[0])
       if lyrics_array[0] == '<end>'
-        puts @list
-        puts @title
+         lyrics_array=[]
+         target.content=''
         stop_lyrics
+
+        next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
+
+         puts "next_song#{next_song}"
+        load_song_from_list(next_song)
+          play_lyrics
+         puts "One time only"
+
       end
 
       # Propriétés de style pour la première ligne
@@ -133,7 +148,7 @@ class Lyricist < Atome
 
         # Calcul de la position verticale
         top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
-                       LyricsStyle.dimensions[:lyrics_size]/3
+                       LyricsStyle.dimensions[:lyrics_size] / 3
 
         # Paramètres pour la ligne
         child_params = {
@@ -226,7 +241,6 @@ class Lyricist < Atome
   def cleanup_cache
     @sorted_keys_cache = {}
   end
-
 
   def save_file(filename, content, mime_type = 'text/plain')
     # Créer une fonction JavaScript avec des noms de paramètres explicites

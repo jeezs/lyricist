@@ -259,7 +259,7 @@ class Lyricist
     stop_audio(@audio_object) if @audio_object
     counter = grab(:counter)
     counter.timer({ stop: true }) if counter
-
+    # alert :good
     # On charge la nouvelle chanson
     @title = song_data["title"]
     grab('title_label').data(@title) if grab('title_label')
@@ -273,6 +273,7 @@ class Lyricist
 
     # Rafraîchir l'affichage
     full_refresh_viewer(0)
+
   end
 
   # Méthode pour supprimer une chanson de la liste

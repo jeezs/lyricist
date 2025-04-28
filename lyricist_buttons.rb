@@ -10,6 +10,10 @@ class Lyricist < Atome
     @list = list_content
   end
 
+  def set_imported_lyrics(lyr)
+    @imported_lyrics=lyr
+  end
+
   def stop_lyrics
     stop_audio(@audio_object)
     counter = grab(:counter)
@@ -21,8 +25,37 @@ class Lyricist < Atome
     @playing = false
   end
 
+  def play_lyrics
+    if @playing
+      grab(:counter).timer({ pause: true })
+      @playing = false
+      stop_audio(@audio_object)
+    else
+
+      counter = grab(:counter)
+      play_audio(@audio_object, @actual_position / 1000)
+      prev_length = @length
+      counter.timer({ end: Float::INFINITY }) do |value|
+        lyrics = grab(:lyric_viewer)
+        value = value.to_i
+        update_lyrics(value, lyrics, counter)
+        if @record && value >= @length
+          @length = value
+        else
+          if value >= @length
+            counter.timer({ stop: true })
+          end
+        end
+        if value < prev_length
+          grab(:timeline_slider).value(value)
+        end
+
+      end
+      @playing = true
+    end
+  end
+
   def load_strategy(val)
-    # alert val
     filename = val[:filename]
     content = val[:content]
 
@@ -38,11 +71,11 @@ class Lyricist < Atome
         current_lyricist.init_audio(audio_path)
         return # Add explicit return
       when ".txt"
-      #   alert :yes
       #   puts "===> text case"
         grab(:importer_support).clear(true)
         parse_song_lyrics(val[:content])
       grab(:import_module).display(:block)
+      @imported_lyrics=val[:content]
         # grab(:lyric_viewer).content(lyrics)
         # current_lyricist.full_refresh_viewer(0)
         return # Add explicit return
@@ -108,8 +141,6 @@ class Lyricist < Atome
     wait_for_duration(@audio_object, ->(duration) {
       @default_length = duration * 1000
       @length = duration * 1000
-      # alert "1: #{self.class}"
-      # alert "1: #{@length}"
     })
   end
 
@@ -124,35 +155,7 @@ class Lyricist < Atome
                   })
 
     play.touch(true) do
-      # alert "2: #{self.class}"
-      # alert"2: #{@length}"
-      if @playing
-        grab(:counter).timer({ pause: true })
-        @playing = false
-        stop_audio(@audio_object)
-      else
-
-        counter = grab(:counter)
-        play_audio(@audio_object, @actual_position / 1000)
-        prev_length = @length
-        counter.timer({ end: Float::INFINITY }) do |value|
-          lyrics = grab(:lyric_viewer)
-          value = value.to_i
-          update_lyrics(value, lyrics, counter)
-          if @record && value >= @length
-            @length = value
-          else
-            if value >= @length
-              counter.timer({ stop: true })
-            end
-          end
-          if value < prev_length
-            grab(:timeline_slider).value(value)
-          end
-
-        end
-        @playing = true
-      end
+      play_lyrics
     end
 
     edit_lyrics = button({
@@ -345,8 +348,14 @@ class Lyricist < Atome
                            })
 
     import_lyrics.import(true) do |val|
+
       grab(:importer_support).clear(true)
       parse_song_lyrics(val[:content])
+      current_lyrix = grab(:the_lyricist).data
+      current_lyrix.set_imported_lyrics(val[:content])
+
+
+
     end
 
     #######
@@ -358,6 +367,60 @@ class Lyricist < Atome
                             right: 3,
                             parent: :import_module
                           })
+    import_drag = grab(:import_module)
+    close_import.touch(true) do |val|
+      if import_drag.display == :none
+        import_drag.display(:block)
+      else
+        import_drag.display(:none)
+      end
+    end
+
+    #######
+    save_edited_text = button({
+                           label: :save,
+                           id: :save_editt,
+                           top: LyricsStyle.dimensions[:margin],
+                           left: :auto,
+                           right: 100,
+                           parent: :import_module
+                         })
+
+    save_edited_text.touch(true) do |val|
+
+
+      grab(:importer_support).clear(true)
+      parse_song_lyrics(@imported_lyrics)
+      save_file("#{@title}.txt", @imported_lyrics)
+      # grab(:importer_support).clear(true)
+      # grab(:importer_support).text({data: @imported_lyrics, edit: true})
+      # alert :here
+    end
+    edit_import = button({
+                            label: :edit,
+                            id: :edit_import,
+                            top: LyricsStyle.dimensions[:margin],
+                            left: :auto,
+                            right: 55,
+                            parent: :import_module
+                          })
+
+    edit_import.touch(true) do |val|
+      grab(:importer_support).clear(true)
+      text_to_edit= grab(:importer_support).text({data: @imported_lyrics, edit: true})
+      text_to_edit.keyboard(:down) do |native_event|
+        # event = Native(native_event)
+        @imported_lyrics=text_to_edit.data
+        # if event[:keyCode].to_s == '13' # Touche Entrée
+        #   titesong.blink(:orange)
+        #   event.preventDefault
+        #   title = grab('title_label')
+        #   @title = title.data
+        # end
+      end
+    end
+    #######
+
     import_drag = grab(:import_module)
     close_import.touch(true) do |val|
       if import_drag.display == :none
