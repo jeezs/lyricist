@@ -19,12 +19,16 @@ class Lyricist < Atome
     # begin
       case File.extname(filename).downcase
       when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
-        puts "===> audio case"
+        # puts "===> audio case"
         audio_path="medias/audios/#{filename}"
         current_lyricist.init_audio(audio_path)
         return # Add explicit return
       when ".txt"
-        puts "===> text case"
+      #   alert :yes
+      #   puts "===> text case"
+        grab(:importer_support).clear(true)
+        parse_song_lyrics(val[:content])
+      grab(:import_module).display(:block)
         # grab(:lyric_viewer).content(lyrics)
         # current_lyricist.full_refresh_viewer(0)
         return # Add explicit return
@@ -155,7 +159,8 @@ class Lyricist < Atome
     # Bouton Erase
     erase = button({
                      id: :erase,
-                     label: :erase,
+                     label: :clear,
+                     color: LyricsStyle.colors[:accent],
                      top: LyricsStyle.dimensions[:margin],
                      left: LyricsStyle.positions[:fourth_column],
                      parent: :tool_bar
@@ -187,7 +192,7 @@ class Lyricist < Atome
     ###########
 
     record = button({
-                      label: 'rec.',
+                      label: 'modify',
                       id: :record,
                       top: LyricsStyle.dimensions[:margin],
                       left: LyricsStyle.positions[:third_column],
@@ -326,8 +331,8 @@ class Lyricist < Atome
                            })
 
     import_lyrics.import(true) do |val|
-      alert val
-      # parse_song_lyrics(val[:content])
+      grab(:importer_support).clear(true)
+      parse_song_lyrics(val[:content])
     end
 
     #######

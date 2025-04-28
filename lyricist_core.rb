@@ -136,7 +136,7 @@ class Lyricist < Atome
         }.merge(common_style)
 
         # Création du texte enfant
-         child = target.text(child_params)
+        target.text(child_params)
       end
     end
   end

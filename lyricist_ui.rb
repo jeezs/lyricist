@@ -123,6 +123,7 @@ class Lyricist < Atome
     support.shadow(LyricsStyle.decorations[:invert_shadow])
 
     importer do |val|
+      grab(:importer_support).clear(true)
       parse_song_lyrics(val[:content])
     end
   end
