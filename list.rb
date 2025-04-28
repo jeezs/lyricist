@@ -12,7 +12,7 @@ class Lyricist
                          })
 
     # Créer le panneau de liste (initialement caché)
-    list_panel = grab('view').box({
+     grab('view').box({
                                     id: :list_panel,
                                     width: 400,
                                     height: 500,
@@ -344,7 +344,7 @@ class Lyricist
   # Méthode pour sauvegarder la playlist
   def save_playlist
     content_to_save = @list
-    list_tile="#{@list_title}.pls"
+    list_tile="#{@list_title}.plx"
     save_file(list_tile, content_to_save)
   end
 

@@ -50,7 +50,7 @@ class Lyricist < Atome
         #   puts "Error in LRX processing: #{e.message}"
         # end
         return # Add explicit return
-      when ".lrs"
+      when ".plx"
         puts "===> lrs case"
         current_lyrix = grab(:the_lyricist).data
         current_lyrix.set_list(filename, content)
