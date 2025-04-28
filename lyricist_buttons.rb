@@ -305,6 +305,12 @@ class Lyricist < Atome
     end
 
     #########
+    def set_list(filename, content)
+      @list_title = filename
+      list_content=eval(content)
+      @list = list_content
+    end
+
     load_song = button({
                          label: :load,
                          id: :load,
@@ -314,29 +320,38 @@ class Lyricist < Atome
                        })
 
     load_song.import(true) do |val|
-
+      alert val.class
+      puts val
       filename = val[:filename]
       content = val[:content]
-      file_to_load = eval(content)
-      lyrics = eval(file_to_load['lyrics'])
-      audio_path = file_to_load['song']
-      title = file_to_load['title']
+
       current_lyricist = grab(:the_lyricist).data
       # we clear the current lyrics
+      # alert File.extname(filename).downcase
       case File.extname(filename).downcase
       when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
         current_lyricist.init_audio(audio_path)
       when ".txt"
+        alert :txt
         grab(:lyric_viewer).content(lyrics)
         current_lyricist.full_refresh_viewer(0)
       when ".lrx"
+        alert :lrx
+        file_to_load = eval(content)
+        lyrics = eval(file_to_load['lyrics'])
+        audio_path = file_to_load['song']
+        title = file_to_load['title']
         current_lyricist.clear_all
         @title = title
         grab('title_label').data(title)
         current_lyricist.init_audio(audio_path)
         grab(:lyric_viewer).content(lyrics)
-        @lyrics=  grab(:lyric_viewer).content(lyrics)
+        @lyrics = grab(:lyric_viewer).content(lyrics)
         current_lyricist.full_refresh_viewer(0)
+      when ".lrs"
+        current_lyrix = grab(:the_lyricist).data
+        current_lyrix.set_list(filename, content)
+
       else
         # puts "Extension inconnue"
       end

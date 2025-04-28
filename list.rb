@@ -107,6 +107,7 @@ class Lyricist
 
     # Comportement du bouton List
     list_button.touch(true) do
+      alert @list
       if grab(:list_panel).display == :none
         grab(:list_panel).display(:block)
         refresh_song_list
@@ -165,28 +166,29 @@ class Lyricist
 
       # Numéro d'ordre (éditable)
       order_input = grab('view').text({
-                                        content: key.to_s,
+                                        data: key.to_s,
                                         id: "order_#{key}",
-                                        width: 30,
                                         height: 30,
+                                        position: :absolute,
                                         top: 10,
                                         left: 10,
                                         edit: true,
-                                        size: LyricsStyle.dimensions[:text_small],
-                                        color: :black,
+                                        color: :lightgray,
+                                        # size: LyricsStyle.dimensions[:text_small],
                                         attach: "song_item_#{key}"
                                       })
 
       # Titre de la chanson
       grab('view').text({
-                          content: item["title"].to_s,
+                          data: item["title"].to_s,
                           id: "title_#{key}",
                           width: 200,
+                          position: :absolute,
                           height: 30,
                           top: 10,
                           left: 50,
-                          size: LyricsStyle.dimensions[:text_small],
-                          color: :black,
+                          # size: LyricsStyle.dimensions[:text_small],
+                          color: :lightgray,
                           attach: "song_item_#{key}"
                         })
 
@@ -199,7 +201,7 @@ class Lyricist
                              width: 40,
                              height: 30,
                              size: LyricsStyle.dimensions[:text_small],
-                             color: LyricsStyle.colors[:primary],
+                             # color: LyricsStyle.colors[:primary],
                              parent: "song_item_#{key}"
                            })
 
@@ -228,13 +230,15 @@ class Lyricist
       end
 
       # Action sur le changement d'ordre
-      order_input.keyboard(:down) do |native_event|
+      grab("order_#{key}").keyboard(:down) do |native_event|
         event = Native(native_event)
         if event[:keyCode].to_s == '13' # Touche Entrée
-          event.preventDefault
-          new_order = order_input.data.to_s
+
+          new_order = grab("order_#{key}").data
+          alert new_order
           reorder_song(key, new_order)
           refresh_song_list
+          event.preventDefault
         end
       end
 
@@ -249,8 +253,8 @@ class Lyricist
 
     song_data = @list[key]
 
-    # On ferme le panneau
-    grab(:list_panel).display(:none)
+    # # On ferme le panneau
+    # grab(:list_panel).display(:none)
 
     # On arrête la lecture en cours
     stop_audio(@audio_object) if @audio_object
@@ -341,7 +345,7 @@ class Lyricist
   # Méthode pour sauvegarder la playlist
   def save_playlist
     content_to_save = @list
-    list_tile=@list_title
+    list_tile="#{@list_title}.pls"
     save_file(list_tile, content_to_save)
   end
 

@@ -122,6 +122,7 @@ def init_lyrix(lyrics_content, song_path)
   # 'medias/audios/Ices_From_Hells.m4a'
 
   lyr = Lyricist.new
+  # we create an atome to  be able to retrive the lyr
   element({id: :the_lyricist, data: lyr})
   lyr.init_audio(song_path)
   lyr.new_song(lyrics_content)
