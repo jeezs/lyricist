@@ -225,7 +225,9 @@ class Lyricist
       # Action du bouton Delete
       delete_button.touch(true) do
         delete_song_from_list(key)
-        refresh_song_list
+        wait 0.3 do
+          refresh_song_list
+        end
       end
 
       # Action sur le changement d'ordre
