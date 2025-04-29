@@ -579,6 +579,7 @@ class Lyricist < Atome
         event.preventDefault
         title = grab('title_label')
         @title = title.data
+
       end
     end
   end

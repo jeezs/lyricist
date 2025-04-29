@@ -150,6 +150,8 @@ class Lyricist < Atome
     text_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
+        alert 'case5'
+
         event.preventDefault
         old_timecode = timecode
         new_timecode = timecode_field.data.to_i
@@ -200,6 +202,7 @@ class Lyricist < Atome
     )
 
     update_button.touch(true) do
+      alert 'case7'
       old_timecode = timecode
       new_timecode = timecode_field.data.to_i
       new_text = text_field.data
@@ -256,6 +259,7 @@ class Lyricist < Atome
     )
 
     delete_button.touch(true) do
+      alert 'case8'
       prev_left = editor_container.left
       prev_top = editor_container.top
       lyrics.content.delete(timecode)
@@ -355,6 +359,7 @@ class Lyricist < Atome
 
     new_timecode_field.keyboard(:down) do |native_event|
       event = Native(native_event)
+
       if event[:keyCode].to_s == '13' # Touche Entrée
         event.preventDefault
       end
@@ -440,6 +445,7 @@ class Lyricist < Atome
 
     # Action de confirmation
     confirm_button.touch(true) do
+      alert 'case6'
       prev_left = editor_container.left
       prev_top = editor_container.top
       new_timecode = new_timecode_field.data.to_i
