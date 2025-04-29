@@ -129,7 +129,7 @@ def init_lyrix(lyrics_content, song_path)
   import_drag = grab(:import_module)
   import_drag.display(:none)
   lyr.initialize_list_manager
-  b=grab(:bottom_bar).box({left: :auto, right: 3})
+  # b=grab(:bottom_bar).box({left: :auto, right: 3})
 
   # b.touch(true) do
   #   list= lyr.instance_variable_get"@list"
