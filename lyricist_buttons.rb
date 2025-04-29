@@ -138,15 +138,15 @@ class Lyricist < Atome
     content = val[:content]
 
     current_lyricist = grab(:the_lyricist).data
-    # puts "filename: #{filename}"
-    # puts "extname: #{File.extname(filename).downcase}"
 
     # begin
     case File.extname(filename).downcase
     when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
-      # puts "===> audio case"
       audio_path = "medias/audios/#{filename}"
       current_lyricist.init_audio(audio_path)
+      name_without_extension = File.basename(filename, File.extname(filename))
+      @title=name_without_extension
+      grab(:title_label).data(name_without_extension)
       return # Add explicit return
     when ".txt"
       grab(:importer_support).clear(true)
@@ -154,7 +154,6 @@ class Lyricist < Atome
       grab(:import_module).display(:block)
       @imported_lyrics = val[:content]
     when ".lrx"
-      # puts "===> lrx case"
       # begin
       file_to_load = eval(content)
       lyrics = eval(file_to_load['lyrics'])
