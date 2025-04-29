@@ -6,7 +6,7 @@ require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
 require_relative 'list'
-box({id: :main_stage, width: '100%', height: '100%', color: :red, overflow: :hidden})
+box({id: :main_stage, width: '100%', height: '100%', overflow: :hidden})
 
 # class Audio_player
 class Object
@@ -81,7 +81,7 @@ end
 def parse_song_lyrics(song)
   song_lines = song.split("\n")
   song_lines.each_with_index do |line_found, index|
-    new_id = "a_lyrics_line_#{index}".to_sym
+    new_id = "a_lyrics_line_#{index}"
     # puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
     line_support = grab(:importer_support).box({
@@ -106,6 +106,7 @@ def parse_song_lyrics(song)
     line_support.touch(true) do
       lyrics = grab(:lyric_viewer)
       lyrics.data(line_found)
+      alert 'case 4'
       alter_lyric_event
     end
   end

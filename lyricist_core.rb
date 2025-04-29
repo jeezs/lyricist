@@ -200,6 +200,8 @@ class Lyricist < Atome
   end
 
   def clear_all
+
+     @lyrics={0=>"new"}
     lyric_viewer = grab(:lyric_viewer)
 
     # Regroupement des opérations
@@ -209,15 +211,17 @@ class Lyricist < Atome
                             data: ''
                           })
     else
-      lyric_viewer.content = {}
+      lyric_viewer.content =  @lyrics
       lyric_viewer.data('')
     end
 
     @length = @default_length
+
     lyric_viewer.clear(true)
 
     # Reconstruction du slider
     rebuild_timeline_slider
+
   end
 
   # Méthode pour définir l'anticipation des paroles (en secondes)

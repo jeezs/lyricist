@@ -435,23 +435,6 @@ class Lyricist < Atome
 
     end
 
-    #######
-    # close_import = button({
-    #                         label: :close,
-    #                         id: :close_import,
-    #                         top: LyricsStyle.dimensions[:margin],
-    #                         left: :auto,
-    #                         right: 3,
-    #                         parent: :import_module
-    #                       })
-    # import_drag = grab(:import_module)
-    # close_import.touch(true) do |val|
-    #   if import_drag.display == :none
-    #     import_drag.display(:block)
-    #   else
-    #     import_drag.display(:none)
-    #   end
-    # end
 
     #######
     save_edited_text = button({
@@ -468,12 +451,9 @@ class Lyricist < Atome
       grab(:importer_support).clear(true)
       parse_song_lyrics(@imported_lyrics)
       save_file("#{@title}.txt", @imported_lyrics)
-      # grab(:importer_support).clear(true)
-      # grab(:importer_support).text({data: @imported_lyrics, edit: true})
-      # alert :here
     end
     edit_import = button({
-                           label: :edit,
+                           label: :raw,
                            id: :edit_import,
                            top: LyricsStyle.dimensions[:margin],
                            left: :auto,
@@ -482,18 +462,21 @@ class Lyricist < Atome
                          })
 
     edit_import.touch(true) do |val|
-      grab(:importer_support).clear(true)
-      text_to_edit = grab(:importer_support).text({ data: @imported_lyrics, edit: true })
-      text_to_edit.keyboard(:down) do |native_event|
-        alert :case1
-        @imported_lyrics = text_to_edit.data
-        # if event[:keyCode].to_s == '13' # Touche Entrée
-        #   titesong.blink(:orange)
-        #   event.preventDefault
-        #   title = grab('title_label')
-        #   @title = title.data
-        # end
+      if @edit_lyrics_mode
+        grab("edit_import_label").data(:raw)
+        grab(:importer_support).clear(true)
+        parse_song_lyrics(@imported_lyrics)
+        @edit_lyrics_mode=false
+      else
+        grab("edit_import_label").data(:insert)
+        grab(:importer_support).clear(true)
+        text_to_edit = grab(:importer_support).text({ data: @imported_lyrics, edit: true })
+        text_to_edit.keyboard(:down) do |native_event|
+          @imported_lyrics = text_to_edit.data
+        end
+        @edit_lyrics_mode=true
       end
+
     end
     #######
 
