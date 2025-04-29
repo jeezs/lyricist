@@ -106,7 +106,7 @@ def parse_song_lyrics(song)
     line_support.touch(true) do
       lyrics = grab(:lyric_viewer)
       lyrics.data(line_found)
-      alert 'case4'
+      alert "OK 1 case #{self.class}"
       alter_lyric_event
     end
   end

@@ -19,6 +19,7 @@ class Lyricist < Atome
     @title="ices from hell"
     @list={}
     @allow_next=true
+    @actual_position=0
 
     build_ui
     if content

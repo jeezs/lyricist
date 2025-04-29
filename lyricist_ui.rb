@@ -226,12 +226,26 @@ class Lyricist < Atome
       # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
-        alert 'case3'
-        # grab(:lyrics_support).color(LyricsStyle.colors[:container_bg])
-        # grab(:lyrics_support).remove(:red_col)
         grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
         event.preventDefault
         alter_lyric_event
+
+        #### updating the list
+        current_song = (find_key_by_title(@list, @title))
+        puts  "OK 7 case song: #{current_song}"
+        current_hash=eval(@list[current_song][:lyrics])
+        alert "current_hash: #{current_hash}"
+        alert "current_lyrics : #{@list}"
+        alert "@lyrics[@actual_position]: #{@lyrics[@actual_position]}"
+        # alert "il y a confusion c'est pas actual position mais actual song NB sont et apres actual posiyion"
+        updated_lyrics= current_hash[@actual_position] = @lyrics[@actual_position]
+        # alert "@lyrics : {#{@actual_position} => #{@lyrics[@actual_position]} }}"
+        updated_lyrics=updated_lyrics.to_s
+        @list[current_song][:lyrics]=updated_lyrics
+        alert "current_lyrics : #{@list}"
+        # alert "@actual_position : #{@actual_position}"
+
+
       end
     end
   end
