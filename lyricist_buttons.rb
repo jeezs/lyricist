@@ -238,7 +238,7 @@ class Lyricist < Atome
     end
 
     edit_lyrics = button({
-                           label: "Edit",
+                           label: :Edit,
                            id: :edit_lyrics_button,
                            left: :auto,
                            right: LyricsStyle.dimensions[:margin],
@@ -255,6 +255,7 @@ class Lyricist < Atome
       else
         # Ouvrir l'éditeur
         @editor_open = true
+        grab(:import_module).display(:none)
         show_lyrics_editor(33, 33)
       end
     end
@@ -287,6 +288,8 @@ class Lyricist < Atome
       import_drag = grab(:import_module)
       if import_drag.display == :none
         import_drag.display(:block)
+        grab(:lyrics_editor_container).delete({ recursive: true }) if grab(:lyrics_editor_container)
+
       else
         import_drag.display(:none)
       end
