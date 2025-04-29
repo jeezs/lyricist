@@ -485,7 +485,7 @@ class Lyricist < Atome
       grab(:importer_support).clear(true)
       text_to_edit = grab(:importer_support).text({ data: @imported_lyrics, edit: true })
       text_to_edit.keyboard(:down) do |native_event|
-        # event = Native(native_event)
+        alert :case1
         @imported_lyrics = text_to_edit.data
         # if event[:keyCode].to_s == '13' # Touche Entrée
         #   titesong.blink(:orange)

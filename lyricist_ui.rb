@@ -225,6 +225,7 @@ class Lyricist < Atome
       # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
+        alert 'case3'
         # grab(:lyrics_support).color(LyricsStyle.colors[:container_bg])
         # grab(:lyrics_support).remove(:red_col)
         grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture

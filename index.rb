@@ -6,6 +6,7 @@ require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
 require_relative 'list'
+box({id: :main_stage, width: '100%', height: '100%', color: :red, overflow: :hidden})
 
 # class Audio_player
 class Object
@@ -179,3 +180,4 @@ init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'me
 # ccc.touch(:down) do
 #   alert  a.duration
 # end
+

@@ -118,6 +118,7 @@ class Lyricist < Atome
     timecode_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
+        alert 'case2'
         event.preventDefault
         old_timecode = timecode
         new_timecode = timecode_field.data.to_i
