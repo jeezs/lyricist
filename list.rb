@@ -225,7 +225,7 @@ class Lyricist
       # Action du bouton Delete
       delete_button.touch(true) do
         delete_song_from_list(key)
-        wait 0.3 do
+        wait 0.5 do
           refresh_song_list
         end
       end
@@ -247,6 +247,7 @@ class Lyricist
       top_position += 60
     end
   end
+
 
   # Méthode pour charger une chanson depuis la liste
   def load_song_from_list(key)
@@ -272,6 +273,13 @@ class Lyricist
     # Charger les paroles
     lyrics = eval(song_data["lyrics"]) rescue {}
     grab(:lyric_viewer).content(lyrics) if grab(:lyric_viewer)
+    #  "raw" => @imported_lyrics
+    raw_text= song_data[:raw]
+
+       grab(:importer_support).clear(true)
+          parse_song_lyrics(raw_text)
+          # grab(:import_module).display(:block)
+          @imported_lyrics = raw_text
 
     # Rafraîchir l'affichage
     full_refresh_viewer(0)
@@ -332,7 +340,9 @@ class Lyricist
     new_song = {
       "lyrics" => current_lyrics,
       "song" => @audio_path,
-      "title" => @title
+      "title" => @title,
+      "raw" => @imported_lyrics
+
     }
 
     # Déterminer le prochain numéro disponible

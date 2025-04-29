@@ -149,14 +149,10 @@ class Lyricist < Atome
       current_lyricist.init_audio(audio_path)
       return # Add explicit return
     when ".txt"
-      #   puts "===> text case"
       grab(:importer_support).clear(true)
       parse_song_lyrics(val[:content])
       grab(:import_module).display(:block)
       @imported_lyrics = val[:content]
-      # grab(:lyric_viewer).content(lyrics)
-      # current_lyricist.full_refresh_viewer(0)
-      return # Add explicit return
     when ".lrx"
       # puts "===> lrx case"
       # begin
@@ -171,9 +167,12 @@ class Lyricist < Atome
       grab(:lyric_viewer).content(lyrics)
       @lyrics = grab(:lyric_viewer).content(lyrics)
       current_lyricist.full_refresh_viewer(0)
-      # rescue => e
-      #   puts "Error in LRX processing: #{e.message}"
-      # end
+      raw=file_to_load['raw']
+      #  raw
+      grab(:importer_support).clear(true)
+      parse_song_lyrics(raw)
+      # grab(:import_module).display(:block)
+      @imported_lyrics = raw
       return # Add explicit return
     when ".prx"
 
@@ -442,7 +441,7 @@ class Lyricist < Atome
     #######
     save_edited_text = button({
                                 label: :save,
-                                id: :save_editt,
+                                id: :save_edit,
                                 top: LyricsStyle.dimensions[:margin],
                                 left: :auto,
                                 right: 55,
@@ -502,8 +501,9 @@ class Lyricist < Atome
                          parent: :bottom_bar
                        })
     save_song.touch(true) do
+
       lyrics = grab(:lyric_viewer).content.to_s
-      content_to_save = { lyrics: lyrics, song: @audio_path, title: @title }
+      content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
 
       save_file("#{@title}.lrx", content_to_save)
     end
