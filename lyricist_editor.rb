@@ -259,7 +259,7 @@ class Lyricist < Atome
     )
 
     delete_button.touch(true) do
-      alert 'case8'
+      alert 'case1'
       prev_left = editor_container.left
       prev_top = editor_container.top
       lyrics.content.delete(timecode)
