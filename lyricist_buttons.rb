@@ -23,6 +23,38 @@ class Lyricist < Atome
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
+    if grab(:lyric_viewer).data == '<end>' && @allow_next
+      @allow_next=false
+      grab(:lyric_viewer).data=''
+      #####
+      next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
+      # puts "next_song#{next_song}"
+      puts "loading #{next_song}"
+
+      wait 1 do
+        load_song_from_list(next_song)
+        play_lyrics
+        @allow_next=true
+      end
+      # alert next_song.class
+      # puts "One time only"
+      # wait 1 do
+
+        # load_song_from_list(next_song)
+        # play_lyrics
+        # alert 'ok'
+      # end
+
+      # wait 2 do
+      # next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
+      #
+      # puts "next_song#{next_song}"
+      # load_song_from_list(next_song)
+      # play_lyrics
+      # puts "One time only"
+    end
+
+
   end
 
   def play_lyrics

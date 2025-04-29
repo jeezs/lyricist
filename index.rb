@@ -129,6 +129,17 @@ def init_lyrix(lyrics_content, song_path)
   import_drag = grab(:import_module)
   import_drag.display(:none)
   lyr.initialize_list_manager
+  b=grab(:bottom_bar).box({left: :auto, right: 3})
+
+  # b.touch(true) do
+  #   list= lyr.instance_variable_get"@list"
+  #   title=lyr.instance_variable_get"@title"
+  #   alert list
+  #   alert title
+  #   valr= (lyr.find_key_by_title(list, title).to_i + 1).to_s
+  #   alert valr
+  # end
+  # alert :oki
 end
 
 init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')

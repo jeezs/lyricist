@@ -108,14 +108,10 @@ class Lyricist < Atome
       if lyrics_array[0] == '<end>'
          lyrics_array=[]
          target.content=''
+         # alert :stop!
         stop_lyrics
 
-        next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
 
-         puts "next_song#{next_song}"
-        load_song_from_list(next_song)
-          play_lyrics
-         puts "One time only"
 
       end
 
