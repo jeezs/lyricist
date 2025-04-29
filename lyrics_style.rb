@@ -10,6 +10,7 @@ class LyricsStyle
       # Couleurs principales
       primary: { red: 0.15, green: 0.15, blue: 0.15  },
       secondary: { red: 0.72, green: 0.52, blue: 0.52 },
+      third: { red: 0.32, green: 0.32, blue: 0.32 },
       accent: { red: 0.9, green: 0.3, blue: 0.6 },
       danger: { red: 1, green: 0, blue: 0, alpha: 0.3 },
       success: { red: 0.3, green: 0.8, blue: 0.5 },

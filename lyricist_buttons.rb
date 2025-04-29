@@ -17,14 +17,31 @@ class Lyricist < Atome
   def loading_coundown(next_song)
 
     countdown = grab("lyrics_support").box({ id: :load_warning, width: 120, height: 120 })
+    countdown.smooth(120)
+    countdown.color(LyricsStyle.colors[:third])
+    countdown.shadow(LyricsStyle.decorations[:container_shadow])
+    countdown.center(true)
     @allow_loading = true
     countdown.touch(true) do
       # alert :stop_laoding
       @allow_loading = false
     end
+    countdown_size = 69
+    countdown_label = countdown.text({ data: 3, size: countdown_size })
+    countdown_label.color(LyricsStyle.colors[:first_line_color])
+    countdown_label.center(true)
+    wait 1 do
+      countdown_label.data(2)
+      countdown_label.size(countdown_size - (countdown_size / 3))
+      countdown_label.center(true)
+      wait 1 do
+        countdown_label.data(1)
+        countdown_label.size(countdown_size - (countdown_size / 3))
+        countdown_label.center(true)
+      end
+    end
     wait 3 do
       if @allow_loading
-        puts "loading : #{next_song}"
         load_song_from_list(next_song)
         play_lyrics
         @allow_next = true
@@ -38,7 +55,7 @@ class Lyricist < Atome
   end
 
   def stop_lyrics
-    puts "we are here!"
+    # puts "we are here!"
     stop_audio(@audio_object)
     counter = grab(:counter)
     counter.timer({ stop: true })
@@ -53,12 +70,12 @@ class Lyricist < Atome
       #####
       next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
       # puts "next_song#{next_song}"
-      puts "loading #{next_song} : #{@list.length}"
+      # puts "loading #{next_song} : #{@list.length}"
       if next_song.to_i < @list.length + 1
         loading_coundown(next_song)
       else
         wait 1 do
-          current_song=(next_song.to_i - 1).to_s
+          current_song = (next_song.to_i - 1).to_s
           load_song_from_list(current_song)
           @allow_next = true
           puts 'ending of the list'
@@ -141,7 +158,7 @@ class Lyricist < Atome
       # current_lyricist.full_refresh_viewer(0)
       return # Add explicit return
     when ".lrx"
-      puts "===> lrx case"
+      # puts "===> lrx case"
       # begin
       file_to_load = eval(content)
       lyrics = eval(file_to_load['lyrics'])
@@ -165,10 +182,11 @@ class Lyricist < Atome
       current_lyrix.set_list(filename, content)
       refresh_song_list
       grab(:list_panel).display(:block)
-
+      # load the first song of the list
+      load_song_from_list("1")
       return # Add explicit return
     else
-      puts "===> else case"
+      # puts "===> else case"
       # puts "Extension inconnue"
     end
     # rescue => e
