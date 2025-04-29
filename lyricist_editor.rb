@@ -28,30 +28,30 @@ class Lyricist < Atome
     )
 
     # Bouton pour fermer l'éditeur
-    close_button = editor_container.box(
-      LyricsStyle.action_button_style({
-                                        width: 25,
-                                        height: 25,
-                                        right: 10,
-                                        top: 10,
-                                        color: LyricsStyle.colors[:danger]
-                                      })
-    )
+    # close_button = editor_container.box(
+    #   LyricsStyle.action_button_style({
+    #                                     width: 25,
+    #                                     height: 25,
+    #                                     right: 10,
+    #                                     top: 10,
+    #                                     color: LyricsStyle.colors[:danger]
+    #                                   })
+    # )
 
-    close_button.text(
-      LyricsStyle.text_style({
-                               data: "X",
-                               component: { size: LyricsStyle.dimensions[:text_small] },
-                               color: LyricsStyle.colors[:text_primary],
-                               left: 8,
-                               top: 3
-                             })
-    )
+    # close_button.text(
+    #   LyricsStyle.text_style({
+    #                            data: "X",
+    #                            component: { size: LyricsStyle.dimensions[:text_small] },
+    #                            color: LyricsStyle.colors[:text_primary],
+    #                            left: 8,
+    #                            top: 3
+    #                          })
+    # )
 
-    close_button.touch(true) do
-      editor_container.delete({ recursive: true })
-      @editor_open = false
-    end
+    # close_button.touch(true) do
+    #   editor_container.delete({ recursive: true })
+    #   @editor_open = false
+    # end
 
     # Récupération et tri des paroles
     lyrics = grab(:lyric_viewer)
@@ -79,7 +79,7 @@ class Lyricist < Atome
                                  width: 70,
                                  left: 10,
                                  top: 10,
-                                 color: LyricsStyle.colors[:text_accent]
+                                 color: LyricsStyle.colors[:text_primary]
                                })
       )
 
@@ -281,7 +281,7 @@ class Lyricist < Atome
   def build_add_line_button(editor_container, sorted_lyrics, lyrics)
     add_button = editor_container.box(
       LyricsStyle.line_container_style({
-                                         width: 470,
+                                         width: 520,
                                          height: 40,
                                          left: 10,
                                          top: 50 + (sorted_lyrics.size * 60),

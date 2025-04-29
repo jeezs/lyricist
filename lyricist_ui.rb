@@ -101,8 +101,9 @@ class Lyricist < Atome
                       height: :auto,
                       smooth: LyricsStyle.decorations[:standard_smooth],
                       color: LyricsStyle.colors[:container_bg],
-                      drag: true,
-                      resize: true,
+                      shadow: LyricsStyle.decorations[:shadow],
+                      # drag: true,
+                      # resize: true,
                       depth: 2,
                     })
 

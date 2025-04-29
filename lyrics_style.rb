@@ -13,7 +13,7 @@ class LyricsStyle
       third: { red: 0.32, green: 0.32, blue: 0.32 },
       accent: { red: 0.9, green: 0.3, blue: 0.6 },
       danger: { red: 1, green: 0, blue: 0, alpha: 0.3 },
-      success: { red: 0.3, green: 0.8, blue: 0.5 },
+      success: { red: 0.3, green: 0.3, blue: 0.3 },
       warning: { red: 0.95, green: 0.7, blue: 0.2 },
       info: { red: 0.3, green: 0.7, blue: 0.95 },
       
@@ -34,6 +34,7 @@ class LyricsStyle
   # Dimensions
   def self.dimensions
     {
+      percent_offset_between_lines: 1.3,
       slider_width: 399,
       # Largeurs
       standard_width: 55,
@@ -152,7 +153,7 @@ class LyricsStyle
       color: colors[:container_dark],
       smooth: decorations[:container_smooth],
       shadow: decorations[:container_shadow],
-      border: { width: 1, color: colors[:accent], alpha: 0.3 }
+      # border: { width: 1, color: colors[:accent], alpha: 0.3 }
     }
     style.merge(options)
   end
@@ -189,7 +190,7 @@ class LyricsStyle
       color: colors[:container_medium],
       smooth: decorations[:standard_smooth],
       shadow: decorations[:standard_shadow],
-      border: { width: 1, color: colors[:accent], alpha: 0.2 }
+      # border: { width: 1, color: colors[:accent], alpha: 0.2 }
     }
     style.merge(options)
   end
@@ -215,7 +216,7 @@ class LyricsStyle
       left: 0,
       smooth: decorations[:button_smooth],
       shadow: decorations[:button_shadow],
-      border: { width: 1, color: colors[:accent], alpha: 0.3 },
+      # border: { width: 1, color: colors[:accent], alpha: 0.3 },
       label: '',
       label_color: colors[:text_primary],
       id: identity_generator
@@ -233,7 +234,7 @@ class LyricsStyle
       left: opts[:left],
       color: opts[:color],
       smooth: opts[:smooth],
-      border: opts[:border]
+      # border: opts[:border]
     })
     
     # Ajout de l'ombre si spécifiée

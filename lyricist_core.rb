@@ -78,6 +78,7 @@ class Lyricist < Atome
     result
   end
 
+
   def closest_key_before(hash, target)
     return nil if hash.empty?
 
@@ -108,7 +109,6 @@ class Lyricist < Atome
       if lyrics_array[0] == '<end>'
          lyrics_array=[]
          target.content=''
-         # alert :stop!
         stop_lyrics
 
 
@@ -142,7 +142,6 @@ class Lyricist < Atome
       lyrics_array.each_with_index do |lyric, index|
         next if index == 0
 
-        # Calcul de la position verticale
         top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
                        LyricsStyle.dimensions[:lyrics_size] / 3
 
@@ -150,7 +149,7 @@ class Lyricist < Atome
         child_params = {
           data: lyric,
           component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
-          top: top_position
+          top: top_position* LyricsStyle.dimensions[:percent_offset_between_lines]
         }.merge(common_style)
 
         # Création du texte enfant

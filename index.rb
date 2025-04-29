@@ -181,3 +181,4 @@ init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'me
 #   alert  a.duration
 # end
 
+

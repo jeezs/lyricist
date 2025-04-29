@@ -436,22 +436,22 @@ class Lyricist < Atome
     end
 
     #######
-    close_import = button({
-                            label: :close,
-                            id: :close_import,
-                            top: LyricsStyle.dimensions[:margin],
-                            left: :auto,
-                            right: 3,
-                            parent: :import_module
-                          })
-    import_drag = grab(:import_module)
-    close_import.touch(true) do |val|
-      if import_drag.display == :none
-        import_drag.display(:block)
-      else
-        import_drag.display(:none)
-      end
-    end
+    # close_import = button({
+    #                         label: :close,
+    #                         id: :close_import,
+    #                         top: LyricsStyle.dimensions[:margin],
+    #                         left: :auto,
+    #                         right: 3,
+    #                         parent: :import_module
+    #                       })
+    # import_drag = grab(:import_module)
+    # close_import.touch(true) do |val|
+    #   if import_drag.display == :none
+    #     import_drag.display(:block)
+    #   else
+    #     import_drag.display(:none)
+    #   end
+    # end
 
     #######
     save_edited_text = button({
@@ -459,7 +459,7 @@ class Lyricist < Atome
                                 id: :save_editt,
                                 top: LyricsStyle.dimensions[:margin],
                                 left: :auto,
-                                right: 100,
+                                right: 55,
                                 parent: :import_module
                               })
 
@@ -477,7 +477,7 @@ class Lyricist < Atome
                            id: :edit_import,
                            top: LyricsStyle.dimensions[:margin],
                            left: :auto,
-                           right: 55,
+                           right: 5,
                            parent: :import_module
                          })
 
@@ -497,14 +497,14 @@ class Lyricist < Atome
     end
     #######
 
-    import_drag = grab(:import_module)
-    close_import.touch(true) do |val|
-      if import_drag.display == :none
-        import_drag.display(:block)
-      else
-        import_drag.display(:none)
-      end
-    end
+    # import_drag = grab(:import_module)
+    # close_import.touch(true) do |val|
+    #   if import_drag.display == :none
+    #     import_drag.display(:block)
+    #   else
+    #     import_drag.display(:none)
+    #   end
+    # end
 
     #######
 

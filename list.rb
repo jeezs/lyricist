@@ -12,7 +12,7 @@ class Lyricist
                          })
 
     # Créer le panneau de liste (initialement caché)
-     grab('view').box({
+     grab('main_stage').box({
                                     id: :list_panel,
                                     width: 400,
                                     height: 500,
@@ -24,7 +24,7 @@ class Lyricist
                                     overflow: :auto,
                                     display: :none,
                                     attach: :tool_bar,
-                                    drag: true
+                                    # drag: true
                                   })
 
     # Ajouter une barre de titre au panneau
@@ -51,7 +51,7 @@ class Lyricist
     end
 
     # Ajouter un titre
-    grab('view').text({
+    grab('main_stage').text({
                         content: "Playlist Manager",
                         id: :list_panel_title,
                         width: 300,
@@ -74,7 +74,7 @@ class Lyricist
                         })
 
     # Conteneur pour la liste
-    list_container = grab('view').box({
+    list_container = grab('main_stage').box({
                                         id: :list_container,
                                         width: 380,
                                         height: 400,
@@ -151,7 +151,7 @@ class Lyricist
       next unless item && item["title"]
 
       # Créer le conteneur pour l'élément
-      item_container = grab('view').box({
+      item_container = grab('main_stage').box({
                                           id: "song_item_#{key}",
                                           width: 360,
                                           height: 50,
@@ -164,7 +164,7 @@ class Lyricist
                                         })
 
       # Numéro d'ordre (éditable)
-      order_input = grab('view').text({
+      order_input = grab('main_stage').text({
                                         data: key.to_s,
                                         id: "order_#{key}",
                                         height: 30,
@@ -178,7 +178,7 @@ class Lyricist
                                       })
 
       # Titre de la chanson
-      grab('view').text({
+      grab('main_stage').text({
                           data: item["title"].to_s,
                           id: "title_#{key}",
                           width: 200,
