@@ -15,15 +15,16 @@ class Lyricist
      grab('main_stage').box({
                                     id: :list_panel,
                                     width: 400,
-                                    height: 500,
-                                    top: 50,
+                                    bottom: 50,
+                                    top: 0,
+                                    height: :auto,
                                     left: 150,
                                     color: LyricsStyle.colors[:background],
                                     border: { color: LyricsStyle.colors[:primary], width: 2 },
                                     depth: 10,
                                     overflow: :auto,
                                     display: :none,
-                                    attach: :tool_bar,
+                                    attach: :lyrics_support,
                                     # drag: true
                                   })
 
@@ -64,21 +65,22 @@ class Lyricist
                       })
 
     # Bouton fermer
-    close_list = button({
-                          label: :close,
-                          id: :close_list,
-                          top: 5,
-                          left: :auto,
-                          right: 5,
-                          parent: :list_title_bar
-                        })
+    # close_list = button({
+    #                       label: :close,
+    #                       id: :close_list,
+    #                       top: 5,
+    #                       left: :auto,
+    #                       right: 5,
+    #                       parent: :list_title_bar
+    #                     })
 
     # Conteneur pour la liste
     list_container = grab('main_stage').box({
                                         id: :list_container,
                                         width: 380,
-                                        height: 400,
+                                        height: :auto,
                                         top: 50,
+                                        bottom: 0,
                                         left: 10,
                                         color: LyricsStyle.colors[:background],
                                         attach: :list_panel
@@ -88,7 +90,8 @@ class Lyricist
     add_song = button({
                         label: :new,
                         id: :add_song_to_list,
-                        top: 460,
+                        top: :auto,
+                        bottom: 3,
                         left: 10,
                         # color: LyricsStyle.colors[:accent],
                         parent: :list_panel
@@ -98,7 +101,8 @@ class Lyricist
     save_list = button({
                          label: "Save",
                          id: :save_list,
-                         top: 460,
+                         top: :auto,
+                         bottom: 3,
                          left: :auto,
                          right: 10,
                          # color: LyricsStyle.colors[:primary],
@@ -119,9 +123,9 @@ class Lyricist
     end
 
     # Comportement du bouton Fermer
-    close_list.touch(true) do
-      grab(:list_panel).display(:none)
-    end
+    # close_list.touch(true) do
+    #   grab(:list_panel).display(:none)
+    # end
 
     # Comportement du bouton Add Current
     add_song.touch(true) do
