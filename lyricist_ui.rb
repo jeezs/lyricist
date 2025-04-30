@@ -61,7 +61,7 @@ class Lyricist < Atome
                           context: :insert
                         })
 
-    lyrics_support.touch(:double) do
+    lyrics_support.touch(:long) do
 
       top_f = lyrics_support.top
       if top_f == 0

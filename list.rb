@@ -109,6 +109,9 @@ class Lyricist
     list_button.touch(true) do
       if grab(:list_panel).display == :none
         grab(:list_panel).display(:block)
+        grab(:import_module).display(:none)
+        grab(:lyrics_editor_container).delete({ recursive: true }) if grab(:lyrics_editor_container)
+
         refresh_song_list
       else
         grab(:list_panel).display(:none)

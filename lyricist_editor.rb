@@ -118,7 +118,6 @@ class Lyricist < Atome
     timecode_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
-        alert "OK 2 case #{self.class}"
         event.preventDefault
         old_timecode = timecode
         new_timecode = timecode_field.data.to_i
@@ -143,6 +142,7 @@ class Lyricist < Atome
         end
         prev_position = @actual_position
         full_refresh_viewer(prev_position)
+        update_song_listing
       end
     end
 
@@ -150,7 +150,6 @@ class Lyricist < Atome
     text_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
-        alert "OK 3 case #{self.class}"
 
         event.preventDefault
         old_timecode = timecode
@@ -176,6 +175,7 @@ class Lyricist < Atome
         end
         prev_position = @actual_position
         full_refresh_viewer(prev_position)
+        update_song_listing
       end
     end
   end
@@ -202,7 +202,6 @@ class Lyricist < Atome
     )
 
     update_button.touch(true) do
-      alert "OK 4 case #{self.class}"
       old_timecode = timecode
       new_timecode = timecode_field.data.to_i
       new_text = text_field.data
@@ -232,6 +231,7 @@ class Lyricist < Atome
       end
       prev_position = @actual_position
       full_refresh_viewer(prev_position)
+      update_song_listing
     end
 
     update_button
@@ -279,7 +279,7 @@ class Lyricist < Atome
 
       # Reconstruire le slider
       full_refresh_viewer(current_position)
-      alert "OK 5 case #{self.class}"
+      update_song_listing
     end
 
     delete_button
@@ -448,7 +448,6 @@ class Lyricist < Atome
 
     # Action de confirmation
     confirm_button.touch(true) do
-      alert "OK 6 case #{self.class}"
       prev_left = editor_container.left
       prev_top = editor_container.top
       new_timecode = new_timecode_field.data.to_i
@@ -472,10 +471,12 @@ class Lyricist < Atome
         dialog_container.delete({ recursive: true })
         editor_container.delete({ recursive: true })
         show_lyrics_editor(prev_left, prev_top)
+        update_song_listing
       else
         # Notification d'erreur
         dialog_container.blink(LyricsStyle.colors[:danger])
       end
+
     end
 
     cancel_button.touch(true) do

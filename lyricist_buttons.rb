@@ -255,6 +255,7 @@ class Lyricist < Atome
         @editor_open = true
         grab(:import_module).display(:none)
         show_lyrics_editor(33, 33)
+        grab(:list_panel).display(:none)
       end
     end
 
@@ -287,7 +288,7 @@ class Lyricist < Atome
       if import_drag.display == :none
         import_drag.display(:block)
         grab(:lyrics_editor_container).delete({ recursive: true }) if grab(:lyrics_editor_container)
-
+        grab(:list_panel).display(:none)
       else
         import_drag.display(:none)
       end
