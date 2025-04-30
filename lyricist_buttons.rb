@@ -265,6 +265,7 @@ class Lyricist < Atome
       else
         import_drag.display(:none)
       end
+      update_song_listing
     end
 
     ###########

@@ -107,6 +107,7 @@ class Lyricist
       else
         grab(:list_panel).display(:none)
       end
+      update_song_listing
     end
 
     # Comportement du bouton Add Current
