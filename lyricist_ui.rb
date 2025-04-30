@@ -37,7 +37,7 @@ class Lyricist < Atome
 
     base_text = ''
 
-    lyrics_support = grab(:view).box({
+    lyrics_support = grab(:main_stage).box({
                                        id: :lyrics_support,
                                        width: :auto,
                                        height: :auto,
@@ -91,7 +91,7 @@ class Lyricist < Atome
   end
 
   def build_song_support
-    grab(:view).box({
+    grab(:main_stage).box({
                       id: :import_module,
                       top: LyricsStyle.dimensions[:tool_bar_height],
                       left: :auto,
@@ -134,7 +134,7 @@ class Lyricist < Atome
   end
 
   def build_timeline_slider
-    grab(:view).slider(
+    grab(:main_stage).slider(
       LyricsStyle.slider_style({
                                  id: :timeline_slider,
                                  attach: :bottom_bar,
@@ -189,7 +189,7 @@ class Lyricist < Atome
   end
 
   def build_tool_bar
-    grab(:view).box({
+    grab(:main_stage).box({
                       id: :tool_bar,
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
@@ -203,7 +203,7 @@ class Lyricist < Atome
                       # drag: true
                     })
 
-    grab(:view).box({
+    grab(:main_stage).box({
                       id: :bottom_bar,
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],

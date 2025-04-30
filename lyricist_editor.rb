@@ -2,7 +2,7 @@
 class Lyricist < Atome
   def show_lyrics_editor(left_f, top_f)
     # Conteneur principal pour l'éditeur
-    editor_container = grab(:view).box(
+    editor_container = grab(:main_stage).box(
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
                                     top: top_f,
