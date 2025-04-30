@@ -226,12 +226,15 @@ class Lyricist < Atome
       delete_song_from_list(current_song)
 
       add_current_song_to_list(current_song)
-      refresh_song_list
+      # refresh_song_list
     else
       add_current_song_to_list
-      refresh_song_list
+      # refresh_song_list
     end
-  end
+    # wait 0.5 do
+      refresh_song_list
+  # end
+end
 
   def setup_lyrics_events
     lyrics = grab(:lyric_viewer)

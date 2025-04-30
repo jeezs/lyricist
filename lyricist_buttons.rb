@@ -243,7 +243,9 @@ class Lyricist < Atome
                    })
 
     erase.touch(true) do
+
       clear_all
+      update_song_listing
     end
 
     ###

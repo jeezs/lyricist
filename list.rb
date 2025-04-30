@@ -122,22 +122,142 @@ class Lyricist
     end
   end
 
-  # Méthode pour rafraîchir la liste affichée
+  ## Méthode pour rafraîchir la liste affichée
+  # def refresh_song_list
+  #   # Supprimer tous les éléments actuels de la liste
+  #   list_container = grab(:list_container)
+  #   list_container.clear(true)
+  #   # Vérifier si @list existe
+  #   # Trier les clés numériquement
+  #   sorted_keys = @list.keys.sort_by { |k| k.to_i }
+  #
+  #   # Position de départ pour les éléments de la liste
+  #   top_position = 10
+  #
+  #   # Créer un élément pour chaque chanson
+  #
+  #   sorted_keys.each do |key|
+  #     item = @list[key]
+  #     next unless item && item["title"]
+  #
+  #     # Créer le conteneur pour l'élément
+  #     grab('main_stage').box({
+  #                              id: "song_item_#{key}",
+  #                              width: 360,
+  #                              height: 50,
+  #                              top: top_position,
+  #                              left: 0,
+  #                              smooth: 6,
+  #                              color: LyricsStyle.colors[:primary],
+  #                              attach: :list_container
+  #                            })
+  #
+  #     # Numéro d'ordre (éditable)
+  #     grab('main_stage').text({
+  #                                              data: key.to_s,
+  #                                              id: "order_#{key}",
+  #                                              height: 30,
+  #                                              position: :absolute,
+  #                                              top: 10,
+  #                                              left: 10,
+  #                                              edit: true,
+  #                                              color: :lightgray,
+  #                                              # size: LyricsStyle.dimensions[:text_small],
+  #                                              attach: "song_item_#{key}"
+  #                                            })
+  #
+  #     # Titre de la chanson
+  #     grab('main_stage').text({
+  #                               data: item["title"].to_s,
+  #                               id: "title_#{key}",
+  #                               width: 200,
+  #                               position: :absolute,
+  #                               height: 30,
+  #                               top: 10,
+  #                               left: 50,
+  #                               # size: LyricsStyle.dimensions[:text_small],
+  #                               color: :lightgray,
+  #                               attach: "song_item_#{key}"
+  #                             })
+  #
+  #     # Bouton pour charger cette chanson
+  #     load_button = button({
+  #                            label: "Load",
+  #                            id: "load_#{key}",
+  #                            top: 10,
+  #                            left: 260,
+  #                            width: 40,
+  #                            height: 30,
+  #                            size: LyricsStyle.dimensions[:text_small],
+  #                            # color: LyricsStyle.colors[:primary],
+  #                            parent: "song_item_#{key}"
+  #                          })
+  #
+  #     # Bouton pour supprimer cette chanson
+  #     delete_button = button({
+  #                              label: "X",
+  #                              id: "delete_#{key}",
+  #                              top: 10,
+  #                              left: 310,
+  #                              width: 30,
+  #                              height: 30,
+  #                              size: LyricsStyle.dimensions[:text_small],
+  #                              color: LyricsStyle.colors[:danger],
+  #                              parent: "song_item_#{key}"
+  #                            })
+  #
+  #     # Action du bouton Load
+  #     load_button.touch(true) do
+  #       load_song_from_list(key)
+  #     end
+  #
+  #     # Action du bouton Delete
+  #     delete_button.touch(true) do
+  #       delete_song_from_list(key)
+  #       # wait 0.5 do
+  #         refresh_song_list
+  #       # end
+  #     end
+  #
+  #     # Action sur le changement d'ordre
+  #     grab("order_#{key}").keyboard(:down) do |native_event|
+  #       event = Native(native_event)
+  #       if event[:keyCode].to_s == '13' # Touche Entrée
+  #
+  #         new_order = grab("order_#{key}").data
+  #         alert "here ??? >>>>#{new_order}"
+  #         reorder_song(key, new_order)
+  #         refresh_song_list
+  #         update_song_listing
+  #         event.preventDefault
+  #       end
+  #     end
+  #
+  #     # Incrémenter la position pour le prochain élément
+  #     top_position += 60
+  #   end
+  # end
+
   def refresh_song_list
     # Supprimer tous les éléments actuels de la liste
     list_container = grab(:list_container)
     list_container.clear(true)
+
     # Vérifier si @list existe
+    return unless @list && !@list.empty?
+
+    # Capturer une copie locale de @list qui ne sera pas modifiée
+    current_list = @list.dup
+
     # Trier les clés numériquement
-    sorted_keys = @list.keys.sort_by { |k| k.to_i }
+    sorted_keys = current_list.keys.sort_by { |k| k.to_i }
 
     # Position de départ pour les éléments de la liste
     top_position = 10
 
     # Créer un élément pour chaque chanson
-
     sorted_keys.each do |key|
-      item = @list[key]
+      item = current_list[key]
       next unless item && item["title"]
 
       # Créer le conteneur pour l'élément
@@ -154,17 +274,16 @@ class Lyricist
 
       # Numéro d'ordre (éditable)
       grab('main_stage').text({
-                                               data: key.to_s,
-                                               id: "order_#{key}",
-                                               height: 30,
-                                               position: :absolute,
-                                               top: 10,
-                                               left: 10,
-                                               edit: true,
-                                               color: :lightgray,
-                                               # size: LyricsStyle.dimensions[:text_small],
-                                               attach: "song_item_#{key}"
-                                             })
+                                data: key.to_s,
+                                id: "order_#{key}",
+                                height: 30,
+                                position: :absolute,
+                                top: 10,
+                                left: 10,
+                                edit: true,
+                                color: :lightgray,
+                                attach: "song_item_#{key}"
+                              })
 
       # Titre de la chanson
       grab('main_stage').text({
@@ -175,7 +294,6 @@ class Lyricist
                                 height: 30,
                                 top: 10,
                                 left: 50,
-                                # size: LyricsStyle.dimensions[:text_small],
                                 color: :lightgray,
                                 attach: "song_item_#{key}"
                               })
@@ -189,7 +307,6 @@ class Lyricist
                              width: 40,
                              height: 30,
                              size: LyricsStyle.dimensions[:text_small],
-                             # color: LyricsStyle.colors[:primary],
                              parent: "song_item_#{key}"
                            })
 
@@ -208,14 +325,23 @@ class Lyricist
 
       # Action du bouton Load
       load_button.touch(true) do
-        load_song_from_list(key)
+        # Au lieu d'utiliser la clé directement, chercher l'élément par titre
+        title_to_load = item["title"].to_s
+        new_key = find_song_key_by_title(title_to_load)
+        load_song_from_list(new_key) if new_key
       end
 
       # Action du bouton Delete
       delete_button.touch(true) do
-        delete_song_from_list(key)
-        wait 0.5 do
-          refresh_song_list
+        # Au lieu d'utiliser la clé directement, chercher l'élément par titre
+        title_to_delete = item["title"].to_s
+        new_key = find_song_key_by_title(title_to_delete)
+
+        if new_key
+          delete_song_from_list(new_key)
+          wait 0.2 do
+            refresh_song_list
+          end
         end
       end
 
@@ -223,12 +349,17 @@ class Lyricist
       grab("order_#{key}").keyboard(:down) do |native_event|
         event = Native(native_event)
         if event[:keyCode].to_s == '13' # Touche Entrée
-
+          # Au lieu d'utiliser la clé directement, chercher l'élément par titre
+          title_to_reorder = item["title"].to_s
+          new_key = find_song_key_by_title(title_to_reorder)
           new_order = grab("order_#{key}").data
-          alert "here ??? >>>>#{new_order}"
-          reorder_song(key, new_order)
-          refresh_song_list
-          update_song_listing
+
+          if new_key
+            reorder_song(new_key, new_order)
+            refresh_song_list
+            update_song_listing
+          end
+
           event.preventDefault
         end
       end
@@ -238,6 +369,16 @@ class Lyricist
     end
   end
 
+  # Nouvelle fonction d'aide pour trouver une clé par titre
+  def find_song_key_by_title(title)
+    return nil unless @list
+
+    @list.each do |key, item|
+      return key if item && item["title"].to_s == title
+    end
+
+    nil # Retourne nil si aucune correspondance n'est trouvée
+  end
   # Méthode pour charger une chanson depuis la liste
   def load_song_from_list(key)
     return unless @list && @list[key]
@@ -273,14 +414,33 @@ class Lyricist
   end
 
   # Méthode pour supprimer une chanson de la liste
+  # def delete_song_from_list(key)
+  #   return unless @list && @list[key]
+  #
+  #   # Supprimer l'élément
+  #   @list.delete(key)
+  #
+  #   # Réorganiser les indices si nécessaire
+  #   reorder_all_songs
+  # end
+  # Remplacer complètement la fonction delete_song_from_list
   def delete_song_from_list(key)
     return unless @list && @list[key]
+
+    # Mémoriser le titre de la chanson avant suppression (pour le log)
+    song_title = @list[key]["title"] rescue "inconnu"
+    puts "Suppression de la chanson '#{song_title}' (clé: #{key})"
 
     # Supprimer l'élément
     @list.delete(key)
 
-    # Réorganiser les indices si nécessaire
-    reorder_all_songs
+    # Ne pas appeler reorder_all_songs ici - C'est le changement crucial
+    # reorder_all_songs  <-- Ne pas exécuter cette ligne
+
+    puts "Élément supprimé. Nombre d'éléments restants: #{@list.size}"
+
+    # Rafraîchir l'UI pour refléter les changements
+    # Mais ne pas le faire ici, car cela sera géré par l'appelant
   end
 
   # Méthode pour réorganiser une chanson
@@ -302,16 +462,52 @@ class Lyricist
   end
 
   # Méthode pour réorganiser tous les indices
+  # def reorder_all_songs
+  #   # Créer une copie temporaire triée
+  #   sorted_items = @list.to_a.sort_by { |k, _| k.to_i }
+  #
+  #   # Vider la liste actuelle
+  #   @list = {}
+  #
+  #   # Réinsérer avec des indices consécutifs
+  #   sorted_items.each_with_index do |(_, item), index|
+  #     @list[(index + 1).to_s] = item
+  #   end
+  # end
   def reorder_all_songs
     # Créer une copie temporaire triée
     sorted_items = @list.to_a.sort_by { |k, _| k.to_i }
 
-    # Vider la liste actuelle
-    @list = {}
+    # Au lieu de vider complètement la liste et de la recréer,
+    # nous allons la mettre à jour de manière incrémentale
 
-    # Réinsérer avec des indices consécutifs
-    sorted_items.each_with_index do |(_, item), index|
-      @list[(index + 1).to_s] = item
+    # Stocker les anciennes clés dans un ordre qui correspond aux nouvelles
+    old_keys = sorted_items.map { |k, _| k }
+
+    # Créer un mappage des anciennes clés vers les nouvelles
+    key_mapping = {}
+
+    sorted_items.each_with_index do |(old_key, item), index|
+      new_key = (index + 1).to_s
+      key_mapping[old_key] = new_key
+
+      # Ne modifie pas l'élément si la clé est déjà correcte
+      next if old_key == new_key
+
+      # Mettre à jour l'élément dans @list avec la nouvelle clé
+      @list[new_key] = item
+
+      # Supprimer l'ancienne entrée seulement si elle est différente
+      @list.delete(old_key) if old_key != new_key
+    end
+
+    # Après avoir mis à jour les clés, mettre à jour tous les événements et éléments UI
+    # liés à ces clés. Cette étape est nécessaire mais manquante dans ta fonction.
+    # Elle devrait être effectuée en rafraîchissant l'interface.
+
+    # Appeler refresh_song_list pour mettre à jour l'UI avec les nouvelles clés
+    wait 0.3 do
+      refresh_song_list
     end
   end
 

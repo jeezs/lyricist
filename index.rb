@@ -131,25 +131,7 @@ def init_lyrix(lyrics_content, song_path)
 end
 
 init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
-# wait 3 do
-#   load_song({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
-# end
 
-# lyr.player
-### set number of line
-# set font size
-# play / rec shortcut
-# replace mode
-# dsiplay / change  lyrics at correct time
-# # save lyrics
-# # # load lyrics
-# play audio
-# playlist
-# send midi
-# receive midi
-# pause alternate play / pause add @playing instance_var
-
-# player(:jj, :ll)
 
 ##### test below
 # class Atome
