@@ -219,6 +219,19 @@ class Lyricist < Atome
                     })
   end
 
+  def update_song_listing
+    current_song = (find_key_b◊y_title(@list, @title))
+    if current_song
+      delete_song_from_list(current_song)
+
+      add_current_song_to_list
+      refresh_song_list
+    else
+      add_current_song_to_list
+      refresh_song_list
+    end
+  end
+
   def setup_lyrics_events
     lyrics = grab(:lyric_viewer)
 
@@ -231,17 +244,8 @@ class Lyricist < Atome
         alter_lyric_event
 
         #### updating the list
+        update_song_listing
 
-        current_song = (find_key_b◊y_title(@list, @title))
-        if current_song
-          delete_song_from_list(current_song)
-
-          add_current_song_to_list
-          refresh_song_list
-        else
-          add_current_song_to_list
-          refresh_song_list
-        end
 
         puts "OK 7 case song: #{current_song} #{@list}"
         # current_hash=eval(@list[current_song][:lyrics])
