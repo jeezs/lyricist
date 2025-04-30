@@ -148,7 +148,7 @@ class Lyricist < Atome
       return # Add explicit return
     when ".prx"
       name_without_extension = File.basename(filename, File.extname(filename))
-
+      @list_title = name_without_extension
       grab(:list_title).data  =name_without_extension
 
       current_lyrix = grab(:the_lyricist).data
