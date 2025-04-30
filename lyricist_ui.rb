@@ -224,7 +224,7 @@ class Lyricist < Atome
     if current_song
       delete_song_from_list(current_song)
 
-      add_current_song_to_list
+      add_current_song_to_list(current_song)
       refresh_song_list
     else
       add_current_song_to_list

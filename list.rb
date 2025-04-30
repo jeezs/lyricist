@@ -330,7 +330,7 @@ class Lyricist
   end
 
   # Méthode pour ajouter la chanson actuelle à la liste
-  def add_current_song_to_list
+  def add_current_song_to_list(song_nb = nil)
     return unless @audio_path && @title
 
     # Récupérer les paroles actuelles
@@ -349,8 +349,12 @@ class Lyricist
     next_key = @list.empty? ? "1" : (@list.keys.map(&:to_i).max + 1).to_s
 
     # Ajouter à la liste
+    if song_nb
+      @list[song_nb] = new_song
+    else
+      @list[next_key] = new_song
+    end
 
-    @list[next_key] = new_song
 
   end
 
