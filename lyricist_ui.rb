@@ -185,7 +185,6 @@ class Lyricist < Atome
         end
       end
     end
-
   end
 
   def build_tool_bar
@@ -200,6 +199,7 @@ class Lyricist < Atome
                       height: LyricsStyle.dimensions[:tool_bar_height],
                       opacity: 1,
                       depth: 3,
+                      overflow: :auto
                       # drag: true
                     })
 
@@ -215,6 +215,7 @@ class Lyricist < Atome
                       height: LyricsStyle.dimensions[:tool_bar_height],
                       opacity: 1,
                       depth: 3,
+                      overflow: :auto
                       # drag: true
                     })
   end

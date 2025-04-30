@@ -35,7 +35,7 @@ class LyricsStyle
   def self.dimensions
     {
       percent_offset_between_lines: 1.3,
-      slider_width: 399,
+      slider_width: 333,
       # Largeurs
       standard_width: 55,
       medium_width: 80,
@@ -95,8 +95,8 @@ class LyricsStyle
   # Positions
   def self.positions
     {
-      next: 435,
-      prev: 405,
+      next: 375,
+      prev: 345,
       lyrics_left_offset: 39,
       lyrics_top_offset: 25,
       slider_bottom: 25,

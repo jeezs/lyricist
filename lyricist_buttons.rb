@@ -497,7 +497,8 @@ class Lyricist < Atome
                          label: :save,
                          id: :save,
                          top: LyricsStyle.dimensions[:margin],
-                         left: 525,
+                         left: :auto,
+                         right: LyricsStyle.dimensions[:margin],
                          parent: :bottom_bar
                        })
     save_song.touch(true) do
@@ -514,7 +515,8 @@ class Lyricist < Atome
                          label: :load,
                          id: :load,
                          top: LyricsStyle.dimensions[:margin],
-                         left: 465,
+                         left: :auto,
+                         right: 65,
                          parent: :bottom_bar
                        })
     load_song.import(true) do |val|
