@@ -147,8 +147,10 @@ class Lyricist < Atome
       @imported_lyrics = raw
       return # Add explicit return
     when ".prx"
+      name_without_extension = File.basename(filename, File.extname(filename))
 
-      # puts "===> lrs case"
+      grab(:list_title).data  =name_without_extension
+
       current_lyrix = grab(:the_lyricist).data
       current_lyrix.set_list( content)
       refresh_song_list

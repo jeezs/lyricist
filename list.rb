@@ -37,7 +37,8 @@ class Lyricist
                                                   color: LyricsStyle.colors[:primary],
                                                   attach: :list_panel
                                                 })
-    title_bar_list_text = list_title_bar.text({ position: :absolute, top: LyricsStyle.dimensions[:margin] * 3,
+    title_bar_list_text = list_title_bar.text({ id: :list_title,
+                                              position: :absolute, top: LyricsStyle.dimensions[:margin] * 3,
                                                 left: LyricsStyle.dimensions[:margin] * 3,
                                                 data: 'List name', edit: true, color: LyricsStyle.colors[:secondary] })
     @list_title = 'new list'
