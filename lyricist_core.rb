@@ -98,7 +98,6 @@ class Lyricist < Atome
   end
 
   def format_lyrics(lyrics_array, target)
-    # puts "here ====> #{@length} - #{@actual_position}"
 
     return if lyrics_array.empty?
     # On vérifie si on doit mettre à jour l'affichage
@@ -110,9 +109,6 @@ class Lyricist < Atome
          lyrics_array=[]
          target.content=''
         stop_lyrics
-
-
-
       end
 
       # Propriétés de style pour la première ligne

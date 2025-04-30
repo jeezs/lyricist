@@ -238,7 +238,7 @@ class Lyricist < Atome
     edit_lyrics = button({
                            label: :Edit,
                            id: :edit_lyrics_button,
-                           left: :auto,
+                           left: 610,
                            right: LyricsStyle.dimensions[:margin],
                            top: LyricsStyle.dimensions[:margin],
                            size: LyricsStyle.dimensions[:text_medium],
@@ -278,7 +278,7 @@ class Lyricist < Atome
                              id: :import_viewer,
                              label: :lyrics,
                              top: LyricsStyle.dimensions[:margin],
-                             left: :auto,
+                             left: 545,
                              right: LyricsStyle.positions[:second_column],
                              parent: :tool_bar
                            })
@@ -497,7 +497,7 @@ class Lyricist < Atome
                          label: :save,
                          id: :save,
                          top: LyricsStyle.dimensions[:margin],
-                         left: :auto,
+                         left: 470,
                          right: LyricsStyle.dimensions[:margin],
                          parent: :bottom_bar
                        })
@@ -515,7 +515,7 @@ class Lyricist < Atome
                          label: :load,
                          id: :load,
                          top: LyricsStyle.dimensions[:margin],
-                         left: :auto,
+                         left: 410,
                          right: 65,
                          parent: :bottom_bar
                        })
