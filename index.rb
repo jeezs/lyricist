@@ -6,7 +6,7 @@ require_relative 'lyricist_buttons'
 require_relative 'lyricist_editor'
 require_relative 'lyricist_core'
 require_relative 'list'
-box({id: :main_stage, width: '100%', height: '100%', overflow: :hidden})
+box({id: :main_stage, width: '100%', height: '100%', overflow: :hidden, color: LyricsStyle.colors[:container_bg]})
 
 # class Audio_player
 class Object
@@ -82,7 +82,6 @@ def parse_song_lyrics(song)
   song_lines = song.split("\n")
   song_lines.each_with_index do |line_found, index|
     new_id = "a_lyrics_line_#{index}"
-    # puts "new_id: #{new_id}, #{index} =>> #{line_found}"
 
     line_support = grab(:importer_support).box({
                                                  id: new_id,
@@ -106,22 +105,19 @@ def parse_song_lyrics(song)
     line_support.touch(true) do
       lyrics = grab(:lyric_viewer)
       lyrics.data(line_found)
-      alert "OK 1 case #{self.class}"
       alter_lyric_event
+      update_song_listing
     end
   end
 end
 audio({  id: :basic_audio })
 # Création de l'instance et lancement de l'application
 
-# import_drag=grab(:import_module)
-# import_drag.display(:none)
 
 grab(:toolbox_tool).display(:none)
 
 def init_lyrix(lyrics_content, song_path)
-  # alert "#{lyrics_content}, #{song_path}"
-  # 'medias/audios/Ices_From_Hells.m4a'
+
 
   lyr = Lyricist.new
   # we create an atome to  be able to retrive the lyr
@@ -131,17 +127,7 @@ def init_lyrix(lyrics_content, song_path)
   import_drag = grab(:import_module)
   import_drag.display(:none)
   lyr.initialize_list_manager
-  # b=grab(:bottom_bar).box({left: :auto, right: 3})
 
-  # b.touch(true) do
-  #   list= lyr.instance_variable_get"@list"
-  #   title=lyr.instance_variable_get"@title"
-  #   alert list
-  #   alert title
-  #   valr= (lyr.find_key_by_title(list, title).to_i + 1).to_s
-  #   alert valr
-  # end
-  # alert :oki
 end
 
 init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
@@ -168,7 +154,7 @@ init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'me
 ##### test below
 # class Atome
 #   def method_missing(name, *args, &block)
-#     alert " que faire avec #{name}, #{args}, #{block}"
+#     puts " que faire avec #{name}, #{args}, #{block}"
 #   end
 # end
 # a=audio({path:'medias/audios/Ices_From_Hells.m4a' })
@@ -179,7 +165,9 @@ init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'me
 #
 # ccc=box({top: 170})
 # ccc.touch(:down) do
-#   alert  a.duration
+#   puts  a.duration
 # end
+
+
 
 

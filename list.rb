@@ -12,36 +12,35 @@ class Lyricist
                          })
 
     # Créer le panneau de liste (initialement caché)
-     grab('main_stage').box({
-                                    id: :list_panel,
-                                    width: 400,
-                                    bottom: 50,
-                                    top: 0,
-                                    height: :auto,
-                                    left: 150,
-                                    color: LyricsStyle.colors[:background],
-                                    border: { color: LyricsStyle.colors[:primary], width: 2 },
-                                    depth: 10,
-                                    overflow: :auto,
-                                    display: :none,
-                                    attach: :lyrics_support,
-                                    # drag: true
-                                  })
+    grab('main_stage').box({
+                             id: :list_panel,
+                             width: 400,
+                             bottom: 50,
+                             top: 0,
+                             height: :auto,
+                             left: 150,
+                             color: LyricsStyle.colors[:background],
+                             border: { color: LyricsStyle.colors[:primary], width: 2 },
+                             depth: 10,
+                             overflow: :auto,
+                             display: :none,
+                             attach: :lyrics_support
+                           })
 
     # Ajouter une barre de titre au panneau
     list_title_bar = grab('list_title_bar').box({
-                                        id: :list_title_bar,
-                                        width: 400,
-                                        height: 40,
-                                        top: 0,
-                                        left: 0,
-                                        color: LyricsStyle.colors[:primary],
-                                        attach: :list_panel
-                                      })
-    title_bar_list_text=list_title_bar.text({position: :absolute, top: LyricsStyle.dimensions[:margin]*3,
-                         left: LyricsStyle.dimensions[:margin]*3,
-                         data: 'List name', edit: true, color:  LyricsStyle.colors[:secondary] })
-    @list_title='new list'
+                                                  id: :list_title_bar,
+                                                  width: 400,
+                                                  height: 40,
+                                                  top: 0,
+                                                  left: 0,
+                                                  color: LyricsStyle.colors[:primary],
+                                                  attach: :list_panel
+                                                })
+    title_bar_list_text = list_title_bar.text({ position: :absolute, top: LyricsStyle.dimensions[:margin] * 3,
+                                                left: LyricsStyle.dimensions[:margin] * 3,
+                                                data: 'List name', edit: true, color: LyricsStyle.colors[:secondary] })
+    @list_title = 'new list'
     title_bar_list_text.keyboard(:down) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
@@ -53,38 +52,28 @@ class Lyricist
 
     # Ajouter un titre
     grab('main_stage').text({
-                        content: "Playlist Manager",
-                        id: :list_panel_title,
-                        width: 300,
-                        height: 30,
-                        top: 10,
-                        left: 10,
-                        size: LyricsStyle.dimensions[:text_medium],
-                        color: :white,
-                        attach: :list_title_bar
-                      })
-
-    # Bouton fermer
-    # close_list = button({
-    #                       label: :close,
-    #                       id: :close_list,
-    #                       top: 5,
-    #                       left: :auto,
-    #                       right: 5,
-    #                       parent: :list_title_bar
-    #                     })
+                              content: "Playlist Manager",
+                              id: :list_panel_title,
+                              width: 300,
+                              height: 30,
+                              top: 10,
+                              left: 10,
+                              size: LyricsStyle.dimensions[:text_medium],
+                              color: :white,
+                              attach: :list_title_bar
+                            })
 
     # Conteneur pour la liste
-    list_container = grab('main_stage').box({
-                                        id: :list_container,
-                                        width: 380,
-                                        height: :auto,
-                                        top: 50,
-                                        bottom: 0,
-                                        left: 10,
-                                        color: LyricsStyle.colors[:background],
-                                        attach: :list_panel
-                                      })
+    grab('main_stage').box({
+                             id: :list_container,
+                             width: 380,
+                             height: :auto,
+                             top: 50,
+                             bottom: 0,
+                             left: 10,
+                             color: LyricsStyle.colors[:background],
+                             attach: :list_panel
+                           })
 
     # Bouton pour ajouter une nouvelle chanson
     add_song = button({
@@ -93,7 +82,6 @@ class Lyricist
                         top: :auto,
                         bottom: 3,
                         left: 10,
-                        # color: LyricsStyle.colors[:accent],
                         parent: :list_panel
                       })
 
@@ -105,7 +93,6 @@ class Lyricist
                          bottom: 3,
                          left: :auto,
                          right: 10,
-                         # color: LyricsStyle.colors[:primary],
                          parent: :list_panel
                        })
 
@@ -115,17 +102,11 @@ class Lyricist
         grab(:list_panel).display(:block)
         grab(:import_module).display(:none)
         grab(:lyrics_editor_container).delete({ recursive: true }) if grab(:lyrics_editor_container)
-
         refresh_song_list
       else
         grab(:list_panel).display(:none)
       end
     end
-
-    # Comportement du bouton Fermer
-    # close_list.touch(true) do
-    #   grab(:list_panel).display(:none)
-    # end
 
     # Comportement du bouton Add Current
     add_song.touch(true) do
@@ -158,45 +139,44 @@ class Lyricist
       next unless item && item["title"]
 
       # Créer le conteneur pour l'élément
-      item_container = grab('main_stage').box({
-                                          id: "song_item_#{key}",
-                                          width: 360,
-                                          height: 50,
-                                          top: top_position,
-                                          left: 0,
-                                          smooth: 6,
-                                          color: LyricsStyle.colors[:primary],
-                                          # border: { color: LyricsStyle.colors[:primary], width: 1 },
-                                          attach: :list_container
-                                        })
+      grab('main_stage').box({
+                               id: "song_item_#{key}",
+                               width: 360,
+                               height: 50,
+                               top: top_position,
+                               left: 0,
+                               smooth: 6,
+                               color: LyricsStyle.colors[:primary],
+                               attach: :list_container
+                             })
 
       # Numéro d'ordre (éditable)
-      order_input = grab('main_stage').text({
-                                        data: key.to_s,
-                                        id: "order_#{key}",
-                                        height: 30,
-                                        position: :absolute,
-                                        top: 10,
-                                        left: 10,
-                                        edit: true,
-                                        color: :lightgray,
-                                        # size: LyricsStyle.dimensions[:text_small],
-                                        attach: "song_item_#{key}"
-                                      })
+      grab('main_stage').text({
+                                               data: key.to_s,
+                                               id: "order_#{key}",
+                                               height: 30,
+                                               position: :absolute,
+                                               top: 10,
+                                               left: 10,
+                                               edit: true,
+                                               color: :lightgray,
+                                               # size: LyricsStyle.dimensions[:text_small],
+                                               attach: "song_item_#{key}"
+                                             })
 
       # Titre de la chanson
       grab('main_stage').text({
-                          data: item["title"].to_s,
-                          id: "title_#{key}",
-                          width: 200,
-                          position: :absolute,
-                          height: 30,
-                          top: 10,
-                          left: 50,
-                          # size: LyricsStyle.dimensions[:text_small],
-                          color: :lightgray,
-                          attach: "song_item_#{key}"
-                        })
+                                data: item["title"].to_s,
+                                id: "title_#{key}",
+                                width: 200,
+                                position: :absolute,
+                                height: 30,
+                                top: 10,
+                                left: 50,
+                                # size: LyricsStyle.dimensions[:text_small],
+                                color: :lightgray,
+                                attach: "song_item_#{key}"
+                              })
 
       # Bouton pour charger cette chanson
       load_button = button({
@@ -243,9 +223,10 @@ class Lyricist
         if event[:keyCode].to_s == '13' # Touche Entrée
 
           new_order = grab("order_#{key}").data
-          alert new_order
+          alert "here ??? >>>>#{new_order}"
           reorder_song(key, new_order)
           refresh_song_list
+          update_song_listing
           event.preventDefault
         end
       end
@@ -254,7 +235,6 @@ class Lyricist
       top_position += 60
     end
   end
-
 
   # Méthode pour charger une chanson depuis la liste
   def load_song_from_list(key)
@@ -269,7 +249,6 @@ class Lyricist
     stop_audio(@audio_object) if @audio_object
     counter = grab(:counter)
     counter.timer({ stop: true }) if counter
-    # alert :good
     # On charge la nouvelle chanson
     @title = song_data["title"]
     grab('title_label').data(@title) if grab('title_label')
@@ -280,13 +259,11 @@ class Lyricist
     # Charger les paroles
     lyrics = eval(song_data["lyrics"]) rescue {}
     grab(:lyric_viewer).content(lyrics) if grab(:lyric_viewer)
-    #  "raw" => @imported_lyrics
-    raw_text= song_data[:raw]
+    raw_text = song_data[:raw]
 
-       grab(:importer_support).clear(true)
-          parse_song_lyrics(raw_text)
-          # grab(:import_module).display(:block)
-          @imported_lyrics = raw_text
+    grab(:importer_support).clear(true)
+    parse_song_lyrics(raw_text)
+    @imported_lyrics = raw_text
 
     # Rafraîchir l'affichage
     full_refresh_viewer(0)
@@ -362,13 +339,13 @@ class Lyricist
       @list[next_key] = new_song
     end
 
-
   end
 
   # Méthode pour sauvegarder la playlist
   def save_playlist
+    update_song_listing
     content_to_save = @list
-    list_tile="#{@list_title}.prx"
+    list_tile = "#{@list_title}.prx"
     save_file(list_tile, content_to_save)
   end
 

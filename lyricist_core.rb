@@ -71,13 +71,13 @@ class Lyricist < Atome
     count.times do |i|
       index = closest_index + i
       break if index >= sorted_keys.size
+
       key = sorted_keys[index]
       result << hash[key] if hash[key]
     end
 
     result
   end
-
 
   def closest_key_before(hash, target)
     return nil if hash.empty?
@@ -100,14 +100,15 @@ class Lyricist < Atome
   def format_lyrics(lyrics_array, target)
 
     return if lyrics_array.empty?
+
     # On vérifie si on doit mettre à jour l'affichage
 
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       # Mise à jour de la première ligne
       target.data(lyrics_array[0])
       if lyrics_array[0] == '<end>'
-         lyrics_array=[]
-         target.content=''
+        lyrics_array = []
+        target.content = ''
         stop_lyrics
       end
 
@@ -145,7 +146,7 @@ class Lyricist < Atome
         child_params = {
           data: lyric,
           component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
-          top: top_position* LyricsStyle.dimensions[:percent_offset_between_lines]
+          top: top_position * LyricsStyle.dimensions[:percent_offset_between_lines]
         }.merge(common_style)
 
         # Création du texte enfant
@@ -197,7 +198,7 @@ class Lyricist < Atome
 
   def clear_all
 
-     @lyrics={0=>"new"}
+    @lyrics = { 0 => "new" }
     lyric_viewer = grab(:lyric_viewer)
 
     # Regroupement des opérations
@@ -207,7 +208,7 @@ class Lyricist < Atome
                             data: ''
                           })
     else
-      lyric_viewer.content =  @lyrics
+      lyric_viewer.content = @lyrics
       lyric_viewer.data('')
     end
 

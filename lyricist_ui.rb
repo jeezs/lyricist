@@ -192,7 +192,7 @@ class Lyricist < Atome
                       id: :tool_bar,
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
-                      top: 0,
+                      top: 5,
                       left: 0,
                       right: 0,
                       width: :auto,
@@ -208,7 +208,7 @@ class Lyricist < Atome
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
                       top: :auto,
-                      bottom: 0,
+                      bottom: 5,
                       left: 0,
                       right: 0,
                       width: :auto,
@@ -237,7 +237,6 @@ class Lyricist < Atome
     lyrics = grab(:lyric_viewer)
 
     lyrics.keyboard(:down) do |native_event|
-      # grab(:lyrics_support).color(LyricsStyle.colors[:danger])
       event = Native(native_event)
       if event[:keyCode].to_s == '13' # Touche Entrée
         grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
@@ -246,20 +245,6 @@ class Lyricist < Atome
 
         #### updating the list
         update_song_listing
-
-
-        puts "OK 7 case song: #{current_song} #{@list}"
-        # current_hash=eval(@list[current_song][:lyrics])
-        # # alert " current_hash: #{current_hash}"
-        # # alert "current_lyrics : #{@list}"
-        # # alert "@lyrics[@actual_position]: #{@lyrics[@actual_position]}"
-        # # alert "il y a confusion c'est pas actual position mais actual song NB sont et apres actual posiyion"
-        # updated_lyrics= current_hash[@actual_position] = @lyrics[@actual_position]
-        # # alert "@lyrics : {#{@actual_position} => #{@lyrics[@actual_position]} }}"
-        # updated_lyrics=updated_lyrics.to_s
-        # @list[current_song][:lyrics]=updated_lyrics
-        # # alert "current_lyrics : #{@list}"
-        # alert "@actual_position : #{@actual_position}"
 
       end
     end
