@@ -39,7 +39,7 @@ class Lyricist
                                       })
     title_bar_list_text=list_title_bar.text({position: :absolute, top: LyricsStyle.dimensions[:margin]*3,
                          left: LyricsStyle.dimensions[:margin]*3,
-                         data: 'new list', edit: true, color:  LyricsStyle.colors[:secondary] })
+                         data: 'List name', edit: true, color:  LyricsStyle.colors[:secondary] })
     @list_title='new list'
     title_bar_list_text.keyboard(:down) do |native_event|
       event = Native(native_event)
@@ -86,7 +86,7 @@ class Lyricist
 
     # Bouton pour ajouter une nouvelle chanson
     add_song = button({
-                        label: "new",
+                        label: :new,
                         id: :add_song_to_list,
                         top: 460,
                         left: 10,

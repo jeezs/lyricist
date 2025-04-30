@@ -123,10 +123,10 @@ class Lyricist < Atome
     support.shadow(LyricsStyle.decorations[:invert_shadow])
 
     importer do |val|
-      content= val[:content]
-      filename= val[:name]
+      content = val[:content]
+      filename = val[:name]
       current_lyricist = grab(:the_lyricist).data
-      formated_import={content: content, filename: filename}
+      formated_import = { content: content, filename: filename }
       current_lyricist.load_strategy(formated_import)
       # grab(:importer_support).clear(true)
       # parse_song_lyrics(val[:content])
@@ -147,7 +147,7 @@ class Lyricist < Atome
                                  left: LyricsStyle.dimensions[:margin],
                                  tag: [],
                                  top: :auto,
-                                 bottom: LyricsStyle.dimensions[:margin]*3,
+                                 bottom: LyricsStyle.dimensions[:margin] * 3,
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
 
@@ -231,20 +231,30 @@ class Lyricist < Atome
         alter_lyric_event
 
         #### updating the list
-        current_song = (find_key_by_title(@list, @title))
-        puts  "OK 7 case song: #{current_song}"
-        current_hash=eval(@list[current_song][:lyrics])
-        alert "current_hash: #{current_hash}"
-        alert "current_lyrics : #{@list}"
-        alert "@lyrics[@actual_position]: #{@lyrics[@actual_position]}"
-        # alert "il y a confusion c'est pas actual position mais actual song NB sont et apres actual posiyion"
-        updated_lyrics= current_hash[@actual_position] = @lyrics[@actual_position]
-        # alert "@lyrics : {#{@actual_position} => #{@lyrics[@actual_position]} }}"
-        updated_lyrics=updated_lyrics.to_s
-        @list[current_song][:lyrics]=updated_lyrics
-        alert "current_lyrics : #{@list}"
-        # alert "@actual_position : #{@actual_position}"
 
+        current_song = (find_key_b◊y_title(@list, @title))
+        if current_song
+          delete_song_from_list(current_song)
+
+          add_current_song_to_list
+          refresh_song_list
+        else
+          add_current_song_to_list
+          refresh_song_list
+        end
+
+        puts "OK 7 case song: #{current_song} #{@list}"
+        # current_hash=eval(@list[current_song][:lyrics])
+        # # alert " current_hash: #{current_hash}"
+        # # alert "current_lyrics : #{@list}"
+        # # alert "@lyrics[@actual_position]: #{@lyrics[@actual_position]}"
+        # # alert "il y a confusion c'est pas actual position mais actual song NB sont et apres actual posiyion"
+        # updated_lyrics= current_hash[@actual_position] = @lyrics[@actual_position]
+        # # alert "@lyrics : {#{@actual_position} => #{@lyrics[@actual_position]} }}"
+        # updated_lyrics=updated_lyrics.to_s
+        # @list[current_song][:lyrics]=updated_lyrics
+        # # alert "current_lyrics : #{@list}"
+        # alert "@actual_position : #{@actual_position}"
 
       end
     end
