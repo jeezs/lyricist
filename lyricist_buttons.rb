@@ -526,7 +526,6 @@ class Lyricist < Atome
                            })
         load_file.import(true) do |val|
           current_lyricist = grab(:the_lyricist).data
-          alert val
           current_lyricist.load_strategy(val)
 
         end
