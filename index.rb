@@ -1,4 +1,41 @@
 # frozen_string_literal: true
+
+# Étape 1 : Définir une fonction JavaScript globale (à exécuter une seule fois au démarrage)
+def save_file_to_idb(file_name, content_to_save)
+  # Utilisation de JS.global pour accéder à l'objet localStorage du navigateur
+  # begin
+    # Conversion du contenu en chaîne JSON si nécessaire
+    content_string = content_to_save.is_a?(String) ? content_to_save : content_to_save.to_json
+
+    # Sauvegarde dans localStorage
+    JS.global.localStorage.setItem(file_name, content_string)
+
+
+end
+
+# Étape 2 : Fonction Ruby simplifiée qui appelle la fonction JavaScript
+def load_file(file_name)
+  begin
+    content = JS.global.localStorage.getItem(file_name)
+  rescue => e
+  end
+end
+def list_all_files_in_localstorage
+  # Obtenir le nombre total d'éléments dans localStorage
+  storage_length = JS.global.localStorage.length
+
+  # Initialiser un tableau pour stocker les noms de fichiers
+  files = []
+
+  # Itérer sur tous les index et récupérer les clés
+  storage_length.times do |i|
+    key = JS.global.localStorage.key(i)
+    files << key
+  end
+
+  # Retourner un hash avec la clé :files
+  return { files: files }
+end
 require_relative 'lyrics_style'
 require_relative 'lyricist_base'
 require_relative 'lyricist_ui'
@@ -10,6 +47,8 @@ box({id: :main_stage, width: '100%', height: '100%', overflow: :hidden, color: L
 
 # class Audio_player
 class Object
+
+
 
   def audio_length(audio_object)
     audio_object.length
@@ -130,7 +169,7 @@ def init_lyrix(lyrics_content, song_path)
 
 end
 
-init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Ices_From_Hells.m4a')
+init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Alive.mp3')
 
 
 ##### test below

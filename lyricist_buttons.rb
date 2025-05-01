@@ -2,6 +2,7 @@
 
 class Lyricist < Atome
 
+
   def set_list(content)
     list_content = eval(content)
     @list = list_content
@@ -111,7 +112,6 @@ class Lyricist < Atome
   def load_strategy(val)
     filename = val[:filename]
     content = val[:content]
-
     current_lyricist = grab(:the_lyricist).data
 
     # begin
@@ -120,7 +120,7 @@ class Lyricist < Atome
       audio_path = "medias/audios/#{filename}"
       current_lyricist.init_audio(audio_path)
       name_without_extension = File.basename(filename, File.extname(filename))
-      @title=name_without_extension
+      @title = name_without_extension
       grab(:title_label).data(name_without_extension)
       return # Add explicit return
     when ".txt"
@@ -140,7 +140,7 @@ class Lyricist < Atome
       grab(:lyric_viewer).content(lyrics)
       @lyrics = grab(:lyric_viewer).content(lyrics)
       current_lyricist.full_refresh_viewer(0)
-      raw=file_to_load['raw']
+      raw = file_to_load['raw']
       #  raw
       grab(:importer_support).clear(true)
       parse_song_lyrics(raw)
@@ -149,10 +149,10 @@ class Lyricist < Atome
     when ".prx"
       name_without_extension = File.basename(filename, File.extname(filename))
       @list_title = name_without_extension
-      grab(:list_title).data  =name_without_extension
+      grab(:list_title).data = name_without_extension
 
       current_lyrix = grab(:the_lyricist).data
-      current_lyrix.set_list( content)
+      current_lyrix.set_list(content)
       refresh_song_list
       grab(:list_panel).display(:block)
       # load the first song of the list
@@ -412,7 +412,6 @@ class Lyricist < Atome
 
     end
 
-
     #######
     save_edited_text = button({
                                 label: :save,
@@ -441,25 +440,39 @@ class Lyricist < Atome
 
     edit_import.touch(true) do |val|
       if @edit_lyrics_mode
-        #raw edit mode
+        # raw edit mode
         grab("edit_import_label").data(:raw)
         grab(:importer_support).clear(true)
         parse_song_lyrics(@imported_lyrics)
-        @edit_lyrics_mode=false
+        @edit_lyrics_mode = false
       else
-        #insert edit mode
+        # insert edit mode
         grab("edit_import_label").data(:insert)
         grab(:importer_support).clear(true)
         text_to_edit = grab(:importer_support).text({ data: @imported_lyrics, edit: true })
         text_to_edit.keyboard(:down) do |native_event|
           @imported_lyrics = text_to_edit.data
         end
-        @edit_lyrics_mode=true
+        @edit_lyrics_mode = true
       end
       update_song_listing
     end
 
     #######
+    # def save_fileinlocalstorage(file_name, content_to_save)
+    #   # Utilisation de JS.global pour accéder à l'objet localStorage du navigateur
+    #   begin
+    #     # Conversion du contenu en chaîne JSON si nécessaire
+    #     content_string = content_to_save.is_a?(String) ? content_to_save : content_to_save.to_json
+    #
+    #     # Sauvegarde dans localStorage
+    #     JS.global.localStorage.setItem(file_name, content_string)
+    #
+    #     return { success: true, message: "Fichier '#{file_name}' sauvegardé avec succès" }
+    #   rescue => e
+    #     return { success: false, message: "Erreur lors de la sauvegarde: #{e.message}" }
+    #   end
+    # end
 
     save_song = button({
                          label: :save,
@@ -471,14 +484,15 @@ class Lyricist < Atome
                        })
     save_song.touch(true) do
 
-      lyrics = grab(:lyric_viewer).content.to_s
       update_song_listing
       content_to_save = @list
       list_tile = "#{@list_title}.prx"
       save_file(list_tile, content_to_save)
-      #to save file instead uncomment the line below
-      # content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
-      # save_file("#{@title}.lrx", content_to_save)
+      save_file_to_idb(list_tile, content_to_save)
+      #  #to save file instead uncomment the line below
+      # lyrics = grab(:lyric_viewer).content.to_s
+      #  content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
+      #  save_file("#{@title}.lrx", content_to_save)
     end
 
     #########
@@ -491,12 +505,52 @@ class Lyricist < Atome
                          right: 65,
                          parent: :bottom_bar
                        })
-    load_song.import(true) do |val|
-      current_lyricist = grab(:the_lyricist).data
-      current_lyricist.load_strategy(val)
+
+    load_song.touch(true) do
+      if grab(:loader)
+        grab(:loader).delete({ recursive: true })
+      else
+        grab(:lyric_viewer).box({ id: :loader,
+                                  width: 259,
+                                  height: 333,
+                                  smooth: 9,
+                                  shadow: LyricsStyle.decorations[:shadow] })
+        load_file = button({
+                             label: :disk,
+                             id: :disk_loader,
+                             top: 3,
+                             left: 3,
+                             right: 65,
+                             parent: :loader,
+
+                           })
+        load_file.import(true) do |val|
+          current_lyricist = grab(:the_lyricist).data
+          alert val
+          current_lyricist.load_strategy(val)
+
+        end
+
+        # loading files in db
+        result=    list_all_files_in_localstorage
+
+        result[:files].each_with_index do |file, index|
+
+          list_f= grab(:loader).text(file)
+          list_f.position(:absolute)
+          list_f.left(5)
+          list_f.top((25*index)+39)
+          list_f.touch(true) do
+            file_content=   load_file(file)
+            current_lyricist = grab(:the_lyricist).data
+            list_to_load={filename: file.to_s, content: file_content.to_s}
+            current_lyricist.load_strategy(list_to_load)
+
+          end
+        end
+      end
 
     end
-
 
     titesong = button({
                         label: @title,
