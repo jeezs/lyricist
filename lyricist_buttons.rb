@@ -11,42 +11,50 @@ class Lyricist < Atome
     @imported_lyrics = lyr
   end
 
-  def loading_countdown(next_song)
+  def loading_countdown(next_song, allow_countdown)
 
-    countdown = grab("lyrics_support").box({ id: :load_warning, width: 120, height: 120 })
-    countdown.smooth(120)
-    countdown.color(LyricsStyle.colors[:third])
-    countdown.shadow(LyricsStyle.decorations[:container_shadow])
-    countdown.center(true)
-    @allow_loading = true
-    countdown.touch(true) do
-      @allow_loading = false
-    end
-    countdown_size = 69
-    countdown_label = countdown.text({ data: 3, size: countdown_size })
-    countdown_label.color(LyricsStyle.colors[:first_line_color])
-    countdown_label.center(true)
-    wait 1 do
-      countdown_label.data(2)
-      countdown_label.size(countdown_size - (countdown_size / 3))
+
+
+    if allow_countdown
+      countdown = grab("lyrics_support").box({ id: :load_warning, width: 120, height: 120 })
+      countdown.smooth(120)
+      countdown.color(LyricsStyle.colors[:third])
+      countdown.shadow(LyricsStyle.decorations[:container_shadow])
+      countdown.center(true)
+      @allow_loading = true
+      countdown.touch(true) do
+        @allow_loading = false
+      end
+      countdown_size = 69
+      countdown_label = countdown.text({ data: 3, size: countdown_size })
+      countdown_label.color(LyricsStyle.colors[:first_line_color])
       countdown_label.center(true)
       wait 1 do
-        countdown_label.data(1)
+        countdown_label.data(2)
         countdown_label.size(countdown_size - (countdown_size / 3))
         countdown_label.center(true)
+        wait 1 do
+          countdown_label.data(1)
+          countdown_label.size(countdown_size - (countdown_size / 3))
+          countdown_label.center(true)
+        end
       end
-    end
-    wait 3 do
-      if @allow_loading
-        load_song_from_list(next_song)
-        play_lyrics
-        @allow_next = true
-        @allow_loading = true
-      else
-        alert "#msg from line 46 lyricist_button"
+      wait 3 do
+        if @allow_loading
+          load_song_from_list(next_song)
+          play_lyrics
+          @allow_next = true
+          @allow_loading = true
+        else
+          alert "#msg from line 46 lyricist_button"
+        end
+        countdown.delete({ recursive: true })
       end
-      countdown.delete({ recursive: true })
+    else
+      load_song_from_list(next_song)
+
     end
+
   end
 
   def play_next_song(params={})
@@ -54,13 +62,19 @@ class Lyricist < Atome
       song_to_load = -1
     else
       song_to_load = 1
+    end
 
+    if params[:immediate]
+      loading_countdown = false
+
+    else
+      loading_countdown = true
     end
     @allow_next = false
     grab(:lyric_viewer).data = ''
     next_song = (find_key_by_title(@list, @title).to_i + song_to_load).to_s
     if next_song.to_i < @list.length + 1
-      loading_countdown(next_song)
+      loading_countdown(next_song, loading_countdown)
     else
       wait 1 do
         current_song = (next_song.to_i - 1).to_s
@@ -511,7 +525,7 @@ class Lyricist < Atome
                             })
 
     load_prev_song.touch(true) do
-      play_next_song({prev: true})
+      play_next_song({prev: true, immediate: true})
     end
 
 
@@ -525,7 +539,7 @@ class Lyricist < Atome
                        })
 
     load_next_song.touch(true) do
-      play_next_song({})
+      play_next_song({immediate: true})
     end
 
     #########
