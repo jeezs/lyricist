@@ -514,7 +514,7 @@ class Lyricist < Atome
       content_to_save = @list
       list_tile = "#{@list_title}.prx"
       save_file(list_tile, content_to_save)
-      save_file_to_idb(list_tile, content_to_save)
+      save_file_to_db(list_tile, content_to_save)
       #  #to save file instead uncomment the line below
       # lyrics = grab(:lyric_viewer).content.to_s
       #  content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}

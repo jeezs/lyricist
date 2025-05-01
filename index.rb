@@ -8,17 +8,13 @@ def hide_all_panels
   grab(:loader).delete({ recursive: true }) if  grab(:loader)
 end
 
-def save_file_to_idb(file_name, content_to_save)
-  # Utilisation de JS.global pour accéder à l'objet localStorage du navigateur
-  # begin
-    # Conversion du contenu en chaîne JSON si nécessaire
+def save_file_to_db(file_name, content_to_save)
     content_string = content_to_save.is_a?(String) ? content_to_save : content_to_save.to_json
-
-    # Sauvegarde dans localStorage
     JS.global.localStorage.setItem(file_name, content_string)
-
-
 end
+
+
+
 
 # Étape 2 : Fonction Ruby simplifiée qui appelle la fonction JavaScript
 def load_file(file_name)
@@ -213,4 +209,46 @@ init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'me
 
 
 
+
+# ########### example IDB
+#
+# b = box({ left: 0, text: :save })
+#
+# b.touch(true) do
+#   b.idb_save('eDen', :toto, "hello") do |file_get|
+#     puts "file_saved: #{file_get}"
+#   end
+# end
+#
+# c = box({ left: 50, text: :load })
+#
+# c.touch(true) do
+#   A.idb_load('eDen', :toto) do |file_get|
+#     puts "file_get: #{file_get}"
+#   end
+# end
+#
+# d = box({ left: 100, text: :list })
+#
+# d.touch(true) do
+#   A.idb_list(:eDen) do |file_get|
+#     puts "file_list: #{file_get}"
+#   end
+# end
+#
+# e = box({ left: 150, text: :remove })
+#
+# e.touch(true) do
+#   A.idb_remove('eDen', :toto) do |file_get|
+#     puts "file_remove: #{file_get}"
+#   end
+# end
+#
+# f = box({ left: 200, text: :reset })
+#
+# f.touch(true) do
+#   A.idb_reset(:eDen)do |file_get|
+#     puts "file_reset: #{file_get}"
+#   end
+# end
 
