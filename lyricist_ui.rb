@@ -45,6 +45,7 @@ class Lyricist < Atome
                                        left: 0,
                                        right: 0,
                                        bottom: 0,
+                                       overflow: :scroll,
                                        color: LyricsStyle.colors[:container_bg]
                                      })
 
@@ -91,11 +92,11 @@ class Lyricist < Atome
   end
 
   def build_song_support
-    grab(:main_stage).box({
+    grab(:lyrics_support).box({
                       id: :import_module,
                       top: LyricsStyle.dimensions[:tool_bar_height],
-                      left: :auto,
-                      right: 9,
+                      left: 0,
+                      # right: 9,
                       width: 399,
                       bottom: 50,
                       height: :auto,
@@ -144,10 +145,10 @@ class Lyricist < Atome
                                  width: LyricsStyle.dimensions[:slider_width],
                                  value: 0,
                                  height: LyricsStyle.dimensions[:slider_height],
-                                 left: LyricsStyle.dimensions[:margin],
+                                 left: LyricsStyle.dimensions[:margin]+33,
                                  tag: [],
-                                 top: :auto,
-                                 bottom: LyricsStyle.dimensions[:margin] * 3,
+                                 top: LyricsStyle.dimensions[:margin] ,
+                                 # bottom: LyricsStyle.dimensions[:margin] * 3,
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
 

@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 # Étape 1 : Définir une fonction JavaScript globale (à exécuter une seule fois au démarrage)
+def hide_all_panels
+  grab(:import_module).display(:none) if  grab(:import_module)
+  grab(:list_panel).display(:none) if  grab(:list_panel)
+  grab(:lyrics_editor_container).delete({ recursive: true }) if  grab(:lyrics_editor_container)
+  grab(:loader).delete({ recursive: true }) if  grab(:loader)
+end
+
 def save_file_to_idb(file_name, content_to_save)
   # Utilisation de JS.global pour accéder à l'objet localStorage du navigateur
   # begin
@@ -166,6 +173,35 @@ def init_lyrix(lyrics_content, song_path)
   import_drag = grab(:import_module)
   import_drag.display(:none)
   lyr.initialize_list_manager
+
+
+
+  ############
+
+  result = list_all_files_in_localstorage
+  file = result[:files][0]
+  # alert file_to_load
+  file_content = load_file(file)
+
+  current_lyricist = grab(:the_lyricist).data
+  list_to_load = { filename: file.to_s, content: file_content.to_s }
+  current_lyricist.load_strategy(list_to_load)
+
+  # result[:files].each_with_index do |file, index|
+  #   # alert file
+  #   # list_f = grab(:loader).text(file)
+  #   # list_f.position(:absolute)
+  #   # list_f.left(5)
+  #   # list_f.top((25 * index) + 39)
+  #   # list_f.touch(true) do
+  #   #   file_content = load_file(file)
+  #   #   current_lyricist = grab(:the_lyricist).data
+  #   #   list_to_load = { filename: file.to_s, content: file_content.to_s }
+  #   #   current_lyricist.load_strategy(list_to_load)
+  #   # end
+  # end
+
+  ############
 
 end
 

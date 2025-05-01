@@ -18,9 +18,9 @@ class Lyricist
                              bottom: 50,
                              top: 0,
                              height: :auto,
-                             left: 150,
+                             left: 0,
                              color: LyricsStyle.colors[:background],
-                             border: { color: LyricsStyle.colors[:primary], width: 2 },
+                             # border: { color: LyricsStyle.colors[:primary], width: 2 },
                              depth: 10,
                              overflow: :auto,
                              display: :none,
@@ -31,12 +31,26 @@ class Lyricist
     list_title_bar = grab('list_title_bar').box({
                                                   id: :list_title_bar,
                                                   width: 400,
-                                                  height: 40,
+                                                  height: 39,
                                                   top: 0,
                                                   left: 0,
                                                   color: LyricsStyle.colors[:primary],
-                                                  attach: :list_panel
+                                                  attach: :list_panel,
+                                                  shadow: LyricsStyle.decorations[:shadow]
+
                                                 })
+    list_bottom_bar = grab('list_title_bar').box({
+                                                  id: :list_bottom_bar,
+                                                  width: 400,
+                                                  height: 39,
+                                                  top: :auto,
+                                                  bottom: 0,
+                                                  left: 0,
+                                                  color: LyricsStyle.colors[:primary],
+                                                  attach: :list_panel,
+                                                  shadow: LyricsStyle.decorations[:shadow]
+                                                })
+
     title_bar_list_text = list_title_bar.text({ id: :list_title,
                                               position: :absolute, top: LyricsStyle.dimensions[:margin] * 3,
                                                 left: LyricsStyle.dimensions[:margin] * 3,
@@ -69,10 +83,13 @@ class Lyricist
                              id: :list_container,
                              width: 380,
                              height: :auto,
-                             top: 50,
-                             bottom: 0,
+                             top: 39,
+                             bottom: 39,
                              left: 10,
-                             color: LyricsStyle.colors[:background],
+                             overflow: :auto,
+
+                             color: {alpha: 0},
+                             # color: :white,
                              attach: :list_panel
                            })
 
@@ -83,7 +100,7 @@ class Lyricist
                         top: :auto,
                         bottom: 3,
                         left: 10,
-                        parent: :list_panel
+                        parent: :list_bottom_bar,
                       })
 
     # Bouton pour sauvegarder les changements
@@ -94,7 +111,7 @@ class Lyricist
                          bottom: 3,
                          left: :auto,
                          right: 10,
-                         parent: :list_panel
+                         parent: :list_bottom_bar
                        })
 
     # Comportement du bouton List
@@ -122,121 +139,7 @@ class Lyricist
     end
   end
 
-  ## Méthode pour rafraîchir la liste affichée
-  # def refresh_song_list
-  #   # Supprimer tous les éléments actuels de la liste
-  #   list_container = grab(:list_container)
-  #   list_container.clear(true)
-  #   # Vérifier si @list existe
-  #   # Trier les clés numériquement
-  #   sorted_keys = @list.keys.sort_by { |k| k.to_i }
-  #
-  #   # Position de départ pour les éléments de la liste
-  #   top_position = 10
-  #
-  #   # Créer un élément pour chaque chanson
-  #
-  #   sorted_keys.each do |key|
-  #     item = @list[key]
-  #     next unless item && item["title"]
-  #
-  #     # Créer le conteneur pour l'élément
-  #     grab('main_stage').box({
-  #                              id: "song_item_#{key}",
-  #                              width: 360,
-  #                              height: 50,
-  #                              top: top_position,
-  #                              left: 0,
-  #                              smooth: 6,
-  #                              color: LyricsStyle.colors[:primary],
-  #                              attach: :list_container
-  #                            })
-  #
-  #     # Numéro d'ordre (éditable)
-  #     grab('main_stage').text({
-  #                                              data: key.to_s,
-  #                                              id: "order_#{key}",
-  #                                              height: 30,
-  #                                              position: :absolute,
-  #                                              top: 10,
-  #                                              left: 10,
-  #                                              edit: true,
-  #                                              color: :lightgray,
-  #                                              # size: LyricsStyle.dimensions[:text_small],
-  #                                              attach: "song_item_#{key}"
-  #                                            })
-  #
-  #     # Titre de la chanson
-  #     grab('main_stage').text({
-  #                               data: item["title"].to_s,
-  #                               id: "title_#{key}",
-  #                               width: 200,
-  #                               position: :absolute,
-  #                               height: 30,
-  #                               top: 10,
-  #                               left: 50,
-  #                               # size: LyricsStyle.dimensions[:text_small],
-  #                               color: :lightgray,
-  #                               attach: "song_item_#{key}"
-  #                             })
-  #
-  #     # Bouton pour charger cette chanson
-  #     load_button = button({
-  #                            label: "Load",
-  #                            id: "load_#{key}",
-  #                            top: 10,
-  #                            left: 260,
-  #                            width: 40,
-  #                            height: 30,
-  #                            size: LyricsStyle.dimensions[:text_small],
-  #                            # color: LyricsStyle.colors[:primary],
-  #                            parent: "song_item_#{key}"
-  #                          })
-  #
-  #     # Bouton pour supprimer cette chanson
-  #     delete_button = button({
-  #                              label: "X",
-  #                              id: "delete_#{key}",
-  #                              top: 10,
-  #                              left: 310,
-  #                              width: 30,
-  #                              height: 30,
-  #                              size: LyricsStyle.dimensions[:text_small],
-  #                              color: LyricsStyle.colors[:danger],
-  #                              parent: "song_item_#{key}"
-  #                            })
-  #
-  #     # Action du bouton Load
-  #     load_button.touch(true) do
-  #       load_song_from_list(key)
-  #     end
-  #
-  #     # Action du bouton Delete
-  #     delete_button.touch(true) do
-  #       delete_song_from_list(key)
-  #       # wait 0.5 do
-  #         refresh_song_list
-  #       # end
-  #     end
-  #
-  #     # Action sur le changement d'ordre
-  #     grab("order_#{key}").keyboard(:down) do |native_event|
-  #       event = Native(native_event)
-  #       if event[:keyCode].to_s == '13' # Touche Entrée
-  #
-  #         new_order = grab("order_#{key}").data
-  #         alert "here ??? >>>>#{new_order}"
-  #         reorder_song(key, new_order)
-  #         refresh_song_list
-  #         update_song_listing
-  #         event.preventDefault
-  #       end
-  #     end
-  #
-  #     # Incrémenter la position pour le prochain élément
-  #     top_position += 60
-  #   end
-  # end
+
 
   def refresh_song_list
     # Supprimer tous les éléments actuels de la liste
@@ -261,7 +164,7 @@ class Lyricist
       next unless item && item["title"]
 
       # Créer le conteneur pour l'élément
-      grab('main_stage').box({
+      song_item = grab('main_stage').box({
                                id: "song_item_#{key}",
                                width: 360,
                                height: 50,
@@ -269,6 +172,7 @@ class Lyricist
                                left: 0,
                                smooth: 6,
                                color: LyricsStyle.colors[:primary],
+                               # color: :red,
                                attach: :list_container
                              })
 
@@ -329,6 +233,16 @@ class Lyricist
         title_to_load = item["title"].to_s
         new_key = find_song_key_by_title(title_to_load)
         load_song_from_list(new_key) if new_key
+        grab(:list_panel).display(:none)
+
+      end
+
+      song_item.touch(true) do
+        title_to_load = item["title"].to_s
+        new_key = find_song_key_by_title(title_to_load)
+        load_song_from_list(new_key) if new_key
+        grab(:list_panel).display(:none)
+
       end
 
       # Action du bouton Delete
@@ -385,8 +299,6 @@ class Lyricist
 
     song_data = @list[key]
 
-    # # On ferme le panneau
-    # grab(:list_panel).display(:none)
 
     # On arrête la lecture en cours
     stop_audio(@audio_object) if @audio_object

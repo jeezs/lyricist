@@ -2,56 +2,14 @@
 class Lyricist < Atome
   def show_lyrics_editor(left_f, top_f)
     # Conteneur principal pour l'éditeur
-    editor_container = grab(:main_stage).box(
+    editor_container = grab(:lyrics_support).box(
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
-                                    top: top_f,
-                                    left: left_f,
-                                    position: :absolute,
-                                    overflow: :auto,
-                                    #drag: true,
-                                    # resize: true,
-                                    depth: 4
+                                    color: {alpha: 0}
                                   })
     )
 
-    # Titre de l'éditeur
-    editor_container.text(
-      LyricsStyle.text_style({
-                               data: "Lyrics editor",
-                               component: { size: LyricsStyle.dimensions[:text_large] },
-                               color: LyricsStyle.colors[:text_primary],
-                               left: 33,
-                               top: 10,
 
-                             })
-    )
-
-    # Bouton pour fermer l'éditeur
-    # close_button = editor_container.box(
-    #   LyricsStyle.action_button_style({
-    #                                     width: 25,
-    #                                     height: 25,
-    #                                     right: 10,
-    #                                     top: 10,
-    #                                     color: LyricsStyle.colors[:danger]
-    #                                   })
-    # )
-
-    # close_button.text(
-    #   LyricsStyle.text_style({
-    #                            data: "X",
-    #                            component: { size: LyricsStyle.dimensions[:text_small] },
-    #                            color: LyricsStyle.colors[:text_primary],
-    #                            left: 8,
-    #                            top: 3
-    #                          })
-    # )
-
-    # close_button.touch(true) do
-    #   editor_container.delete({ recursive: true })
-    #   @editor_open = false
-    # end
 
     # Récupération et tri des paroles
     lyrics = grab(:lyric_viewer)
@@ -59,13 +17,14 @@ class Lyricist < Atome
 
     # Affichage des paroles avec options d'édition
     sorted_lyrics.each_with_index do |(timecode, text), index|
-      y_position = 50 + (index * 60)
+      y_position = 70 + (index * 60)
 
       # Conteneur pour chaque ligne
       line_container = editor_container.box(
         LyricsStyle.line_container_style({
                                            id: "line_container_#{index}".to_sym,
-                                           top: y_position
+                                           top: y_position,
+                                           color: {red: 0.1, green: 0.1, blue: 0.1},
                                          })
       )
 
@@ -291,7 +250,7 @@ class Lyricist < Atome
                                          width: 520,
                                          height: 40,
                                          left: 10,
-                                         top: 50 + (sorted_lyrics.size * 60),
+                                         top: 15,
                                          color: LyricsStyle.colors[:success]
                                        })
     )
@@ -322,6 +281,7 @@ class Lyricist < Atome
                                     height: 150,
                                     left: 120,
                                     top: 120,
+                                    color: {red: 0.1, green: 0.1, blue: 0.1},
                                     position: :absolute
                                   })
     )
@@ -350,13 +310,13 @@ class Lyricist < Atome
     new_timecode_field = dialog_container.text(
       LyricsStyle.text_style({
                                id: :new_timecode,
-                               data: 120,
+                               data: 100,
                                component: { size: LyricsStyle.dimensions[:text_normal] },
                                edit: true,
                                width: 200,
-                               left: 90,
+                               left: 110,
                                top: 40,
-                               color: LyricsStyle.colors[:text_accent]
+                               # color: LyricsStyle.colors[:text_accent]
                              })
     )
 
@@ -409,7 +369,7 @@ class Lyricist < Atome
       LyricsStyle.action_button_style({
                                         width: LyricsStyle.dimensions[:large_width],
                                         height: 30,
-                                        left: 30,
+                                        left: 3,
                                         top: 110,
                                         color: LyricsStyle.colors[:success]
                                       })
@@ -417,7 +377,7 @@ class Lyricist < Atome
 
     confirm_button.text(
       LyricsStyle.text_style({
-                               data: "Confirmer",
+                               data: "ok",
                                component: { size: LyricsStyle.dimensions[:text_normal] },
                                color: LyricsStyle.colors[:text_primary],
                                left: 30,
@@ -430,7 +390,7 @@ class Lyricist < Atome
       LyricsStyle.action_button_style({
                                         width: LyricsStyle.dimensions[:large_width],
                                         height: 30,
-                                        left: 160,
+                                        left: 150,
                                         top: 110,
                                         color: :gray
                                       })
@@ -438,7 +398,7 @@ class Lyricist < Atome
 
     cancel_button.text(
       LyricsStyle.text_style({
-                               data: "Annuler",
+                               data: "Cancel",
                                component: { size: LyricsStyle.dimensions[:text_normal] },
                                color: LyricsStyle.colors[:text_primary],
                                left: 35,

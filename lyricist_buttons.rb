@@ -2,7 +2,6 @@
 
 class Lyricist < Atome
 
-
   def set_list(content)
     list_content = eval(content)
     @list = list_content
@@ -418,7 +417,7 @@ class Lyricist < Atome
                                 id: :save_edit,
                                 top: LyricsStyle.dimensions[:margin],
                                 left: :auto,
-                                right: 55,
+                                right: 66,
                                 parent: :import_module
                               })
 
@@ -507,7 +506,9 @@ class Lyricist < Atome
                        })
 
     load_song.touch(true) do
+      hide_all_panels
       if grab(:loader)
+
         grab(:loader).delete({ recursive: true })
       else
         grab(:lyric_viewer).box({ id: :loader,
@@ -531,20 +532,17 @@ class Lyricist < Atome
         end
 
         # loading files in db
-        result=    list_all_files_in_localstorage
-
+        result = list_all_files_in_localstorage
         result[:files].each_with_index do |file, index|
-
-          list_f= grab(:loader).text(file)
+          list_f = grab(:loader).text(file)
           list_f.position(:absolute)
           list_f.left(5)
-          list_f.top((25*index)+39)
+          list_f.top((25 * index) + 39)
           list_f.touch(true) do
-            file_content=   load_file(file)
+            file_content = load_file(file)
             current_lyricist = grab(:the_lyricist).data
-            list_to_load={filename: file.to_s, content: file_content.to_s}
+            list_to_load = { filename: file.to_s, content: file_content.to_s }
             current_lyricist.load_strategy(list_to_load)
-
           end
         end
       end

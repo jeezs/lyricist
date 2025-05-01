@@ -16,6 +16,7 @@ class LyricsStyle
       success: { red: 0.3, green: 0.3, blue: 0.3 },
       warning: { red: 0.95, green: 0.7, blue: 0.2 },
       info: { red: 0.3, green: 0.7, blue: 0.95 },
+      background: {red: 0.3, green: 0.3, blue: 0.3},
       
       # Couleurs spécifiques
       record: { red: 0.9, green: 0.3, blue: 0.6, alpha: 0.8 },
@@ -35,20 +36,20 @@ class LyricsStyle
   def self.dimensions
     {
       percent_offset_between_lines: 1.3,
-      slider_width: 333,
+      slider_width: 300,
       # Largeurs
       standard_width: 55,
       medium_width: 80,
       large_width: 140,
       container_width: 600,
-      lyrics_width: 1600,
+      lyrics_width:669,
 
       # Hauteurs
       button_height: 25,
       medium_height: 40,
       large_height: 52,
       container_height: 500,
-      tool_bar_height: 39,
+      tool_bar_height: 50,
       slider_height: 25,
       margin: 3,
 
@@ -58,8 +59,8 @@ class LyricsStyle
       text_normal: 16,
       text_large: 20,
       text_xlarge: 36,
-      lyrics_size: 69,
-      next_Line_lyrics_size: 52
+      lyrics_size: 33,
+      next_Line_lyrics_size: 30
     }
   end
 
