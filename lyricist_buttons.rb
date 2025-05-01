@@ -11,7 +11,7 @@ class Lyricist < Atome
     @imported_lyrics = lyr
   end
 
-  def loading_coundown(next_song)
+  def loading_countdown(next_song)
 
     countdown = grab("lyrics_support").box({ id: :load_warning, width: 120, height: 120 })
     countdown.smooth(120)
@@ -49,6 +49,28 @@ class Lyricist < Atome
     end
   end
 
+  def play_next_song(params={})
+    if params[:prev]
+      song_to_load = -1
+    else
+      song_to_load = 1
+
+    end
+    @allow_next = false
+    grab(:lyric_viewer).data = ''
+    next_song = (find_key_by_title(@list, @title).to_i + song_to_load).to_s
+    if next_song.to_i < @list.length + 1
+      loading_countdown(next_song)
+    else
+      wait 1 do
+        current_song = (next_song.to_i - 1).to_s
+        load_song_from_list(current_song)
+        @allow_next = true
+        puts 'ending of the list'
+      end
+    end
+  end
+
   def stop_lyrics
     stop_audio(@audio_object)
     counter = grab(:counter)
@@ -59,23 +81,8 @@ class Lyricist < Atome
     build_timeline_slider
     @playing = false
     if grab(:lyric_viewer).data == '-end-' && @allow_next
-      @allow_next = false
-      grab(:lyric_viewer).data = ''
-      next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
-      if next_song.to_i < @list.length + 1
-        loading_coundown(next_song)
-      else
-        wait 1 do
-          current_song = (next_song.to_i - 1).to_s
-          load_song_from_list(current_song)
-          @allow_next = true
-          puts 'ending of the list'
-        end
-
-      end
-
+      play_next_song
     end
-
   end
 
   def play_lyrics
@@ -492,6 +499,33 @@ class Lyricist < Atome
       # lyrics = grab(:lyric_viewer).content.to_s
       #  content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
       #  save_file("#{@title}.lrx", content_to_save)
+    end
+    ############
+    load_prev_song = button({
+                              label: 'prev.',
+                              id: :load_prev_song,
+                              top: LyricsStyle.dimensions[:margin],
+                              left: 535,
+                              right: LyricsStyle.dimensions[:margin],
+                              parent: :bottom_bar
+                            })
+
+    load_prev_song.touch(true) do
+      play_next_song({prev: true})
+    end
+
+
+    load_next_song = button({
+                         label: :next,
+                         id: :load_next_song,
+                         top: LyricsStyle.dimensions[:margin],
+                         left: 593,
+                         right: LyricsStyle.dimensions[:margin],
+                         parent: :bottom_bar
+                       })
+
+    load_next_song.touch(true) do
+      play_next_song({})
     end
 
     #########

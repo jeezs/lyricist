@@ -166,7 +166,7 @@ def init_lyrix(lyrics_content, song_path)
 
 
   lyr = Lyricist.new
-  # we create an atome to  be able to retrive the lyr
+  # we create an atome to  be able to retreive the lyr
   element({id: :the_lyricist, data: lyr})
   lyr.init_audio(song_path)
   lyr.new_song(lyrics_content)
@@ -177,7 +177,7 @@ def init_lyrix(lyrics_content, song_path)
 
 
   ############
-
+  #autoload here
   result = list_all_files_in_localstorage
   file = result[:files][0]
   # alert file_to_load
@@ -186,6 +186,8 @@ def init_lyrix(lyrics_content, song_path)
   current_lyricist = grab(:the_lyricist).data
   list_to_load = { filename: file.to_s, content: file_content.to_s }
   current_lyricist.load_strategy(list_to_load)
+  # now closing list panel
+  hide_all_panels
 
   # result[:files].each_with_index do |file, index|
   #   # alert file
