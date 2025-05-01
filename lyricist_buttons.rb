@@ -29,6 +29,9 @@ class Lyricist < Atome
       countdown_label = countdown.text({ data: 3, size: countdown_size })
       countdown_label.color(LyricsStyle.colors[:first_line_color])
       countdown_label.center(true)
+      countdown_label.touch(true) do
+        @allow_loading = false
+      end
       wait 1 do
         countdown_label.data(2)
         countdown_label.size(countdown_size - (countdown_size / 3))
@@ -46,7 +49,7 @@ class Lyricist < Atome
           @allow_next = true
           @allow_loading = true
         else
-          alert "#msg from line 46 lyricist_button"
+          play_next_song({current: true, immediate: true})
         end
         countdown.delete({ recursive: true })
       end
@@ -62,6 +65,9 @@ class Lyricist < Atome
       song_to_load = -1
     else
       song_to_load = 1
+    end
+    if params[:current]
+      song_to_load=0
     end
 
     if params[:immediate]
@@ -554,11 +560,11 @@ class Lyricist < Atome
                        })
 
     load_song.touch(true) do
-      hide_all_panels
-      if grab(:loader)
 
-        grab(:loader).delete({ recursive: true })
+      if grab(:loader)
+        hide_all_panels
       else
+        hide_all_panels
         grab(:lyric_viewer).box({ id: :loader,
                                   width: 259,
                                   height: 333,
