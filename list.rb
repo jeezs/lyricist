@@ -339,9 +339,9 @@ class Lyricist
 
         if new_key
           delete_song_from_list(new_key)
-          wait 0.2 do
+          # wait 0.2 do
             refresh_song_list
-          end
+          # end
         end
       end
 
@@ -506,9 +506,9 @@ class Lyricist
     # Elle devrait être effectuée en rafraîchissant l'interface.
 
     # Appeler refresh_song_list pour mettre à jour l'UI avec les nouvelles clés
-    wait 0.3 do
+    # wait 0.3 do
       refresh_song_list
-    end
+    # end
   end
 
   # Méthode pour ajouter la chanson actuelle à la liste
