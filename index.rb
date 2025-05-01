@@ -189,22 +189,6 @@ def init_lyrix(lyrics_content, song_path)
   # now closing list panel
   hide_all_panels
 
-  # result[:files].each_with_index do |file, index|
-  #   # alert file
-  #   # list_f = grab(:loader).text(file)
-  #   # list_f.position(:absolute)
-  #   # list_f.left(5)
-  #   # list_f.top((25 * index) + 39)
-  #   # list_f.touch(true) do
-  #   #   file_content = load_file(file)
-  #   #   current_lyricist = grab(:the_lyricist).data
-  #   #   list_to_load = { filename: file.to_s, content: file_content.to_s }
-  #   #   current_lyricist.load_strategy(list_to_load)
-  #   # end
-  # end
-
-  ############
-
 end
 
 init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Alive.mp3')

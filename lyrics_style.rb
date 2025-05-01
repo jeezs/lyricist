@@ -151,9 +151,9 @@ class LyricsStyle
     style = {
       width: dimensions[:container_width],
       height: dimensions[:container_height],
-      color: colors[:container_dark],
+      # color: colors[:container_dark],
       smooth: decorations[:container_smooth],
-      shadow: decorations[:container_shadow],
+      # shadow: decorations[:container_shadow],
       # border: { width: 1, color: colors[:accent], alpha: 0.3 }
     }
     style.merge(options)

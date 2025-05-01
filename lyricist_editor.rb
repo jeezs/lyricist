@@ -5,7 +5,7 @@ class Lyricist < Atome
     editor_container = grab(:lyrics_support).box(
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
-                                    color: {alpha: 0}
+                                    color: {red: 0.12, green: 0.12,blue: 0.12,alpha: 0}
                                   })
     )
 
