@@ -62,6 +62,10 @@ class Lyricist < Atome
                           context: :insert
                         })
 
+    lyrics_support.touch(true) do
+      hide_all_panels
+    end
+
     lyrics_support.touch(:long) do
 
       top_f = lyrics_support.top

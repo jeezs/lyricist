@@ -106,10 +106,17 @@ class Lyricist < Atome
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       # Mise à jour de la première ligne
       target.data(lyrics_array[0])
-      if lyrics_array[0] == '<end>'
-        lyrics_array = []
-        target.content = ''
-        stop_lyrics
+
+      if lyrics_array[0] == '-end-'
+        if @playing
+          @allow_next = true
+          lyrics_array = []
+          target.content = ''
+          stop_lyrics
+        else
+          @allow_next = false
+        end
+
       end
 
       # Propriétés de style pour la première ligne

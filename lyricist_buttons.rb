@@ -58,7 +58,7 @@ class Lyricist < Atome
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
-    if grab(:lyric_viewer).data == '<end>' && @allow_next
+    if grab(:lyric_viewer).data == '-end-' && @allow_next
       @allow_next = false
       grab(:lyric_viewer).data = ''
       next_song = (find_key_by_title(@list, @title).to_i + 1).to_s
