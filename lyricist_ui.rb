@@ -62,7 +62,7 @@ class Lyricist < Atome
                           context: :insert
                         })
 
-    lyrics_support.touch(true) do
+    lyrics_support.touch(:double) do
       hide_all_panels
     end
 

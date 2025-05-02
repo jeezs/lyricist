@@ -6,9 +6,10 @@ class Lyricist < Atome
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
                                     color: { red: 0.12, green: 0.12, blue: 0.12, alpha: 0 },
-                                    left: grab(:view).to_px(:width) - 550,# :cant" use auto it crash when removing the panal
+                                    left: grab(:view).to_px(:width)-530,# :cant" use auto it crash when removing the panal
                                     width: 530,
-                                    right: 0
+                                    right: 0,
+                                    depth: 3
                                   })
     )
 
@@ -28,6 +29,7 @@ class Lyricist < Atome
                                            color: { red: 0.1, green: 0.1, blue: 0.1 },
                                          })
       )
+
 
       # Champ pour le timecode
       timecode_field = line_container.text(

@@ -3,16 +3,17 @@
 class Lyricist < Atome
   # Méthodes pour la gestion des paroles
 
-
-
   def closest_values(hash, target, count = 1)
     return [] if hash.empty?
 
-    # On ajuste la cible en fonction de l'anticipation configurée
-    adjusted_target = target - (@lyrics_anticipation_time || 0.0)
+    # CORRECTION: Inverser le signe pour le comportement correct
+    # Positif = retard, Négatif = avance
+    adjusted_target = target + (@lyrics_anticipation_time || 0.0)
+
+    # Débogage temporaire (à retirer après test)
+    puts "DEBUG: Original target: #{target}, Adjusted: #{adjusted_target}, Anticipation: #{@lyrics_anticipation_time}"
 
     # Utilisation d'une cache pour les clés triées si le hash est grand
-    # (optimisation pour éviter de trier à chaque appel)
     @sorted_keys_cache ||= {}
     sorted_keys = @sorted_keys_cache[hash.object_id]
 
@@ -27,7 +28,7 @@ class Lyricist < Atome
       low, high = 0, sorted_keys.size - 1
       closest_index = nil
 
-      # Recherche binaire optimisée
+      # Recherche binaire optimisée - UTILISE adjusted_target
       while low <= high
         mid = (low + high) / 2
         if sorted_keys[mid] < adjusted_target
@@ -49,14 +50,14 @@ class Lyricist < Atome
         elsif low <= 0
           closest_index = 0
         else
-          # Comparer les deux valeurs les plus proches
+          # Comparer les deux valeurs les plus proches - UTILISE adjusted_target
           prev = sorted_keys[low - 1]
           current = sorted_keys[low]
           closest_index = (adjusted_target - prev).abs < (current - adjusted_target).abs ? low - 1 : low
         end
       end
     else
-      # Pour les petits ensembles, on utilise la méthode originale
+      # Pour les petits ensembles - UTILISE adjusted_target
       closest_index = sorted_keys.index(sorted_keys.min_by { |key| (key - adjusted_target).abs })
     end
 
@@ -75,6 +76,9 @@ class Lyricist < Atome
       result << hash[key] if hash[key]
     end
 
+    # Débogage temporaire (à retirer après test)
+    puts "DEBUG: Found lyrics: #{result.first}" unless result.empty?
+
     result
   end
 
@@ -82,9 +86,12 @@ class Lyricist < Atome
     return nil if hash.empty?
 
     # Recherche optimisée de la clé la plus proche avant target
+    # CORRECTION: Utiliser la cible ajustée ici aussi
+    adjusted_target = target + (@lyrics_anticipation_time || 0.0)
+
     max_key = nil
     hash.keys.each do |key|
-      max_key = key if key <= target && (max_key.nil? || key > max_key)
+      max_key = key if key <= adjusted_target && (max_key.nil? || key > max_key)
     end
     max_key
   end
@@ -97,11 +104,9 @@ class Lyricist < Atome
   end
 
   def format_lyrics(lyrics_array, target)
-
     return if lyrics_array.empty?
 
     # On vérifie si on doit mettre à jour l'affichage
-
     if target.data != lyrics_array[0] && grab(:counter).content == :play
       # Mise à jour de la première ligne
       target.data(lyrics_array[0])
@@ -115,7 +120,6 @@ class Lyricist < Atome
         else
           @allow_next = false
         end
-
       end
 
       # Propriétés de style pour la première ligne
@@ -157,7 +161,6 @@ class Lyricist < Atome
 
         # Création du texte enfant
         target.text(child_params)
-
       end
     end
   end
@@ -176,6 +179,9 @@ class Lyricist < Atome
     end
 
     @actual_position = value
+
+    # Débogage temporaire
+    puts "DEBUG: update_lyrics called with position: #{value}, anticipation: #{@lyrics_anticipation_time}"
 
     # Récupération et formatage des paroles
     current_lyrics = closest_values(target.content, value, @number_of_lines)
@@ -203,7 +209,6 @@ class Lyricist < Atome
   end
 
   def clear_all
-
     @lyrics = { 0 => "new" }
     lyric_viewer = grab(:lyric_viewer)
 
@@ -224,14 +229,26 @@ class Lyricist < Atome
 
     # Reconstruction du slider
     rebuild_timeline_slider
-
   end
 
   # Méthode pour définir l'anticipation des paroles (en secondes)
   def set_lyrics_anticipation(seconds)
+    # CORRECTION: Assurer que la valeur est convertie en float et vider le cache
+    old_value = @lyrics_anticipation_time
     @lyrics_anticipation_time = seconds.to_f
+
+    # Débogage
+    puts "DEBUG: Set anticipation: #{@lyrics_anticipation_time}s (was #{old_value}s)"
+
     # Vider le cache des clés triées quand l'anticipation change
-    @sorted_keys_cache = {}
+    if old_value != @lyrics_anticipation_time
+      @sorted_keys_cache = {}
+
+      # Forcer une mise à jour avec la nouvelle anticipation si en cours de lecture
+      if @playing && grab(:counter) && grab(:lyric_viewer)
+        update_lyrics(@actual_position, grab(:lyric_viewer), grab(:counter))
+      end
+    end
   end
 
   # Méthode pour récupérer la valeur actuelle d'anticipation
@@ -280,5 +297,53 @@ class Lyricist < Atome
 
     # Appeler la fonction avec les arguments dans le bon ordre
     save_js.call(filename, content, mime_type)
+  end
+
+  # Méthode de débogage temporaire pour tester l'anticipation
+  # Ajoutez un bouton ou appelez cette méthode manuellement pour tester
+  def debug_anticipation
+    puts "=== DÉBUT DEBUG ANTICIPATION ==="
+    puts "Position actuelle: #{@actual_position}ms"
+    puts "Anticipation: #{@lyrics_anticipation_time}s"
+
+    lyric_viewer = grab(:lyric_viewer)
+    content = lyric_viewer.content
+    puts "Nombre de timecodes: #{content.keys.size}"
+
+    if content.keys.size > 0
+      keys = content.keys.sort
+      puts "Premier timecode: #{keys.first}ms, Dernier: #{keys.last}ms"
+
+      # Test avec quelques valeurs d'anticipation
+      [-1.0, 0.0, 1.0].each do |ant|
+        set_lyrics_anticipation(ant)
+        adjusted = @actual_position + (ant * 1000) # Convert to ms
+        puts "Test avec anticipation #{ant}s: cible ajustée #{adjusted}ms"
+
+        result = closest_values(content, @actual_position, 1)
+        if result.empty?
+          puts "Aucun résultat trouvé"
+        else
+          puts "Parole trouvée: #{result.first}"
+        end
+      end
+    else
+      puts "Aucun contenu de paroles disponible"
+    end
+
+    puts "=== FIN DEBUG ANTICIPATION ==="
+  end
+
+  # Fonction à appeler pour tester si vous pouvez modifier l'anticipation via console
+  def test_anticipation(value)
+    puts "Définition de l'anticipation à #{value} secondes"
+    set_lyrics_anticipation(value)
+
+    # Forcer une mise à jour si en lecture
+    if @playing
+      update_lyrics(@actual_position, grab(:lyric_viewer), grab(:counter))
+    else
+      puts "Pas en lecture, utilisez play_lyrics() pour voir l'effet"
+    end
   end
 end
