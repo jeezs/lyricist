@@ -20,7 +20,7 @@ class Lyricist < Atome
     @list={}
     @allow_next=true
     # Variable d'instance pour l'anticipation des paroles (en secondes)
-    @lyrics_anticipation_time = -3
+    @lyrics_anticipation_time = 0.0
 
     build_ui
     if content
