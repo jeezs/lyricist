@@ -6,78 +6,39 @@ class Lyricist < Atome
   def closest_values(hash, target, count = 1)
     return [] if hash.empty?
 
-    # CORRECTION: Inverser le signe pour le comportement correct
-    # Positif = retard, Négatif = avance
-    adjusted_target = target + (@lyrics_anticipation_time || 0.0)
+    # Trier les clés (timecodes)
+    sorted_keys = hash.keys.sort
 
-    # Débogage temporaire (à retirer après test)
-    puts "DEBUG: Original target: #{target}, Adjusted: #{adjusted_target}, Anticipation: #{@lyrics_anticipation_time}"
-
-    # Utilisation d'une cache pour les clés triées si le hash est grand
-    @sorted_keys_cache ||= {}
-    sorted_keys = @sorted_keys_cache[hash.object_id]
-
-    if sorted_keys.nil? || @sorted_keys_cache_size != hash.size
-      sorted_keys = hash.keys.sort
-      @sorted_keys_cache[hash.object_id] = sorted_keys
-      @sorted_keys_cache_size = hash.size
+    # Trouver la clé la plus proche qui est inférieure ou égale à la cible
+    found_key = nil
+    sorted_keys.reverse_each do |key|
+      if key <= target
+        found_key = key
+        break
+      end
     end
 
-    # On utilise une recherche binaire pour les grands ensembles de données
-    if sorted_keys.size > 50
-      low, high = 0, sorted_keys.size - 1
-      closest_index = nil
-
-      # Recherche binaire optimisée - UTILISE adjusted_target
-      while low <= high
-        mid = (low + high) / 2
-        if sorted_keys[mid] < adjusted_target
-          low = mid + 1
-        elsif sorted_keys[mid] > adjusted_target
-          high = mid - 1
-        else
-          # Correspondance exacte trouvée
-          closest_index = mid
-          break
-        end
-      end
-
-      # Si on n'a pas trouvé de correspondance exacte, on prend la plus proche
-      if closest_index.nil?
-        # Gérer les cas limites
-        if low >= sorted_keys.size
-          closest_index = sorted_keys.size - 1
-        elsif low <= 0
-          closest_index = 0
-        else
-          # Comparer les deux valeurs les plus proches - UTILISE adjusted_target
-          prev = sorted_keys[low - 1]
-          current = sorted_keys[low]
-          closest_index = (adjusted_target - prev).abs < (current - adjusted_target).abs ? low - 1 : low
-        end
-      end
-    else
-      # Pour les petits ensembles - UTILISE adjusted_target
-      closest_index = sorted_keys.index(sorted_keys.min_by { |key| (key - adjusted_target).abs })
+    # Si aucune clé n'est trouvée (toutes sont supérieures), prendre la première
+    if found_key.nil?
+      found_key = sorted_keys.first
     end
 
-    return [] if closest_index.nil?
-
-    # On limite l'index à la taille de la liste
-    closest_index = [closest_index, sorted_keys.size - 1].min
-
-    # Extraction des valeurs correspondantes
+    # Récupérer le résultat
     result = []
-    count.times do |i|
-      index = closest_index + i
-      break if index >= sorted_keys.size
+    if found_key
+      result << hash[found_key]
 
-      key = sorted_keys[index]
-      result << hash[key] if hash[key]
+      # Ajouter les lignes suivantes si demandé
+      if count > 1
+        current_index = sorted_keys.index(found_key)
+        (1...count).each do |i|
+          next_index = current_index + i
+          break if next_index >= sorted_keys.size
+          next_key = sorted_keys[next_index]
+          result << hash[next_key] if hash[next_key]
+        end
+      end
     end
-
-    # Débogage temporaire (à retirer après test)
-    puts "DEBUG: Found lyrics: #{result.first}" unless result.empty?
 
     result
   end
@@ -85,13 +46,10 @@ class Lyricist < Atome
   def closest_key_before(hash, target)
     return nil if hash.empty?
 
-    # Recherche optimisée de la clé la plus proche avant target
-    # CORRECTION: Utiliser la cible ajustée ici aussi
-    adjusted_target = target + (@lyrics_anticipation_time || 0.0)
-
+    # Ne pas modifier la cible
     max_key = nil
     hash.keys.each do |key|
-      max_key = key if key <= adjusted_target && (max_key.nil? || key > max_key)
+      max_key = key if key <= target && (max_key.nil? || key > max_key)
     end
     max_key
   end
@@ -130,7 +88,7 @@ class Lyricist < Atome
         component: { size: LyricsStyle.dimensions[:lyrics_size] }
       }
 
-      # Application du style en une seule opération (si possible)
+      # Application du style
       if target.respond_to?(:update)
         target.update(style_first_line)
       else
@@ -166,7 +124,7 @@ class Lyricist < Atome
   end
 
   def update_lyrics(value, target, timer_found)
-    # Mise à jour du timer en une seule opération si possible
+    # Mise à jour du timer
     if timer_found.respond_to?(:update)
       timer_found.update({
                            data: value,
@@ -180,10 +138,7 @@ class Lyricist < Atome
 
     @actual_position = value
 
-    # Débogage temporaire
-    puts "DEBUG: update_lyrics called with position: #{value}, anticipation: #{@lyrics_anticipation_time}"
-
-    # Récupération et formatage des paroles
+    # Récupération des paroles sans modifier la valeur
     current_lyrics = closest_values(target.content, value, @number_of_lines)
     format_lyrics(current_lyrics, target)
   end
@@ -197,14 +152,12 @@ class Lyricist < Atome
   end
 
   def full_refresh_viewer(at = 0)
-    # Reconstruction optimisée
     rebuild_timeline_slider(0)
     rebuild_timeline_slider(@length)
     rebuild_timeline_slider(at)
   end
 
   def refresh_viewer(at = 0)
-    # Utilisation de la méthode helper
     rebuild_timeline_slider(at)
   end
 
@@ -212,7 +165,6 @@ class Lyricist < Atome
     @lyrics = { 0 => "new" }
     lyric_viewer = grab(:lyric_viewer)
 
-    # Regroupement des opérations
     if lyric_viewer.respond_to?(:update)
       lyric_viewer.update({
                             content: {},
@@ -224,36 +176,8 @@ class Lyricist < Atome
     end
 
     @length = @default_length
-
     lyric_viewer.clear(true)
-
-    # Reconstruction du slider
     rebuild_timeline_slider
-  end
-
-  # Méthode pour définir l'anticipation des paroles (en secondes)
-  def set_lyrics_anticipation(seconds)
-    # CORRECTION: Assurer que la valeur est convertie en float et vider le cache
-    old_value = @lyrics_anticipation_time
-    @lyrics_anticipation_time = seconds.to_f
-
-    # Débogage
-    puts "DEBUG: Set anticipation: #{@lyrics_anticipation_time}s (was #{old_value}s)"
-
-    # Vider le cache des clés triées quand l'anticipation change
-    if old_value != @lyrics_anticipation_time
-      @sorted_keys_cache = {}
-
-      # Forcer une mise à jour avec la nouvelle anticipation si en cours de lecture
-      if @playing && grab(:counter) && grab(:lyric_viewer)
-        update_lyrics(@actual_position, grab(:lyric_viewer), grab(:counter))
-      end
-    end
-  end
-
-  # Méthode pour récupérer la valeur actuelle d'anticipation
-  def get_lyrics_anticipation
-    @lyrics_anticipation_time || 0.0
   end
 
   # Nettoyage du cache si nécessaire
@@ -261,8 +185,21 @@ class Lyricist < Atome
     @sorted_keys_cache = {}
   end
 
+  # Pour réinitialiser l'état du système en cas de besoin
+  def reset_lyrics_system
+    cleanup_cache
+    @actual_position = 0
+
+    # Si lecture en cours, arrêter et redémarrer
+    if @playing
+      stop_lyrics
+      wait 0.5 do
+        play_lyrics
+      end
+    end
+  end
+
   def save_file(filename, content, mime_type = 'text/plain')
-    # Créer une fonction JavaScript avec des noms de paramètres explicites
     save_js = JS.eval(<<~JS)
       (function(fileName, fileContent, mimeType) {
         console.log("Saving file:", fileName, "with content:", fileContent);
@@ -295,55 +232,35 @@ class Lyricist < Atome
       })
     JS
 
-    # Appeler la fonction avec les arguments dans le bon ordre
     save_js.call(filename, content, mime_type)
   end
 
-  # Méthode de débogage temporaire pour tester l'anticipation
-  # Ajoutez un bouton ou appelez cette méthode manuellement pour tester
-  def debug_anticipation
-    puts "=== DÉBUT DEBUG ANTICIPATION ==="
-    puts "Position actuelle: #{@actual_position}ms"
-    puts "Anticipation: #{@lyrics_anticipation_time}s"
-
+  # Méthode utilitaire pour inspecter le contenu des paroles
+  def inspect_lyrics_content
     lyric_viewer = grab(:lyric_viewer)
     content = lyric_viewer.content
-    puts "Nombre de timecodes: #{content.keys.size}"
 
-    if content.keys.size > 0
-      keys = content.keys.sort
-      puts "Premier timecode: #{keys.first}ms, Dernier: #{keys.last}ms"
+    if content && content.keys.size > 0
+      sorted_keys = content.keys.sort
+      puts "=== CONTENU DES PAROLES ==="
+      puts "Nombre de timecodes: #{sorted_keys.size}"
+      puts "Premier timecode: #{sorted_keys.first}"
+      puts "Dernier timecode: #{sorted_keys.last}"
 
-      # Test avec quelques valeurs d'anticipation
-      [-1.0, 0.0, 1.0].each do |ant|
-        set_lyrics_anticipation(ant)
-        adjusted = @actual_position + (ant * 1000) # Convert to ms
-        puts "Test avec anticipation #{ant}s: cible ajustée #{adjusted}ms"
-
-        result = closest_values(content, @actual_position, 1)
-        if result.empty?
-          puts "Aucun résultat trouvé"
-        else
-          puts "Parole trouvée: #{result.first}"
-        end
+      # Afficher les 5 premiers timecodes et leur contenu
+      puts "Premiers timecodes:"
+      sorted_keys[0..4].each do |key|
+        puts "  #{key}: #{content[key]}"
       end
+
+      # Afficher les 5 derniers timecodes et leur contenu
+      puts "Derniers timecodes:"
+      sorted_keys[-5..-1].each do |key|
+        puts "  #{key}: #{content[key]}"
+      end
+      puts "==========================="
     else
       puts "Aucun contenu de paroles disponible"
-    end
-
-    puts "=== FIN DEBUG ANTICIPATION ==="
-  end
-
-  # Fonction à appeler pour tester si vous pouvez modifier l'anticipation via console
-  def test_anticipation(value)
-    puts "Définition de l'anticipation à #{value} secondes"
-    set_lyrics_anticipation(value)
-
-    # Forcer une mise à jour si en lecture
-    if @playing
-      update_lyrics(@actual_position, grab(:lyric_viewer), grab(:counter))
-    else
-      puts "Pas en lecture, utilisez play_lyrics() pour voir l'effet"
     end
   end
 end

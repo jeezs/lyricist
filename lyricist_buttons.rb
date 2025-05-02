@@ -220,6 +220,37 @@ class Lyricist < Atome
   end
 
   def build_control_buttons
+    # for tests only
+    # nexty = button({
+    #                 label: :next,
+    #                 id: :nexty,
+    #                 top: LyricsStyle.dimensions[:margin],
+    #                 left: 999,
+    #                 parent: :tool_bar
+    #               })
+    #
+    # nexty.touch(true) do
+    #   # alert @actual_position
+    #   counter = grab(:counter)
+    #   lyrics = grab(:lyric_viewer)
+    #   update_lyrics(@actual_position+10, lyrics, counter)
+    #   grab(:timeline_slider).value(@actual_position+10)
+    # end
+    #
+    # prevy = button({
+    #                  label: :prev,
+    #                  id: :prevy,
+    #                  top: LyricsStyle.dimensions[:margin],
+    #                  left: 800,
+    #                  parent: :tool_bar
+    #                })
+    #
+    # prevy.touch(true) do
+    #   counter = grab(:counter)
+    #   lyrics = grab(:lyric_viewer)
+    #   update_lyrics(@actual_position-10, lyrics, counter)
+    #   grab(:timeline_slider).value(@actual_position-10)
+    # end
 
     play = button({
                     label: :play,

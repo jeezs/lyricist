@@ -5,14 +5,20 @@ class Lyricist < Atome
     editor_container = grab(:lyrics_support).box(
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
+                                    # color: :red,
                                     color: { red: 0.12, green: 0.12, blue: 0.12, alpha: 0 },
                                     left: grab(:view).to_px(:width)-530,# :cant" use auto it crash when removing the panal
                                     width: 530,
                                     right: 0,
-                                    depth: 3
+                                    depth: 33
                                   })
     )
-
+    editor_container.touch(true) do |evt|
+      evt.stop_propagation  # Arrête la propagation de l'événement
+      evt.prevent_default   # Empêche le comportement par défaut si nécessaire
+      evt.prev
+      puts 'jjj'
+    end
     # Récupération et tri des paroles
     lyrics = grab(:lyric_viewer)
     sorted_lyrics = lyrics.content.sort.to_h
