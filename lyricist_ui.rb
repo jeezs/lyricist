@@ -99,8 +99,8 @@ class Lyricist < Atome
     grab(:lyrics_support).box({
                       id: :import_module,
                       top: LyricsStyle.dimensions[:tool_bar_height],
-                      left: 0,
-                      # right: 9,
+                      left: :auto,
+                      right: 0,
                       width: 399,
                       bottom: 50,
                       height: :auto,

@@ -5,17 +5,18 @@ class Lyricist < Atome
     editor_container = grab(:lyrics_support).box(
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
-                                    color: {red: 0.12, green: 0.12,blue: 0.12,alpha: 0}
+                                    color: { red: 0.12, green: 0.12, blue: 0.12, alpha: 0 },
+                                    left: :auto,
+                                    width: 530,
+                                    right: 0
                                   })
     )
-
-
 
     # Récupération et tri des paroles
     lyrics = grab(:lyric_viewer)
     sorted_lyrics = lyrics.content.sort.to_h
 
-    # Affichage des paroles avec options d'édition
+    # Affichage des paroles avec options d'éditionadd a
     sorted_lyrics.each_with_index do |(timecode, text), index|
       y_position = 70 + (index * 60)
 
@@ -24,7 +25,7 @@ class Lyricist < Atome
         LyricsStyle.line_container_style({
                                            id: "line_container_#{index}".to_sym,
                                            top: y_position,
-                                           color: {red: 0.1, green: 0.1, blue: 0.1},
+                                           color: { red: 0.1, green: 0.1, blue: 0.1 },
                                          })
       )
 
@@ -219,8 +220,6 @@ class Lyricist < Atome
 
     delete_button.touch(true) do
 
-
-
       prev_left = editor_container.left
       prev_top = editor_container.top
       lyrics.content.delete(timecode)
@@ -281,7 +280,7 @@ class Lyricist < Atome
                                     height: 150,
                                     left: 120,
                                     top: 120,
-                                    color: {red: 0.1, green: 0.1, blue: 0.1},
+                                    color: { red: 0.1, green: 0.1, blue: 0.1 },
                                     position: :absolute
                                   })
     )

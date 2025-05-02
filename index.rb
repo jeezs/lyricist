@@ -19,7 +19,7 @@ end
 # Étape 2 : Fonction Ruby simplifiée qui appelle la fonction JavaScript
 def load_file(file_name)
   begin
-    content = JS.global.localStorage.getItem(file_name)
+     JS.global.localStorage.getItem(file_name)
   rescue => e
   end
 end
