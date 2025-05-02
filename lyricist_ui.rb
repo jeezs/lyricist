@@ -125,7 +125,7 @@ class Lyricist < Atome
                                          height: :auto,
                                          width: :auto,
                                          smooth: LyricsStyle.decorations[:standard_smooth],
-                                         color: LyricsStyle.colors[:container_light],
+                                         color: LyricsStyle.colors[:container_medium],
                                        })
 
     support.shadow(LyricsStyle.decorations[:invert_shadow])

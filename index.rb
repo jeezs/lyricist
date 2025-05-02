@@ -131,7 +131,7 @@ def parse_song_lyrics(song)
                                                  height: 30,
                                                  top: index * 33,
                                                  left: 3,
-                                                 color: LyricsStyle.colors[:danger],
+                                                 color: LyricsStyle.colors[:container_bg],
                                                  smooth: LyricsStyle.decorations[:standard_smooth]
                                                })
 

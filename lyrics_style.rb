@@ -26,8 +26,8 @@ class LyricsStyle
       
       # Couleurs des containers
       container_bg: { red: 0.12, green: 0.12, blue: 0.12, alpha: 1 },
-      container_dark: { red: 0.1, green: 0.1, blue: 0.18, alpha: 0.95 },
-      container_medium: { red: 0.18, green: 0.18, blue: 0.25, alpha: 0.9 },
+      container_dark: { red: 0.1, green: 0.1, blue: 0.1, alpha: 0.95 },
+      container_medium: { red: 0.18, green: 0.18, blue: 0.18, alpha: 0.9 },
       container_light: { red: 0.22, green: 0.22, blue: 0.3, alpha: 0.85 }
     }
   end
