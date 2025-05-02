@@ -175,7 +175,7 @@ def init_lyrix(lyrics_content, song_path)
   ############
   #autoload here
   result = list_all_files_in_localstorage
-  file = result[:files][0]
+  file = result[:files].last
   # alert file_to_load
   file_content = load_file(file)
 
