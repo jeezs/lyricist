@@ -3,8 +3,7 @@
 class Lyricist < Atome
   # Méthodes pour la gestion des paroles
 
-  # Variable d'instance pour l'anticipation des paroles (en secondes)
-  @lyrics_anticipation_time = 0.0
+
 
   def closest_values(hash, target, count = 1)
     return [] if hash.empty?

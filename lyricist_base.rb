@@ -19,7 +19,8 @@ class Lyricist < Atome
     @title="ices from hell"
     @list={}
     @allow_next=true
-    @actual_position=0
+    # Variable d'instance pour l'anticipation des paroles (en secondes)
+    @lyrics_anticipation_time = -3
 
     build_ui
     if content

@@ -226,7 +226,7 @@ class Lyricist < Atome
   end
 
   def update_song_listing
-    current_song = (find_key_b◊y_title(@list, @title))
+    current_song = (find_key_by_title(@list, @title))
     if current_song
       delete_song_from_list(current_song)
 

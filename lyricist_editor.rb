@@ -6,7 +6,7 @@ class Lyricist < Atome
       LyricsStyle.container_style({
                                     id: :lyrics_editor_container,
                                     color: { red: 0.12, green: 0.12, blue: 0.12, alpha: 0 },
-                                    left: :auto,
+                                    left: grab(:view).to_px(:width) - 550,# :cant" use auto it crash when removing the panal
                                     width: 530,
                                     right: 0
                                   })
@@ -16,7 +16,7 @@ class Lyricist < Atome
     lyrics = grab(:lyric_viewer)
     sorted_lyrics = lyrics.content.sort.to_h
 
-    # Affichage des paroles avec options d'éditionadd a
+    # Affichage des paroles avec options d'édition
     sorted_lyrics.each_with_index do |(timecode, text), index|
       y_position = 70 + (index * 60)
 
