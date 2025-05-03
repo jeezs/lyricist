@@ -71,24 +71,7 @@ class Lyricist < Atome
 
     lyrics_support.touch(:long) do
 
-      top_f = lyrics_support.top
-      if top_f == 0
-        lyrics_support.left(0)
-        lyrics_support.right(0)
-        lyrics_support.top(LyricsStyle.dimensions[:tool_bar_height])
-        lyrics_support.width(:auto)
-        lyrics_support.height(:auto)
-        lyrics_support.depth = 0
-      else
-        lyrics_support.depth(7)
-        lyrics_support.left(0)
-        lyrics_support.top(0)
-        lyrics_support.bottom(0)
-        lyrics_support.right(0)
-        lyrics_support.width(:auto)
-        lyrics_support.height(:auto)
-        lyrics_support.depth = 99
-      end
+      fullscreen
 
     end
 
@@ -196,7 +179,7 @@ class Lyricist < Atome
   end
 
   def build_tool_bar
-    grab(:main_stage).box({
+    tool_bar=grab(:main_stage).box({
                       id: :tool_bar,
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
@@ -211,7 +194,7 @@ class Lyricist < Atome
                       # drag: true
                     })
 
-    grab(:main_stage).box({
+    bottom_bar=grab(:main_stage).box({
                       id: :bottom_bar,
                       color: LyricsStyle.colors[:container_bg],
                       shadow: LyricsStyle.decorations[:standard_shadow],
@@ -226,7 +209,24 @@ class Lyricist < Atome
                       overflow: :auto
                       # drag: true
                     })
+
+    tool_bar.touch(:double) do
+      hide_all_panels
+    end
+
+    bottom_bar.touch(:double) do
+      hide_all_panels
+    end
+
+    tool_bar.touch(:long) do
+      fullscreen
+    end
+
+    bottom_bar.touch(:long) do
+      fullscreen
+    end
   end
+
 
   def update_song_listing
     current_song = (find_key_by_title(@list, @title))

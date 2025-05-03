@@ -8,6 +8,8 @@ def hide_all_panels
   grab(:loader).delete({ recursive: true }) if  grab(:loader)
 end
 
+
+
 def save_file_to_db(file_name, content_to_save)
     content_string = content_to_save.is_a?(String) ? content_to_save : content_to_save.to_json
     JS.global.localStorage.setItem(file_name, content_string)

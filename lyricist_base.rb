@@ -29,7 +29,27 @@ class Lyricist < Atome
     # create a new audio object
     audio({  id: :song_audio })
   end
-
+  def fullscreen
+    lyrics_support=grab(:lyrics_support)
+    top_f = lyrics_support.top
+    if top_f == 0
+      lyrics_support.left(0)
+      lyrics_support.right(0)
+      lyrics_support.top(LyricsStyle.dimensions[:tool_bar_height])
+      lyrics_support.width(:auto)
+      lyrics_support.height(:auto)
+      lyrics_support.depth = 0
+    else
+      lyrics_support.depth(7)
+      lyrics_support.left(0)
+      lyrics_support.top(0)
+      lyrics_support.bottom(0)
+      lyrics_support.right(0)
+      lyrics_support.width(:auto)
+      lyrics_support.height(:auto)
+      lyrics_support.depth = 99
+    end
+  end
   def new_song(content)
     @lyrics=content
     grab(:lyric_viewer).content(content)
