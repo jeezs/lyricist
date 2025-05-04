@@ -5,8 +5,8 @@ class LyricsStyle
   # Couleurs
   def self.colors
     {
-      first_line_color: { red: 0.9, green: 0.6, blue: 0.6 },
-      other_lines_color: { red: 0.5, green: 0.3, blue: 0.3 },
+      first_line_color: { red: 0.93, green: 0.93, blue: 0.93 },
+      other_lines_color: { red: 0.7, green: 0.7, blue: 0.7 },
       # Couleurs principales
       primary: { red: 0.15, green: 0.15, blue: 0.15  },
       secondary: { red: 0.72, green: 0.52, blue: 0.52 },

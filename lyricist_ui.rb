@@ -20,11 +20,12 @@ class Lyricist < Atome
              # color: LyricsStyle.colors[:secondary],
              top: LyricsStyle.dimensions[:margin],
              # position: :absolute,
-             parent: :tool_bar
-           })
+             parent: :tool_bar,
 
+           })
+    grab(:counter_support).overflow(:hidden)
     counter = grab(:counter_support).text({
-                                            data: :counter,
+                                            data: 0,
                                             content: :play,
                                             # center: true,
                                             left: 6,
@@ -125,6 +126,7 @@ class Lyricist < Atome
   end
 
   def build_timeline_slider
+
     grab(:main_stage).slider(
       LyricsStyle.slider_style({
                                  id: :timeline_slider,
@@ -145,9 +147,9 @@ class Lyricist < Atome
                                })
     ) do |value|
       lyrics = grab(:lyric_viewer)
-      counter = grab(:counter)
-      update_lyrics(value, lyrics, counter)
+      update_lyrics(value, lyrics)
     end
+    #alert("@length is : #{@length}")
     grab(:timeline_slider_cursor).touch(:down) do
       grab(:counter).timer({ pause: true })
       # @playing = false

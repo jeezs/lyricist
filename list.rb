@@ -302,8 +302,8 @@ class Lyricist
 
     # On arrête la lecture en cours
     stop_audio(@audio_object) if @audio_object
-    counter = grab(:counter)
-    counter.timer({ stop: true }) if counter
+    # counter = grab(:counter)
+    # counter.timer({ stop: true }) if counter
     # On charge la nouvelle chanson
     @title = song_data["title"]
     grab('title_label').data(@title) if grab('title_label')
@@ -341,7 +341,7 @@ class Lyricist
 
     # Mémoriser le titre de la chanson avant suppression (pour le log)
     song_title = @list[key]["title"] rescue "inconnu"
-    puts "Suppression de la chanson '#{song_title}' (clé: #{key})"
+    # puts "Suppression de la chanson '#{song_title}' (clé: #{key})"
 
     # Supprimer l'élément
     @list.delete(key)
@@ -349,7 +349,7 @@ class Lyricist
     # Ne pas appeler reorder_all_songs ici - C'est le changement crucial
     # reorder_all_songs  <-- Ne pas exécuter cette ligne
 
-    puts "Élément supprimé. Nombre d'éléments restants: #{@list.size}"
+    # puts "Élément supprimé. Nombre d'éléments restants: #{@list.size}"
 
     # Rafraîchir l'UI pour refléter les changements
     # Mais ne pas le faire ici, car cela sera géré par l'appelant

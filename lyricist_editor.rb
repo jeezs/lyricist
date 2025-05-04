@@ -104,10 +104,10 @@ class Lyricist < Atome
         update_lyrics(current_position, lyrics, counter)
 
         max_timecode = lyrics.content.keys.max
-        if max_timecode > @length
-          @length = max_timecode
-          full_refresh_viewer(current_position)
-        end
+        # if max_timecode > @length
+        #   @length = max_timecode
+        #   full_refresh_viewer(current_position)
+        # end
         prev_position = @actual_position
         full_refresh_viewer(prev_position)
         update_song_listing

@@ -108,7 +108,7 @@ class Lyricist < Atome
         next if index == 0
 
         top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
-                       LyricsStyle.dimensions[:lyrics_size] / 3
+                       LyricsStyle.dimensions[:lyrics_size] *3
 
         # Paramètres pour la ligne
         child_params = {
@@ -123,23 +123,12 @@ class Lyricist < Atome
     end
   end
 
-  def update_lyrics(value, target, timer_found)
-    # Mise à jour du timer
-    if timer_found.respond_to?(:update)
-      timer_found.update({
-                           data: value,
-                           timer: { position: value, start: value }
-                         })
-    else
-      timer_found.data(value)
-      timer_found.timer[:position] = value
-      timer_found.timer[:start] = value
-    end
-
-    @actual_position = value
-
+  def update_lyrics(value, target)
     # Récupération des paroles sans modifier la valeur
     current_lyrics = closest_values(target.content, value, @number_of_lines)
+    # puts "#{current_lyrics.class} : #{current_lyrics}"
+    # current_lyrics=['hello', 'jeezs', 'hello', 'jeezs','hello', 'jeezs', 'hello', 'jeezs', 'hello', 'jeezs',
+    #                 'hello', 'jeezs', 'hello', 'jeezs','hello', 'jeezs','hello', 'jeezs']
     format_lyrics(current_lyrics, target)
   end
 

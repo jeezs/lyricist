@@ -13,8 +13,6 @@ class Lyricist < Atome
 
   def loading_countdown(next_song, allow_countdown)
 
-
-
     if allow_countdown
       countdown = grab("lyrics_support").box({ id: :load_warning, width: 120, height: 120 })
       countdown.smooth(120)
@@ -49,7 +47,7 @@ class Lyricist < Atome
           @allow_next = true
           @allow_loading = true
         else
-          play_next_song({current: true, immediate: true})
+          play_next_song({ current: true, immediate: true })
         end
         countdown.delete({ recursive: true })
       end
@@ -60,14 +58,14 @@ class Lyricist < Atome
 
   end
 
-  def play_next_song(params={})
+  def play_next_song(params = {})
     if params[:prev]
       song_to_load = -1
     else
       song_to_load = 1
     end
     if params[:current]
-      song_to_load=0
+      song_to_load = 0
     end
 
     if params[:immediate]
@@ -93,16 +91,46 @@ class Lyricist < Atome
 
   def stop_lyrics
     stop_audio(@audio_object)
-    counter = grab(:counter)
-    counter.timer({ stop: true })
+    # counter = grab(:counter)
+    # counter.timer({ stop: true })
     lyrics = grab(:lyric_viewer)
     update_lyrics(0, lyrics, counter)
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
+    @actual_position=0
+    grab(:counter).data(0)
     if grab(:lyric_viewer).data == '-end-' && @allow_next
       play_next_song
     end
+  end
+
+  def play_audio(audio_object, actual_position)
+    current_lyricist = grab(:the_lyricist).data
+    @length=current_lyricist.instance_variable_get('@length')
+    @record=current_lyricist.instance_variable_get('@record')
+    @actual_position=current_lyricist.instance_variable_get('@actual_position')
+    counter=grab(:counter)
+    lyrics = grab(:lyric_viewer)
+    slider= grab(:timeline_slider)
+    audio_object.play(actual_position) do |params|
+      value = params[:time].round(2)
+      current_lyricist.instance_variable_set('@actual_position', value)
+      counter.data(value)
+      current_lyricist.update_lyrics(value, lyrics)
+      slider.value(value)
+      # end
+    end
+
+    @playing = true
+  end
+
+  def pause_audio(audio_object)
+    audio_object.pause(:pause)
+  end
+
+  def stop_audio(audio_object)
+    audio_object.play(:stop)
   end
 
   def play_lyrics
@@ -111,29 +139,11 @@ class Lyricist < Atome
       @playing = false
       stop_audio(@audio_object)
     else
-
-      counter = grab(:counter)
-      play_audio(@audio_object, @actual_position / 1000)
-      prev_length = @length
-      counter.timer({ end: Float::INFINITY }) do |value|
-        lyrics = grab(:lyric_viewer)
-        value = value.to_i
-        update_lyrics(value, lyrics, counter)
-        if @record && value >= @length
-          @length = value
-        else
-          if value >= @length
-            counter.timer({ stop: true })
-          end
-        end
-        if value < prev_length
-          grab(:timeline_slider).value(value)
-        end
-
-      end
-      @playing = true
+      play_audio(@audio_object, @actual_position)
     end
   end
+
+
 
   def load_strategy(val)
     filename = val[:filename]
@@ -214,8 +224,9 @@ class Lyricist < Atome
     @audio_path = audio_path
     @audio_object.path(audio_path)
     wait_for_duration(@audio_object, ->(duration) {
-      @default_length = duration * 1000
-      @length = duration * 1000
+      @default_length = duration
+      @length = duration
+      full_refresh_viewer(0)
     })
   end
 
@@ -411,41 +422,44 @@ class Lyricist < Atome
 
     prev_word.touch(true) do
       lyrics = grab(:lyric_viewer)
-      counter = grab(:counter)
-      current_position = counter.timer[:position]
-
+      # counter = grab(:counter)
+      # current_position = counter.timer[:position]
+      #
       # Trouver la clé qui précède la position actuelle
       sorted_keys = lyrics.content.keys.sort
-      prev_index = sorted_keys.rindex { |key| key < current_position }
+      prev_index = sorted_keys.rindex { |key| key < @actual_position }
 
       if prev_index
         prev_position = sorted_keys[prev_index]
-        update_lyrics(prev_position, lyrics, counter)
+        @actual_position=prev_position
+        update_lyrics(prev_position, lyrics)
         grab(:timeline_slider).value(prev_position)
       else
         # Si aucune position précédente n'est trouvée, aller au début (position 0)
-        update_lyrics(0, lyrics, counter)
+        update_lyrics(0, lyrics)
         grab(:timeline_slider).value(0)
       end
     end
 
     next_word.touch(true) do
       lyrics = grab(:lyric_viewer)
-      counter = grab(:counter)
-      current_position = counter.timer[:position]
+      # counter = grab(:counter)
+      # current_position = counter.timer[:position]
 
       # Trouver la clé qui suit la position actuelle
       sorted_keys = lyrics.content.keys.sort
-      next_index = sorted_keys.find_index { |key| key > current_position }
-
+      next_index = sorted_keys.find_index { |key| key > @actual_position }
+      # alert "#{@actual_position} : #{sorted_keys} : #{next_index}"
       if next_index
+
         next_position = sorted_keys[next_index]
-        update_lyrics(next_position, lyrics, counter)
+        @actual_position=next_position
+        update_lyrics(next_position, lyrics)
         grab(:timeline_slider).value(next_position)
       else
         # Si aucune position suivante n'est trouvée, aller à la fin
         last_position = sorted_keys.last
-        update_lyrics(last_position, lyrics, counter)
+        update_lyrics(last_position, lyrics)
         grab(:timeline_slider).value(last_position)
       end
     end
@@ -562,21 +576,20 @@ class Lyricist < Atome
                             })
 
     load_prev_song.touch(true) do
-      play_next_song({prev: true, immediate: true})
+      play_next_song({ prev: true, immediate: true })
     end
 
-
     load_next_song = button({
-                         label: :next,
-                         id: :load_next_song,
-                         top: LyricsStyle.dimensions[:margin],
-                         left: 593,
-                         right: LyricsStyle.dimensions[:margin],
-                         parent: :bottom_bar
-                       })
+                              label: :next,
+                              id: :load_next_song,
+                              top: LyricsStyle.dimensions[:margin],
+                              left: 593,
+                              right: LyricsStyle.dimensions[:margin],
+                              parent: :bottom_bar
+                            })
 
     load_next_song.touch(true) do
-      play_next_song({immediate: true})
+      play_next_song({ immediate: true })
     end
 
     #########

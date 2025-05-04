@@ -59,17 +59,17 @@ class Object
     audio_object.length
   end
 
-  def play_audio(audio_object, at)
-    audio_object.play(at) # do |val|
-  end
+  # def play_audio(audio_object, at)
+  #   audio_object.play(at) # do |val|
+  # end
 
-  def pause_audio(audio_object)
-    audio_object.pause(:pause)
-  end
-
-  def stop_audio(audio_object)
-    audio_object.play(:stop)
-  end
+  # def pause_audio(audio_object)
+  #   audio_object.pause(:pause)
+  # end
+  #
+  # def stop_audio(audio_object)
+  #   audio_object.play(:stop)
+  # end
 end
 
 def button(params)
@@ -116,9 +116,7 @@ end
 
 def alter_lyric_event
   lyrics = grab(:lyric_viewer)
-  counter = grab(:counter)
-  current_position = counter.timer[:position]
-  lyrics.content[current_position] = lyrics.data
+  lyrics.content[@actual_position] = lyrics.data
   lyrics.blink(LyricsStyle.colors[:danger])
 end
 
@@ -146,7 +144,7 @@ def parse_song_lyrics(song)
                         width: 399
                       })
 
-    line_support.touch(true) do
+    line_support.touch(:down) do
       lyrics = grab(:lyric_viewer)
       lyrics.data(line_found)
       alter_lyric_event
@@ -162,7 +160,6 @@ grab(:toolbox_tool).display(:none)
 
 def init_lyrix(lyrics_content, song_path)
 
-
   lyr = Lyricist.new
   # we create an atome to  be able to retreive the lyr
   element({id: :the_lyricist, data: lyr})
@@ -172,13 +169,11 @@ def init_lyrix(lyrics_content, song_path)
   import_drag.display(:none)
   lyr.initialize_list_manager
 
-
-
   ############
   #autoload here
   result = list_all_files_in_localstorage
   file = result[:files].last
-  # alert file_to_load
+
   file_content = load_file(file)
 
   current_lyricist = grab(:the_lyricist).data
@@ -189,7 +184,8 @@ def init_lyrix(lyrics_content, song_path)
 
 end
 
-init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Alive.mp3')
+# init_lyrix({ 0 => "hi", 2594 => "jeezs", 8838 => "from", 231295 => "hope" }, 'medias/audios/Alive.mp3')
+init_lyrix({ 0 => "hi", 233 => "jeezs" }, 'medias/audios/Alive.mp3')
 
 
 ##### test below
