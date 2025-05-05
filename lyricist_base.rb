@@ -52,7 +52,7 @@ class Lyricist < Atome
   end
   def new_song(content)
     @lyrics=content
-    grab(:lyric_viewer).content(content)
+    grab(:main_line).content(content)
     # last_key, last_value = content.to_a.last
     # @default_length = last_key
     # @length = @default_length

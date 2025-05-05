@@ -20,7 +20,7 @@ class Lyricist < Atome
       puts 'jjj'
     end
     # Récupération et tri des paroles
-    lyrics = grab(:lyric_viewer)
+    lyrics = grab(:main_line)
     sorted_lyrics = lyrics.content.sort.to_h
 
     # Affichage des paroles avec options d'édition

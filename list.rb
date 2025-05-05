@@ -295,8 +295,10 @@ class Lyricist
   end
   # Méthode pour charger une chanson depuis la liste
   def load_song_from_list(key)
+
     return unless @list && @list[key]
 
+    prepare_lyrics_display
     song_data = @list[key]
 
 
@@ -313,7 +315,14 @@ class Lyricist
 
     # Charger les paroles
     lyrics = eval(song_data["lyrics"]) rescue {}
-    grab(:lyric_viewer).content(lyrics) if grab(:lyric_viewer)
+    grab(:main_line).content(lyrics) if grab(:main_line)
+
+
+    (1...@number_of_lines).each do |index|
+      # grab("my_line_#{index}").delete({ recursive: true })
+      grab("my_line_#{index}").data('') if grab("my_line_#{index}")
+    end
+
     raw_text = song_data[:raw]
 
     grab(:importer_support).clear(true)
@@ -428,7 +437,7 @@ class Lyricist
     return unless @audio_path && @title
 
     # Récupérer les paroles actuelles
-    current_lyrics = grab(:lyric_viewer).content.to_s rescue "{}"
+    current_lyrics = grab(:main_line).content.to_s rescue "{}"
 
     # Créer une nouvelle entrée
     new_song = {

@@ -75,7 +75,7 @@ class Lyricist < Atome
       loading_countdown = true
     end
     @allow_next = false
-    grab(:lyric_viewer).data = ''
+    grab(:main_line).data = ''
     next_song = (find_key_by_title(@list, @title).to_i + song_to_load).to_s
     if next_song.to_i < @list.length + 1
       loading_countdown(next_song, loading_countdown)
@@ -93,14 +93,14 @@ class Lyricist < Atome
     stop_audio(@audio_object)
     # counter = grab(:counter)
     # counter.timer({ stop: true })
-    lyrics = grab(:lyric_viewer)
+    lyrics = grab(:main_line)
     update_lyrics(0, lyrics)
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
     @actual_position=0
     grab(:counter).data(0)
-    if grab(:lyric_viewer).data == '-end-' && @allow_next
+    if grab(:main_line).data == '-end-' && @allow_next
       play_next_song
     end
   end
@@ -109,11 +109,11 @@ class Lyricist < Atome
     current_lyricist = grab(:the_lyricist).data
     @length=current_lyricist.instance_variable_get('@length')
     @record=current_lyricist.instance_variable_get('@record')
-    @actual_position=current_lyricist.instance_variable_get('@actual_position')
+    # @actual_position=current_lyricist.instance_variable_get('@actual_position')
     # counter=grab(:counter)
     slider= grab(:timeline_slider)
     audio_object.play(actual_position) do |params|
-      value = params[:time].round(2)
+      value = params[:time].round(1)
       slider.value(value)
     end
 
@@ -168,8 +168,8 @@ class Lyricist < Atome
       @title = title
       grab('title_label').data(title)
       current_lyricist.init_audio(audio_path)
-      grab(:lyric_viewer).content(lyrics)
-      @lyrics = grab(:lyric_viewer).content(lyrics)
+      grab(:main_line).content(lyrics)
+      @lyrics = grab(:main_line).content(lyrics)
       current_lyricist.full_refresh_viewer(0)
       raw = file_to_load['raw']
       #  raw
@@ -315,7 +315,7 @@ class Lyricist < Atome
 
     record.touch(true) do
       prev_postion = @actual_position
-      lyric_viewer = grab(:lyric_viewer)
+      lyric_viewer = grab(:main_line)
       if @record == true
         @record = false
         lyric_viewer.edit(false)
@@ -328,7 +328,7 @@ class Lyricist < Atome
         @number_of_lines = 1
 
         counter = grab(:counter)
-        lyrics = grab(:lyric_viewer)
+        lyrics = grab(:main_line)
         update_lyrics(0, lyrics, counter)
       end
       full_refresh_viewer(prev_postion)
@@ -385,12 +385,9 @@ class Lyricist < Atome
                          parent: :bottom_bar
                        })
 
-    prev_word.touch(true) do
-      lyrics = grab(:lyric_viewer)
-      # counter = grab(:counter)
-      # current_position = counter.timer[:position]
-      #
-      # Trouver la clé qui précède la position actuelle
+    prev_word.touch(:down) do
+      stop_audio(@audio_object)
+      lyrics = grab(:main_line)
       sorted_keys = lyrics.content.keys.sort
       prev_index = sorted_keys.rindex { |key| key < @actual_position }
 
@@ -400,21 +397,21 @@ class Lyricist < Atome
         update_lyrics(prev_position, lyrics)
         grab(:timeline_slider).value(prev_position)
       else
-        # Si aucune position précédente n'est trouvée, aller au début (position 0)
         update_lyrics(0, lyrics)
         grab(:timeline_slider).value(0)
       end
     end
+    prev_word.touch(:up) do
+      if @playing
+        play_audio(@audio_object, @actual_position)
+      end
+    end
 
-    next_word.touch(true) do
-      lyrics = grab(:lyric_viewer)
-      # counter = grab(:counter)
-      # current_position = counter.timer[:position]
-
-      # Trouver la clé qui suit la position actuelle
+    next_word.touch(:down) do
+      stop_audio(@audio_object)
+      lyrics = grab(:main_line)
       sorted_keys = lyrics.content.keys.sort
       next_index = sorted_keys.find_index { |key| key > @actual_position }
-      # alert "#{@actual_position} : #{sorted_keys} : #{next_index}"
       if next_index
 
         next_position = sorted_keys[next_index]
@@ -422,10 +419,14 @@ class Lyricist < Atome
         update_lyrics(next_position, lyrics)
         grab(:timeline_slider).value(next_position)
       else
-        # Si aucune position suivante n'est trouvée, aller à la fin
         last_position = sorted_keys.last
         update_lyrics(last_position, lyrics)
         grab(:timeline_slider).value(last_position)
+      end
+    end
+    next_word.touch(:up) do
+      if @playing
+        play_audio(@audio_object, @actual_position)
       end
     end
 
@@ -526,7 +527,7 @@ class Lyricist < Atome
       save_file(list_tile, content_to_save)
       save_file_to_db(list_tile, content_to_save)
       #  #to save file instead uncomment the line below
-      # lyrics = grab(:lyric_viewer).content.to_s
+      # lyrics = grab(:main_line).content.to_s
       #  content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
       #  save_file("#{@title}.lrx", content_to_save)
     end
@@ -554,6 +555,7 @@ class Lyricist < Atome
                             })
 
     load_next_song.touch(true) do
+
       play_next_song({ immediate: true })
     end
 
@@ -574,7 +576,7 @@ class Lyricist < Atome
         hide_all_panels
       else
         hide_all_panels
-        grab(:lyric_viewer).box({ id: :loader,
+        grab(:main_line).box({ id: :loader,
                                   width: 259,
                                   height: 333,
                                   smooth: 9,

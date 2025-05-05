@@ -7,7 +7,7 @@ class Lyricist < Atome
     build_song_support
     build_control_buttons
     build_lyrics_viewer
-    # prepare_lyrics_display(grab(:lyric_viewer))
+    prepare_lyrics_display
     build_timeline_slider
   end
 
@@ -37,7 +37,7 @@ class Lyricist < Atome
                                             invert: true
                                           })
 
-    base_text = ''
+    # base_text = ''
 
     lyrics_support = grab(:main_stage).box({
                                        id: :lyrics_support,
@@ -51,18 +51,18 @@ class Lyricist < Atome
                                        color: LyricsStyle.colors[:container_bg]
                                      })
 
-    lyrics_support.text({
-                          top: 3,
-                          left: 3,
-                          width: LyricsStyle.dimensions[:line_width],
-                          data: base_text,
-                          id: :lyric_viewer,
-                          edit: false,
-                          component: { size: LyricsStyle.dimensions[:text_xlarge] },
-                          position: :absolute,
-                          content: { 0 => base_text },
-                          context: :insert
-                        })
+    # lyrics_support.text({
+    #                       top: 3,
+    #                       left: 3,
+    #                       width: LyricsStyle.dimensions[:line_width],
+    #                       data: base_text,
+    #                       id: :main_line,
+    #                       edit: false,
+    #                       component: { size: LyricsStyle.dimensions[:text_xlarge] },
+    #                       position: :absolute,
+    #                       content: { 0 => base_text },
+    #                       context: :insert
+    #                     })
 
     # grab(:bottom_bar).touch(true) do
     #   hide_all_panels
@@ -79,8 +79,25 @@ class Lyricist < Atome
 
     counter.timer({ position: 88 })
 
-    # Événements sur le viewer de paroles
-    setup_lyrics_events
+
+  end
+
+  def setup_lyrics_events
+    lyrics = grab(:main_line)
+
+    lyrics.keyboard(:down) do |native_event|
+
+      event = Native(native_event)
+      if event[:keyCode].to_s == '13' # Touche Entrée
+        grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
+        event.preventDefault
+        alter_lyric_event
+
+        #### updating the list
+        update_song_listing
+
+      end
+    end
   end
 
   def build_song_support
@@ -125,7 +142,7 @@ class Lyricist < Atome
   end
 
   def build_timeline_slider
-    lyrics = grab(:lyric_viewer)
+    lyrics = grab(:main_line)
     counter=grab(:counter)
     grab(:main_stage).slider(
       LyricsStyle.slider_style({
@@ -146,12 +163,17 @@ class Lyricist < Atome
     ) do |value|
       counter.data(value)
       update_lyrics(value, lyrics)
+      @actual_position=value
+
     end
     grab(:timeline_slider_cursor).touch(:down) do
       grab(:counter).timer({ pause: true })
       stop_audio(@audio_object)
     end
     grab(:timeline_slider_cursor).touch(:up) do
+      if @playing
+        play_audio(@audio_object, @actual_position)
+      end
     end
   end
 
@@ -221,20 +243,5 @@ class Lyricist < Atome
   # end
 end
 
-  def setup_lyrics_events
-    lyrics = grab(:lyric_viewer)
 
-    lyrics.keyboard(:down) do |native_event|
-      event = Native(native_event)
-      if event[:keyCode].to_s == '13' # Touche Entrée
-        grab(:counter).content(:play) # Permet la mise à jour du viewer de paroles pendant la lecture
-        event.preventDefault
-        alter_lyric_event
-
-        #### updating the list
-        update_song_listing
-
-      end
-    end
-  end
 end

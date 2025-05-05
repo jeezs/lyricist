@@ -103,11 +103,7 @@ def button(params)
   btn
 end
 
-def alter_lyric_event
-  lyrics = grab(:lyric_viewer)
-  lyrics.content[@actual_position] = lyrics.data
-  lyrics.blink(LyricsStyle.colors[:danger])
-end
+
 
 def parse_song_lyrics(song)
   song_lines = song.split("\n")
@@ -134,9 +130,9 @@ def parse_song_lyrics(song)
                       })
 
     line_support.touch(:down) do
-      lyrics = grab(:lyric_viewer)
+
+      lyrics = grab(:main_line)
       lyrics.data(line_found)
-      alter_lyric_event
       update_song_listing
     end
   end

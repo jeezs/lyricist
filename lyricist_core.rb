@@ -61,69 +61,180 @@ class Lyricist < Atome
     nil # Retourne nil si aucune correspondance n'est trouvée
   end
 
+  ########################
 
+  ##########################################
+
+  # Méthode pour préparer l'affichage des paroles (à appeler une seule fois à l'initialisation)
+  def prepare_lyrics_display
+
+    lyrics_support = grab(:lyrics_support)
+    # alert target.id
+    # Style pour la première ligne
+    # style_first_line = {
+    #   color: LyricsStyle.colors[:first_line_color],
+    #   left: LyricsStyle.positions[:lyrics_left_offset],
+    #   top: LyricsStyle.positions[:lyrics_top_offset],
+    #   component: { size: LyricsStyle.dimensions[:lyrics_size] }
+    # }
+
+    lyrics_support.text({
+                          top: 3,
+                          left: 3,
+                          width: LyricsStyle.dimensions[:line_width],
+                          data: '',
+                          id: :main_line,
+                          edit: false,
+                          component: { size: LyricsStyle.dimensions[:text_xlarge] },
+                          position: :absolute,
+                          content: { 0 => '' },
+                          context: :insert
+                        })
+
+    # # Initialisation du contenu de la première ligne
+    # target.data('first line')
+
+    # # Application du style à la cible principale selon la méthode disponible
+    # if target.respond_to?(:update)
+    #   target.update(style_first_line)
+    # else
+    #   style_first_line.each { |prop, val| target.send(prop, val) }
+    # end
+
+    # Style commun pour les lignes suivantes
+    common_style = {
+      edit: false,
+      width: LyricsStyle.dimensions[:lyrics_width],
+      color: LyricsStyle.colors[:other_lines_color],
+      position: :absolute
+    }
+
+    # Création des lignes suivantes (initialisées avec 'next lines')
+    (1...@number_of_lines).each do |index|
+      top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
+                     LyricsStyle.dimensions[:lyrics_size] * 3
+
+      # Création de chaque ligne avec un ID unique
+      lyrics_support.text({
+                            id: :"my_line_#{index}",
+                            data: 'next lines',
+                            component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
+                            top: top_position * LyricsStyle.dimensions[:percent_offset_between_lines]
+                          }.merge(common_style))
+    end
+
+    # Événements sur le viewer de paroles
+    setup_lyrics_events
+
+  end
+
+  def alter_lyric_event
+
+
+    lyrics = grab(:main_line)
+    lyrics.color(LyricsStyle.colors[:danger])
+    wait 1 do
+      lyrics.color(LyricsStyle.colors[:first_line_color])
+    end
+    lyrics.content[@actual_position] = lyrics.data
+
+  end
+
+  # Méthode mise à jour pour juste actualiser le contenu des lignes
   def update_lyrics(value, target)
     lyrics_array = closest_values(target.content, value, @number_of_lines)
     return if lyrics_array.empty?
+    return if target.data == lyrics_array[0] || grab(:counter).content != :play
 
-    # On vérifie si on doit mettre à jour l'affichage
-    if target.data != lyrics_array[0] && grab(:counter).content == :play
-      # Mise à jour de la première ligne
-      target.data(lyrics_array[0])
+    # Mise à jour de la première ligne
+    target.data(lyrics_array[0])
 
-      if lyrics_array[0] == '-end-'
-        if @playing
-          @allow_next = true
-          lyrics_array = []
-          target.content = ''
-          stop_lyrics
-        else
-          @allow_next = false
-        end
-      end
-
-      # Propriétés de style pour la première ligne
-      style_first_line = {
-        color: LyricsStyle.colors[:first_line_color],
-        left: LyricsStyle.positions[:lyrics_left_offset],
-        top: LyricsStyle.positions[:lyrics_top_offset],
-        component: { size: LyricsStyle.dimensions[:lyrics_size] }
-      }
-
-      # Application du style
-      if target.respond_to?(:update)
-        target.update(style_first_line)
+    # Gestion de la fin des paroles
+    if lyrics_array[0] == '-end-'
+      if @playing
+        @allow_next = true
+        target.content = ''
+        stop_lyrics
       else
-        style_first_line.each { |prop, val| target.send(prop, val) }
+        @allow_next = false
       end
+      return
+    end
 
-      # Style commun pour les lignes suivantes
-      common_style = {
-        edit: false,
-        width: LyricsStyle.dimensions[:lyrics_width],
-        color: LyricsStyle.colors[:other_lines_color],
-        position: :absolute
-      }
-
-      # Création des lignes suivantes
-      lyrics_array.each_with_index do |lyric, index|
-        next if index == 0
-
-        top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
-                       LyricsStyle.dimensions[:lyrics_size] *3
-
-        # Paramètres pour la ligne
-        child_params = {
-          data: lyric,
-          component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
-          top: top_position * LyricsStyle.dimensions[:percent_offset_between_lines]
-        }.merge(common_style)
-
-        # Création du texte enfant
-        target.text(child_params)
+    # Mise à jour des lignes suivantes
+    lyrics_array.each_with_index do |lyric, index|
+      next if index == 0 # Ignorer la première ligne qui est déjà mise à jour
+      if index < @number_of_lines
+        # Utilisation de grab pour mettre à jour le contenu des lignes existantes
+        grab(:"my_line_#{index}").data(lyric)
       end
     end
   end
+
+  ####################################################
+
+  # def update_lyrics(value, target)
+  #   lyrics_array = closest_values(target.content, value, @number_of_lines)
+  #   return if lyrics_array.empty?
+  #   # alert "==> #{target.id}"
+  #   # On vérifie si on doit mettre à jour l'affichage
+  #   if target.data != lyrics_array[0] && grab(:counter).content == :play
+  #     # Mise à jour de la première ligne
+  #     target.data(lyrics_array[0])
+  #
+  #     if lyrics_array[0] == '-end-'
+  #       if @playing
+  #         @allow_next = true
+  #         lyrics_array = []
+  #         target.content = ''
+  #         stop_lyrics
+  #       else
+  #         @allow_next = false
+  #       end
+  #     end
+  #
+  #     # Propriétés de style pour la première ligne
+  #     style_first_line = {
+  #       color: LyricsStyle.colors[:first_line_color],
+  #       left: LyricsStyle.positions[:lyrics_left_offset],
+  #       top: LyricsStyle.positions[:lyrics_top_offset],
+  #       component: { size: LyricsStyle.dimensions[:lyrics_size] }
+  #     }
+  #
+  #     # Application du style
+  #     if target.respond_to?(:update)
+  #       target.update(style_first_line)
+  #     else
+  #       style_first_line.each { |prop, val| target.send(prop, val) }
+  #     end
+  #
+  #     # Style commun pour les lignes suivantes
+  #     common_style = {
+  #       edit: false,
+  #       width: LyricsStyle.dimensions[:lyrics_width],
+  #       color: LyricsStyle.colors[:other_lines_color],
+  #       position: :absolute
+  #     }
+  #
+  #     # Création des lignes suivantes
+  #     lyrics_array.each_with_index do |lyric, index|
+  #       next if index == 0
+  #
+  #       top_position = LyricsStyle.dimensions[:next_Line_lyrics_size] * index +
+  #                      LyricsStyle.dimensions[:lyrics_size] *3
+  #
+  #       # Paramètres pour la ligne
+  #       child_params = {
+  #         data: lyric,
+  #         component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
+  #         top: top_position * LyricsStyle.dimensions[:percent_offset_between_lines]
+  #       }.merge(common_style)
+  #
+  #       # Création du texte enfant
+  #       target.text(child_params)
+  #     end
+  #   end
+  # end
 
   # Helper pour la reconstruction du slider
   def rebuild_timeline_slider(at = 0)
@@ -144,8 +255,8 @@ class Lyricist < Atome
   end
 
   def clear_all
-    @lyrics = { 0 => "new" }
-    lyric_viewer = grab(:lyric_viewer)
+    @lyrics = { 0 => "" }
+    lyric_viewer = grab(:main_line)
 
     if lyric_viewer.respond_to?(:update)
       lyric_viewer.update({
@@ -156,9 +267,17 @@ class Lyricist < Atome
       lyric_viewer.content = @lyrics
       lyric_viewer.data('')
     end
+    (1...@number_of_lines).each do |index|
 
+      # grab("my_line_#{index}").delete({ recursive: true })
+      grab("my_line_#{index}").data('') if grab("my_line_#{index}")
+    end
+
+    #
+    #
     @length = @default_length
-    lyric_viewer.clear(true)
+    # lyric_viewer.clear(true)
+    # grab(:lyrics_support).clear(true)
     rebuild_timeline_slider
   end
 
@@ -219,7 +338,7 @@ class Lyricist < Atome
 
   # Méthode utilitaire pour inspecter le contenu des paroles
   def inspect_lyrics_content
-    lyric_viewer = grab(:lyric_viewer)
+    lyric_viewer = grab(:main_line)
     content = lyric_viewer.content
 
     if content && content.keys.size > 0
