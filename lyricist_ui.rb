@@ -121,8 +121,6 @@ class Lyricist < Atome
       current_lyricist = grab(:the_lyricist).data
       formated_import = { content: content, filename: filename }
       current_lyricist.load_strategy(formated_import)
-      # grab(:importer_support).clear(true)
-      # parse_song_lyrics(val[:content])
     end
   end
 
@@ -142,10 +140,8 @@ class Lyricist < Atome
                                  left: LyricsStyle.dimensions[:margin]+33,
                                  tag: [],
                                  top: LyricsStyle.dimensions[:margin] ,
-                                 # bottom: LyricsStyle.dimensions[:margin] * 3,
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
-
                                })
     ) do |value|
       counter.data(value)
