@@ -111,15 +111,10 @@ class Lyricist < Atome
     @record=current_lyricist.instance_variable_get('@record')
     @actual_position=current_lyricist.instance_variable_get('@actual_position')
     # counter=grab(:counter)
-    # lyrics = grab(:lyric_viewer)
     slider= grab(:timeline_slider)
     audio_object.play(actual_position) do |params|
       value = params[:time].round(2)
-      # current_lyricist.instance_variable_set('@actual_position', value)
-      # counter.data(value)
-      # current_lyricist.update_lyrics(value, lyrics)
       slider.value(value)
-      # end
     end
 
     @playing = true
