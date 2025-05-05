@@ -59,17 +59,6 @@ class Object
     audio_object.length
   end
 
-  # def play_audio(audio_object, at)
-  #   audio_object.play(at) # do |val|
-  # end
-
-  # def pause_audio(audio_object)
-  #   audio_object.pause(:pause)
-  # end
-  #
-  # def stop_audio(audio_object)
-  #   audio_object.play(:stop)
-  # end
 end
 
 def button(params)

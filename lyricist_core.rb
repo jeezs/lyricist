@@ -61,7 +61,9 @@ class Lyricist < Atome
     nil # Retourne nil si aucune correspondance n'est trouvée
   end
 
-  def format_lyrics(lyrics_array, target)
+
+  def update_lyrics(value, target)
+    lyrics_array = closest_values(target.content, value, @number_of_lines)
     return if lyrics_array.empty?
 
     # On vérifie si on doit mettre à jour l'affichage
@@ -121,15 +123,6 @@ class Lyricist < Atome
         target.text(child_params)
       end
     end
-  end
-
-  def update_lyrics(value, target)
-    # Récupération des paroles sans modifier la valeur
-    current_lyrics = closest_values(target.content, value, @number_of_lines)
-    # puts "#{current_lyrics.class} : #{current_lyrics}"
-    # current_lyrics=['hello', 'jeezs', 'hello', 'jeezs','hello', 'jeezs', 'hello', 'jeezs', 'hello', 'jeezs',
-    #                 'hello', 'jeezs', 'hello', 'jeezs','hello', 'jeezs','hello', 'jeezs']
-    format_lyrics(current_lyrics, target)
   end
 
   # Helper pour la reconstruction du slider

@@ -94,7 +94,7 @@ class Lyricist < Atome
     # counter = grab(:counter)
     # counter.timer({ stop: true })
     lyrics = grab(:lyric_viewer)
-    update_lyrics(0, lyrics, counter)
+    update_lyrics(0, lyrics)
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
@@ -110,14 +110,14 @@ class Lyricist < Atome
     @length=current_lyricist.instance_variable_get('@length')
     @record=current_lyricist.instance_variable_get('@record')
     @actual_position=current_lyricist.instance_variable_get('@actual_position')
-    counter=grab(:counter)
-    lyrics = grab(:lyric_viewer)
+    # counter=grab(:counter)
+    # lyrics = grab(:lyric_viewer)
     slider= grab(:timeline_slider)
     audio_object.play(actual_position) do |params|
       value = params[:time].round(2)
-      current_lyricist.instance_variable_set('@actual_position', value)
-      counter.data(value)
-      current_lyricist.update_lyrics(value, lyrics)
+      # current_lyricist.instance_variable_set('@actual_position', value)
+      # counter.data(value)
+      # current_lyricist.update_lyrics(value, lyrics)
       slider.value(value)
       # end
     end
@@ -231,37 +231,7 @@ class Lyricist < Atome
   end
 
   def build_control_buttons
-    # for tests only
-    # nexty = button({
-    #                 label: :next,
-    #                 id: :nexty,
-    #                 top: LyricsStyle.dimensions[:margin],
-    #                 left: 999,
-    #                 parent: :tool_bar
-    #               })
-    #
-    # nexty.touch(true) do
-    #   # alert @actual_position
-    #   counter = grab(:counter)
-    #   lyrics = grab(:lyric_viewer)
-    #   update_lyrics(@actual_position+10, lyrics, counter)
-    #   grab(:timeline_slider).value(@actual_position+10)
-    # end
-    #
-    # prevy = button({
-    #                  label: :prev,
-    #                  id: :prevy,
-    #                  top: LyricsStyle.dimensions[:margin],
-    #                  left: 800,
-    #                  parent: :tool_bar
-    #                })
-    #
-    # prevy.touch(true) do
-    #   counter = grab(:counter)
-    #   lyrics = grab(:lyric_viewer)
-    #   update_lyrics(@actual_position-10, lyrics, counter)
-    #   grab(:timeline_slider).value(@actual_position-10)
-    # end
+
 
     play = button({
                     label: :play,

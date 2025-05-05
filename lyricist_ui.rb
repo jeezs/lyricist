@@ -7,6 +7,7 @@ class Lyricist < Atome
     build_song_support
     build_control_buttons
     build_lyrics_viewer
+    # prepare_lyrics_display(grab(:lyric_viewer))
     build_timeline_slider
   end
 
@@ -126,7 +127,8 @@ class Lyricist < Atome
   end
 
   def build_timeline_slider
-
+    lyrics = grab(:lyric_viewer)
+    counter=grab(:counter)
     grab(:main_stage).slider(
       LyricsStyle.slider_style({
                                  id: :timeline_slider,
@@ -146,7 +148,7 @@ class Lyricist < Atome
 
                                })
     ) do |value|
-      lyrics = grab(:lyric_viewer)
+      counter.data(value)
       update_lyrics(value, lyrics)
     end
     #alert("@length is : #{@length}")
@@ -157,26 +159,26 @@ class Lyricist < Atome
     end
     grab(:timeline_slider_cursor).touch(:up) do
 
-      counter = grab(:counter)
-      if @playing
-        play_audio(@audio_object, @actual_position / 1000)
-        prev_length = @length
-        counter.timer({ end: Float::INFINITY }) do |value|
-          lyrics = grab(:lyric_viewer)
-          value = value.to_i
-          update_lyrics(value, lyrics, counter)
-          if @record && value >= @length
-            @length = value
-          else
-            if value >= @length
-              counter.timer({ stop: true })
-            end
-          end
-          if value < prev_length
-            grab(:timeline_slider).value(value)
-          end
-        end
-      end
+      # counter = grab(:counter)
+      # if @playing
+      #   play_audio(@audio_object, @actual_position / 1000)
+      #   prev_length = @length
+      #   counter.timer({ end: Float::INFINITY }) do |value|
+      #     lyrics = grab(:lyric_viewer)
+      #     value = value.to_i
+      #     update_lyrics(value, lyrics, counter)
+      #     if @record && value >= @length
+      #       @length = value
+      #     else
+      #       if value >= @length
+      #         counter.timer({ stop: true })
+      #       end
+      #     end
+      #     if value < prev_length
+      #       grab(:timeline_slider).value(value)
+      #     end
+      #   end
+      # end
     end
   end
 
