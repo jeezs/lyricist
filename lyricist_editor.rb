@@ -7,27 +7,24 @@ class Lyricist < Atome
                                     id: :lyrics_editor_container,
                                     # color: :red,
                                     color: { red: 0.12, green: 0.12, blue: 0.12, alpha: 0 },
-                                    left: grab(:view).to_px(:width)-530,# :cant" use auto it crash when removing the panal
+                                    left: grab(:view).to_px(:width) - 530, # :cant" use auto it crash when removing the panal
                                     width: 530,
                                     right: 0,
                                     depth: 33
                                   })
     )
     editor_container.touch(true) do |evt|
-      evt.stop_propagation  # Arrête la propagation de l'événement
-      evt.prevent_default   # Empêche le comportement par défaut si nécessaire
+      evt.stop_propagation
+      evt.prevent_default
       evt.prev
       puts 'jjj'
     end
-    # Récupération et tri des paroles
     lyrics = grab(:main_line)
     sorted_lyrics = lyrics.content.sort.to_h
 
-    # Affichage des paroles avec options d'édition
     sorted_lyrics.each_with_index do |(timecode, text), index|
       y_position = 70 + (index * 60)
 
-      # Conteneur pour chaque ligne
       line_container = editor_container.box(
         LyricsStyle.line_container_style({
                                            id: "line_container_#{index}".to_sym,
@@ -36,8 +33,6 @@ class Lyricist < Atome
                                          })
       )
 
-
-      # Champ pour le timecode
       timecode_field = line_container.text(
         LyricsStyle.text_style({
                                  id: "timecode_#{index}".to_sym,
@@ -51,7 +46,6 @@ class Lyricist < Atome
                                })
       )
 
-      # Champ pour le texte
       text_field = line_container.text(
         LyricsStyle.text_style({
                                  id: "text_#{index}".to_sym,
@@ -65,24 +59,19 @@ class Lyricist < Atome
                                })
       )
 
-      # Actions
       setup_edit_line_events(line_container, timecode_field, text_field, timecode, lyrics)
 
-      # Bouton de mise à jour
-      update_button = build_update_button(line_container, timecode, timecode_field, text_field, lyrics)
+      build_update_button(line_container, timecode, timecode_field, text_field, lyrics)
 
-      # Bouton de suppression
-      delete_button = build_delete_button(line_container, editor_container, timecode, lyrics)
+      build_delete_button(line_container, editor_container, timecode, lyrics)
     end
 
-    # Bouton pour ajouter une nouvelle ligne
     build_add_line_button(editor_container, sorted_lyrics, lyrics)
   end
 
   private
 
   def setup_edit_line_events(line_container, timecode_field, text_field, timecode, lyrics)
-    # Action sur le champ timecode
     timecode_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
@@ -103,18 +92,12 @@ class Lyricist < Atome
         current_position = counter.timer[:position]
         update_lyrics(current_position, lyrics, counter)
 
-        max_timecode = lyrics.content.keys.max
-        # if max_timecode > @length
-        #   @length = max_timecode
-        #   full_refresh_viewer(current_position)
-        # end
         prev_position = @actual_position
         full_refresh_viewer(prev_position)
         update_song_listing
       end
     end
 
-    # Action sur le champ texte
     text_field.keyboard(:dowm) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'
@@ -175,23 +158,18 @@ class Lyricist < Atome
       new_text = text_field.data
 
       if new_timecode != old_timecode
-        # Si le timecode a changé, on supprime l'ancien et on ajoute le nouveau
         lyrics.content.delete(old_timecode)
         lyrics.content[new_timecode] = new_text
       else
-        # Sinon on met simplement à jour le texte
         lyrics.content[old_timecode] = new_text
       end
 
-      # Notification visuelle de mise à jour
       line_container.blink(LyricsStyle.colors[:success])
 
-      # Mise à jour de l'affichage et du slider si nécessaire
       counter = grab(:counter)
       current_position = counter.timer[:position]
       update_lyrics(current_position, lyrics, counter)
 
-      # Reconstruire le slider si la plage a changé
       max_timecode = lyrics.content.keys.max
       if max_timecode > @length
         @length = max_timecode
@@ -234,16 +212,13 @@ class Lyricist < Atome
 
       line_container.delete({ recursive: true })
 
-      # Réorganiser les éléments restants
       editor_container.delete({ recursive: true })
       show_lyrics_editor(prev_left, prev_top)
 
-      # Mise à jour de l'affichage
       counter = grab(:counter)
       current_position = counter.timer[:position]
       update_lyrics(current_position, lyrics, counter)
 
-      # Reconstruire le slider
       full_refresh_viewer(current_position)
       update_song_listing
     end
@@ -280,7 +255,6 @@ class Lyricist < Atome
   end
 
   def show_add_dialog(editor_container, lyrics)
-    # Ouvrir un dialogue pour ajouter une nouvelle ligne
     dialog_container = grab(:lyrics_editor_container).box(
       LyricsStyle.container_style({
                                     id: :add_dialog,
@@ -303,7 +277,6 @@ class Lyricist < Atome
                              })
     )
 
-    # Champ pour le nouveau timecode
     dialog_container.text(
       LyricsStyle.text_style({
                                data: "Timecode:",
@@ -323,19 +296,17 @@ class Lyricist < Atome
                                width: 200,
                                left: 110,
                                top: 40,
-                               # color: LyricsStyle.colors[:text_accent]
                              })
     )
 
     new_timecode_field.keyboard(:down) do |native_event|
       event = Native(native_event)
 
-      if event[:keyCode].to_s == '13' # Touche Entrée
+      if event[:keyCode].to_s == '13'
         event.preventDefault
       end
     end
 
-    # Champ pour le nouveau texte
     dialog_container.text(
       LyricsStyle.text_style({
                                data: "Texte:",
@@ -366,12 +337,10 @@ class Lyricist < Atome
       end
     end
 
-    # Boutons d'action
     build_dialog_buttons(dialog_container, new_timecode_field, new_text_field, editor_container, lyrics)
   end
 
   def build_dialog_buttons(dialog_container, new_timecode_field, new_text_field, editor_container, lyrics)
-    # Bouton de confirmation
     confirm_button = dialog_container.box(
       LyricsStyle.action_button_style({
                                         width: LyricsStyle.dimensions[:large_width],
@@ -392,7 +361,6 @@ class Lyricist < Atome
                              })
     )
 
-    # Bouton d'annulation
     cancel_button = dialog_container.box(
       LyricsStyle.action_button_style({
                                         width: LyricsStyle.dimensions[:large_width],
@@ -413,7 +381,6 @@ class Lyricist < Atome
                              })
     )
 
-    # Action de confirmation
     confirm_button.touch(true) do
       prev_left = editor_container.left
       prev_top = editor_container.top
@@ -423,24 +390,20 @@ class Lyricist < Atome
       if new_timecode > 0 && !new_text.empty?
         lyrics.content[new_timecode] = new_text
 
-        # Mise à jour de l'affichage
         counter = grab(:counter)
         current_position = counter.timer[:position]
         update_lyrics(current_position, lyrics, counter)
 
-        # Mettre à jour la longueur si nécessaire
         if new_timecode > @length
           @length = new_timecode
         end
 
-        # Reconstruire le slider et l'éditeur
         full_refresh_viewer(current_position)
         dialog_container.delete({ recursive: true })
         editor_container.delete({ recursive: true })
         show_lyrics_editor(prev_left, prev_top)
         update_song_listing
       else
-        # Notification d'erreur
         dialog_container.blink(LyricsStyle.colors[:danger])
       end
 

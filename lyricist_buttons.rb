@@ -91,14 +91,12 @@ class Lyricist < Atome
 
   def stop_lyrics
     stop_audio(@audio_object)
-    # counter = grab(:counter)
-    # counter.timer({ stop: true })
     lyrics = grab(:main_line)
     update_lyrics(0, lyrics)
     grab(:timeline_slider).delete({ force: true })
     build_timeline_slider
     @playing = false
-    @actual_position=0
+    @actual_position = 0
     grab(:counter).data(0)
     if grab(:main_line).data == '-end-' && @allow_next
       play_next_song
@@ -107,11 +105,10 @@ class Lyricist < Atome
 
   def play_audio(audio_object, actual_position)
     current_lyricist = grab(:the_lyricist).data
-    @length=current_lyricist.instance_variable_get('@length')
-    @record=current_lyricist.instance_variable_get('@record')
-    # @actual_position=current_lyricist.instance_variable_get('@actual_position')
-    # counter=grab(:counter)
-    slider= grab(:timeline_slider)
+    @length = current_lyricist.instance_variable_get('@length')
+    @record = current_lyricist.instance_variable_get('@record')
+    current_lyricist.instance_variable_get('@actual_position')
+    slider = grab(:timeline_slider)
     audio_object.play(actual_position) do |params|
       value = params[:time].round(1)
       slider.value(value)
@@ -138,14 +135,11 @@ class Lyricist < Atome
     end
   end
 
-
-
   def load_strategy(val)
     filename = val[:filename]
     content = val[:content]
     current_lyricist = grab(:the_lyricist).data
 
-    # begin
     case File.extname(filename).downcase
     when ".mp3", ".wav", ".ogg", ".aac", ".flac", ".m4a"
       audio_path = "medias/audios/#{filename}"
@@ -153,7 +147,7 @@ class Lyricist < Atome
       name_without_extension = File.basename(filename, File.extname(filename))
       @title = name_without_extension
       grab(:title_label).data(name_without_extension)
-      return # Add explicit return
+      return
     when ".txt"
       grab(:importer_support).clear(true)
       parse_song_lyrics(val[:content])
@@ -172,11 +166,10 @@ class Lyricist < Atome
       @lyrics = grab(:main_line).content(lyrics)
       current_lyricist.full_refresh_viewer(0)
       raw = file_to_load['raw']
-      #  raw
       grab(:importer_support).clear(true)
       parse_song_lyrics(raw)
       @imported_lyrics = raw
-      return # Add explicit return
+      return
     when ".prx"
       name_without_extension = File.basename(filename, File.extname(filename))
       @list_title = name_without_extension
@@ -186,24 +179,18 @@ class Lyricist < Atome
       current_lyrix.set_list(content)
       refresh_song_list
       grab(:list_panel).display(:block)
-      # load the first song of the list
       load_song_from_list("1")
-      return # Add explicit return
-    else
-      # puts "Extension unknown"
+      return
     end
     update_song_listing
   end
 
   def wait_for_duration(audio_object, callback)
-    # Vérifier si duration existe et convertir en Float Ruby
     duration_value = audio_object.duration.to_f rescue nil
 
     if duration_value && duration_value > 0
-      # Duration est définie, exécuter le callback
       callback.call(duration_value)
     else
-      # Planifier une nouvelle vérification après un court délai
       JS.global.setTimeout(-> { wait_for_duration(audio_object, callback) }, 100)
     end
   end
@@ -226,7 +213,6 @@ class Lyricist < Atome
   end
 
   def build_control_buttons
-
 
     play = button({
                     label: :play,
@@ -252,11 +238,9 @@ class Lyricist < Atome
 
     edit_lyrics.touch(true) do
       if @editor_open
-        # Fermer l'éditeur s'il est déjà ouvert
         grab(:lyrics_editor_container).delete({ recursive: true }) if grab(:lyrics_editor_container)
         @editor_open = false
       else
-        # Ouvrir l'éditeur
         @editor_open = true
         grab(:import_module).display(:none)
         show_lyrics_editor(33, 33)
@@ -265,7 +249,6 @@ class Lyricist < Atome
       update_song_listing
     end
 
-    # Bouton Erase
     erase = button({
                      id: :erase,
                      label: :clear,
@@ -281,7 +264,6 @@ class Lyricist < Atome
       update_song_listing
     end
 
-    ###
     view_importer = button({
                              id: :import_viewer,
                              label: :lyrics,
@@ -302,8 +284,6 @@ class Lyricist < Atome
       end
       update_song_listing
     end
-
-    ###########
 
     record = button({
                       label: 'modify',
@@ -334,16 +314,11 @@ class Lyricist < Atome
       full_refresh_viewer(prev_postion)
     end
 
-    #########
-
     clear = button({
                      label: 'clear',
                      id: :clear,
                      top: LyricsStyle.dimensions[:margin],
                      color: LyricsStyle.colors[:accent],
-
-                     # color: :yellow,
-                     # background: :red,
                      left: LyricsStyle.positions[:second_column],
                      parent: :import_module
                    })
@@ -351,9 +326,7 @@ class Lyricist < Atome
     clear.touch(true) do
       grab(:importer_support).clear(true)
     end
-    ###########
 
-    # Bouton Stop
     stop = button({
                     label: :stop,
                     id: :stop,
@@ -393,7 +366,7 @@ class Lyricist < Atome
 
       if prev_index
         prev_position = sorted_keys[prev_index]
-        @actual_position=prev_position
+        @actual_position = prev_position
         update_lyrics(prev_position, lyrics)
         grab(:timeline_slider).value(prev_position)
       else
@@ -415,7 +388,7 @@ class Lyricist < Atome
       if next_index
 
         next_position = sorted_keys[next_index]
-        @actual_position=next_position
+        @actual_position = next_position
         update_lyrics(next_position, lyrics)
         grab(:timeline_slider).value(next_position)
       else
@@ -433,7 +406,6 @@ class Lyricist < Atome
     import_lyrics = button({
                              label: :import,
                              id: :import_lyrics,
-                             # color: LyricsStyle.colors[:accent],
                              text_color: :black,
                              top: LyricsStyle.dimensions[:margin],
                              left: 3,
@@ -449,7 +421,6 @@ class Lyricist < Atome
 
     end
 
-    #######
     save_edited_text = button({
                                 label: :save,
                                 id: :save_edit,
@@ -477,13 +448,11 @@ class Lyricist < Atome
 
     edit_import.touch(true) do |val|
       if @edit_lyrics_mode
-        # raw edit mode
         grab("edit_import_label").data(:raw)
         grab(:importer_support).clear(true)
         parse_song_lyrics(@imported_lyrics)
         @edit_lyrics_mode = false
       else
-        # insert edit mode
         grab("edit_import_label").data(:insert)
         grab(:importer_support).clear(true)
         text_to_edit = grab(:importer_support).text({ data: @imported_lyrics, edit: true })
@@ -494,22 +463,6 @@ class Lyricist < Atome
       end
       update_song_listing
     end
-
-    #######
-    # def save_fileinlocalstorage(file_name, content_to_save)
-    #   # Utilisation de JS.global pour accéder à l'objet localStorage du navigateur
-    #   begin
-    #     # Conversion du contenu en chaîne JSON si nécessaire
-    #     content_string = content_to_save.is_a?(String) ? content_to_save : content_to_save.to_json
-    #
-    #     # Sauvegarde dans localStorage
-    #     JS.global.localStorage.setItem(file_name, content_string)
-    #
-    #     return { success: true, message: "Fichier '#{file_name}' sauvegardé avec succès" }
-    #   rescue => e
-    #     return { success: false, message: "Erreur lors de la sauvegarde: #{e.message}" }
-    #   end
-    # end
 
     save_song = button({
                          label: :save,
@@ -526,12 +479,7 @@ class Lyricist < Atome
       list_tile = "#{@list_title}.prx"
       save_file(list_tile, content_to_save)
       save_file_to_db(list_tile, content_to_save)
-      #  #to save file instead uncomment the line below
-      # lyrics = grab(:main_line).content.to_s
-      #  content_to_save = { lyrics: lyrics, song: @audio_path, title: @title , raw: @imported_lyrics}
-      #  save_file("#{@title}.lrx", content_to_save)
     end
-    ############
     load_prev_song = button({
                               label: 'prev.',
                               id: :load_prev_song,
@@ -559,8 +507,6 @@ class Lyricist < Atome
       play_next_song({ immediate: true })
     end
 
-    #########
-
     load_song = button({
                          label: :load,
                          id: :load,
@@ -577,10 +523,10 @@ class Lyricist < Atome
       else
         hide_all_panels
         grab(:main_line).box({ id: :loader,
-                                  width: 259,
-                                  height: 333,
-                                  smooth: 9,
-                                  shadow: LyricsStyle.decorations[:shadow] })
+                               width: 259,
+                               height: 333,
+                               smooth: 9,
+                               shadow: LyricsStyle.decorations[:shadow] })
         load_file = button({
                              label: :disk,
                              id: :disk_loader,
@@ -596,7 +542,6 @@ class Lyricist < Atome
 
         end
 
-        # loading files in db
         result = list_all_files_in_localstorage
         result[:files].each_with_index do |file, index|
           list_f = grab(:loader).text(file)
@@ -614,7 +559,7 @@ class Lyricist < Atome
 
     end
 
-    titesong = button({
+    song_title = button({
                         label: @title,
                         id: :title,
                         top: LyricsStyle.dimensions[:margin],
@@ -623,14 +568,13 @@ class Lyricist < Atome
                         edit: true,
                         parent: :tool_bar
                       })
-    titesong.keyboard(:down) do |native_event|
+    song_title.keyboard(:down) do |native_event|
       event = Native(native_event)
-      if event[:keyCode].to_s == '13' # Touche Entrée
-        titesong.blink(:orange)
+      if event[:keyCode].to_s == '13'
+        song_title.blink(:orange)
         event.preventDefault
         title = grab('title_label')
         @title = title.data
-
       end
     end
   end
