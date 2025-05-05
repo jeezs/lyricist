@@ -64,9 +64,7 @@ class Lyricist < Atome
     else
       song_to_load = 1
     end
-    if params[:current]
-      song_to_load = 0
-    end
+    song_to_load = 0 if params[:current]
 
     if params[:immediate]
       loading_countdown = false
@@ -98,9 +96,7 @@ class Lyricist < Atome
     @playing = false
     @actual_position = 0
     grab(:counter).data(0)
-    if grab(:main_line).data == '-end-' && @allow_next
-      play_next_song
-    end
+    play_next_song if grab(:main_line).data == '-end-' && @allow_next
   end
 
   def play_audio(audio_object, actual_position)
@@ -375,8 +371,8 @@ class Lyricist < Atome
       end
     end
     prev_word.touch(:up) do
-      if @playing
-        play_audio(@audio_object, @actual_position)
+      wait 0.5 do
+        play_audio(@audio_object, @actual_position) if @playing
       end
     end
 
@@ -398,9 +394,7 @@ class Lyricist < Atome
       end
     end
     next_word.touch(:up) do
-      if @playing
-        play_audio(@audio_object, @actual_position)
-      end
+      play_audio(@audio_object, @actual_position) if @playing
     end
 
     import_lyrics = button({
