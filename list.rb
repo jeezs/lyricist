@@ -6,7 +6,7 @@ class Lyricist
                            label: :list,
                            id: :list_button,
                            top: LyricsStyle.dimensions[:margin],
-                           left: LyricsStyle.positions[:seventh_column],
+                           left: LyricsStyle.positions[:seventh_column]+25,
                            parent: :tool_bar
                          })
 

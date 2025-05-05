@@ -59,19 +59,19 @@ class Lyricist < Atome
   end
 
   def play_next_song(params = {})
-    if params[:prev]
-      song_to_load = -1
-    else
-      song_to_load = 1
-    end
+    song_to_load = if params[:prev]
+                     -1
+                   else
+                     1
+                   end
     song_to_load = 0 if params[:current]
 
-    if params[:immediate]
-      loading_countdown = false
+    loading_countdown = if params[:immediate]
+                          false
 
-    else
-      loading_countdown = true
-    end
+                        else
+                          true
+                        end
     @allow_next = false
     grab(:main_line).data = ''
     next_song = (find_key_by_title(@list, @title).to_i + song_to_load).to_s
@@ -214,7 +214,7 @@ class Lyricist < Atome
                     label: :play,
                     id: :play,
                     top: LyricsStyle.dimensions[:margin],
-                    left: LyricsStyle.dimensions[:margin],
+                    left: 25,
                     parent: :tool_bar
                   })
 
@@ -225,7 +225,7 @@ class Lyricist < Atome
     edit_lyrics = button({
                            label: :Edit,
                            id: :edit_lyrics_button,
-                           left: 610,
+                           left: 635,
                            right: LyricsStyle.dimensions[:margin],
                            top: LyricsStyle.dimensions[:margin],
                            size: LyricsStyle.dimensions[:text_medium],
@@ -250,7 +250,7 @@ class Lyricist < Atome
                      label: :clear,
                      color: LyricsStyle.colors[:accent],
                      top: LyricsStyle.dimensions[:margin],
-                     left: LyricsStyle.positions[:fourth_column],
+                     left: LyricsStyle.positions[:fourth_column]+25,
                      parent: :tool_bar
                    })
 
@@ -264,7 +264,7 @@ class Lyricist < Atome
                              id: :import_viewer,
                              label: :lyrics,
                              top: LyricsStyle.dimensions[:margin],
-                             left: 545,
+                             left: 570,
                              right: LyricsStyle.positions[:second_column],
                              parent: :tool_bar
                            })
@@ -285,7 +285,7 @@ class Lyricist < Atome
                       label: 'modify',
                       id: :record,
                       top: LyricsStyle.dimensions[:margin],
-                      left: LyricsStyle.positions[:third_column],
+                      left: LyricsStyle.positions[:third_column]+25,
                       parent: :tool_bar
                     })
 
@@ -315,7 +315,7 @@ class Lyricist < Atome
                      id: :clear,
                      top: LyricsStyle.dimensions[:margin],
                      color: LyricsStyle.colors[:accent],
-                     left: LyricsStyle.positions[:second_column],
+                     left: LyricsStyle.positions[:second_column]+25,
                      parent: :import_module
                    })
 
@@ -328,7 +328,7 @@ class Lyricist < Atome
                     id: :stop,
                     top: LyricsStyle.dimensions[:margin],
                     color: LyricsStyle.colors[:secondary],
-                    left: LyricsStyle.positions[:second_column],
+                    left: LyricsStyle.positions[:second_column]+25,
                     parent: :tool_bar
                   })
 
@@ -340,7 +340,7 @@ class Lyricist < Atome
                          label: :<,
                          width: 25,
                          id: :previous,
-                         top: LyricsStyle.dimensions[:margin],
+                         top: 6,
                          left: LyricsStyle.positions[:prev],
                          parent: :bottom_bar
                        })
@@ -348,7 +348,7 @@ class Lyricist < Atome
     next_word = button({
                          label: :>,
                          width: 25,
-                         top: LyricsStyle.dimensions[:margin],
+                         top:6,
                          id: :next,
                          left: LyricsStyle.positions[:next],
                          parent: :bottom_bar
@@ -461,7 +461,7 @@ class Lyricist < Atome
     save_song = button({
                          label: :save,
                          id: :save,
-                         top: LyricsStyle.dimensions[:margin],
+                         top: 6,
                          left: 470,
                          right: LyricsStyle.dimensions[:margin],
                          parent: :bottom_bar
@@ -477,7 +477,7 @@ class Lyricist < Atome
     load_prev_song = button({
                               label: 'prev.',
                               id: :load_prev_song,
-                              top: LyricsStyle.dimensions[:margin],
+                              top: 6,
                               left: 535,
                               right: LyricsStyle.dimensions[:margin],
                               parent: :bottom_bar
@@ -490,7 +490,7 @@ class Lyricist < Atome
     load_next_song = button({
                               label: :next,
                               id: :load_next_song,
-                              top: LyricsStyle.dimensions[:margin],
+                              top: 6,
                               left: 593,
                               right: LyricsStyle.dimensions[:margin],
                               parent: :bottom_bar
@@ -504,7 +504,7 @@ class Lyricist < Atome
     load_song = button({
                          label: :load,
                          id: :load,
-                         top: LyricsStyle.dimensions[:margin],
+                         top: 6,
                          left: 410,
                          right: 65,
                          parent: :bottom_bar
@@ -554,14 +554,14 @@ class Lyricist < Atome
     end
 
     song_title = button({
-                        label: @title,
-                        id: :title,
-                        top: LyricsStyle.dimensions[:margin],
-                        left: 250,
-                        width: 120,
-                        edit: true,
-                        parent: :tool_bar
-                      })
+                          label: @title,
+                          id: :title,
+                          top: LyricsStyle.dimensions[:margin],
+                          left: 250+25,
+                          width: 120,
+                          edit: true,
+                          parent: :tool_bar
+                        })
     song_title.keyboard(:down) do |native_event|
       event = Native(native_event)
       if event[:keyCode].to_s == '13'

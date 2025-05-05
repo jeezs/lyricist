@@ -16,7 +16,7 @@ class Lyricist < Atome
              label: '',
              id: :counter_support,
              width: 99,
-             left: LyricsStyle.positions[:counter_left],
+             left: LyricsStyle.positions[:counter_left]+25,
              top: LyricsStyle.dimensions[:margin],
              parent: :tool_bar,
 
@@ -125,9 +125,9 @@ class Lyricist < Atome
                                  width: LyricsStyle.dimensions[:slider_width],
                                  value: 0,
                                  height: LyricsStyle.dimensions[:slider_height],
-                                 left: LyricsStyle.dimensions[:margin] + 33,
+                                 left: 25,
                                  tag: [],
-                                 top: LyricsStyle.dimensions[:margin],
+                                 top: 6,
                                  color: :orange,
                                  cursor: { color: :orange, width: 25, height: 25 }
                                })

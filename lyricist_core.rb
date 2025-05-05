@@ -64,11 +64,11 @@ class Lyricist < Atome
     lyrics_support = grab(:lyrics_support)
 
     lyrics_support.text({
-                          left: 3,
                           width: LyricsStyle.dimensions[:line_width],
                           data: '',
                           id: :main_line,
                           top: 39,
+                          left: 39,
                           edit: false,
                           component: { size: LyricsStyle.dimensions[:text_xlarge] },
                           position: :absolute,
@@ -91,6 +91,7 @@ class Lyricist < Atome
       lyrics_support.text({
                             id: :"my_line_#{index}",
                             data: 'next lines',
+                            left: 39,
                             component: { size: LyricsStyle.dimensions[:next_Line_lyrics_size] },
                             top: top_position * LyricsStyle.dimensions[:percent_offset_between_lines]
                           }.merge(common_style))

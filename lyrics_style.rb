@@ -45,7 +45,7 @@ class LyricsStyle
       container_height: 500,
       tool_bar_height: 50,
       slider_height: 25,
-      margin: 3,
+      margin: 15,
 
       text_small: 12,
       text_medium: 14,
